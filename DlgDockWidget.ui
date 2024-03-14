@@ -1,0 +1,349 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>mDockWidget</class>
+ <widget class="QDockWidget" name="mDockWidget">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>237</width>
+    <height>285</height>
+   </rect>
+  </property>
+  <property name="sizePolicy">
+   <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+    <horstretch>0</horstretch>
+    <verstretch>0</verstretch>
+   </sizepolicy>
+  </property>
+  <property name="locale">
+   <locale language="C" country="AnyCountry"/>
+  </property>
+  <property name="windowTitle">
+   <string>On-the-Fly Shortest Path</string>
+  </property>
+  <widget class="QWidget" name="dockWidgetContents">
+   <widget class="QFrame" name="frame">
+    <property name="geometry">
+     <rect>
+      <x>-10</x>
+      <y>0</y>
+      <width>241</width>
+      <height>256</height>
+     </rect>
+    </property>
+    <property name="locale">
+     <locale language="C" country="AnyCountry"/>
+    </property>
+    <property name="frameShape">
+     <enum>QFrame::StyledPanel</enum>
+    </property>
+    <property name="frameShadow">
+     <enum>QFrame::Raised</enum>
+    </property>
+    <widget class="QLabel" name="label">
+     <property name="geometry">
+      <rect>
+       <x>20</x>
+       <y>10</y>
+       <width>41</width>
+       <height>21</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Layer</string>
+     </property>
+    </widget>
+    <widget class="QComboBox" name="layer_combobox">
+     <property name="geometry">
+      <rect>
+       <x>60</x>
+       <y>10</y>
+       <width>171</width>
+       <height>22</height>
+      </rect>
+     </property>
+     <property name="locale">
+      <locale language="C" country="AnyCountry"/>
+     </property>
+     <property name="editable">
+      <bool>false</bool>
+     </property>
+     <property name="currentIndex">
+      <number>-1</number>
+     </property>
+     <property name="placeholderText">
+      <string/>
+     </property>
+     <property name="duplicatesEnabled">
+      <bool>true</bool>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="start_coordinates_button">
+     <property name="geometry">
+      <rect>
+       <x>177</x>
+       <y>40</y>
+       <width>56</width>
+       <height>28</height>
+      </rect>
+     </property>
+     <property name="locale">
+      <locale language="C" country="AnyCountry"/>
+     </property>
+     <property name="text">
+      <string>Start</string>
+     </property>
+     <property name="checkable">
+      <bool>true</bool>
+     </property>
+     <property name="checked">
+      <bool>false</bool>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="middle_coordinates_button">
+     <property name="geometry">
+      <rect>
+       <x>177</x>
+       <y>70</y>
+       <width>56</width>
+       <height>28</height>
+      </rect>
+     </property>
+     <property name="locale">
+      <locale language="C" country="AnyCountry"/>
+     </property>
+     <property name="text">
+      <string>Middle</string>
+     </property>
+     <property name="checkable">
+      <bool>true</bool>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="end_coordinates_button">
+     <property name="geometry">
+      <rect>
+       <x>177</x>
+       <y>100</y>
+       <width>56</width>
+       <height>28</height>
+      </rect>
+     </property>
+     <property name="locale">
+      <locale language="C" country="AnyCountry"/>
+     </property>
+     <property name="text">
+      <string>End</string>
+     </property>
+     <property name="checkable">
+      <bool>true</bool>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_2">
+     <property name="geometry">
+      <rect>
+       <x>20</x>
+       <y>135</y>
+       <width>42</width>
+       <height>21</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Length</string>
+     </property>
+    </widget>
+    <widget class="QLineEdit" name="resultLength">
+     <property name="geometry">
+      <rect>
+       <x>80</x>
+       <y>135</y>
+       <width>113</width>
+       <height>20</height>
+      </rect>
+     </property>
+     <property name="locale">
+      <locale language="C" country="AnyCountry"/>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+     </property>
+     <property name="readOnly">
+      <bool>true</bool>
+     </property>
+    </widget>
+    <widget class="QLineEdit" name="start_coordinates_textbox">
+     <property name="geometry">
+      <rect>
+       <x>21</x>
+       <y>44</y>
+       <width>146</width>
+       <height>20</height>
+      </rect>
+     </property>
+     <property name="locale">
+      <locale language="C" country="AnyCountry"/>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+     <property name="readOnly">
+      <bool>true</bool>
+     </property>
+    </widget>
+    <widget class="QLineEdit" name="middle_coordinates_textbox">
+     <property name="geometry">
+      <rect>
+       <x>21</x>
+       <y>73</y>
+       <width>146</width>
+       <height>20</height>
+      </rect>
+     </property>
+     <property name="locale">
+      <locale language="C" country="AnyCountry"/>
+     </property>
+     <property name="readOnly">
+      <bool>true</bool>
+     </property>
+     <property name="placeholderText">
+      <string>optional</string>
+     </property>
+    </widget>
+    <widget class="QLineEdit" name="end_coordinates_textbox">
+     <property name="geometry">
+      <rect>
+       <x>21</x>
+       <y>102</y>
+       <width>146</width>
+       <height>20</height>
+      </rect>
+     </property>
+     <property name="locale">
+      <locale language="C" country="AnyCountry"/>
+     </property>
+     <property name="readOnly">
+      <bool>true</bool>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_3">
+     <property name="geometry">
+      <rect>
+       <x>20</x>
+       <y>162</y>
+       <width>51</width>
+       <height>16</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Fiber loss</string>
+     </property>
+    </widget>
+    <widget class="QLineEdit" name="fiberLoss">
+     <property name="geometry">
+      <rect>
+       <x>137</x>
+       <y>160</y>
+       <width>56</width>
+       <height>22</height>
+      </rect>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+     </property>
+    </widget>
+    <widget class="QLabel" name="lengthUnits">
+     <property name="geometry">
+      <rect>
+       <x>196</x>
+       <y>136</y>
+       <width>36</width>
+       <height>16</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>units</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="fiberLossUnits">
+     <property name="geometry">
+      <rect>
+       <x>196</x>
+       <y>162</y>
+       <width>36</width>
+       <height>16</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>units</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="configure_button">
+     <property name="geometry">
+      <rect>
+       <x>50</x>
+       <y>225</y>
+       <width>151</width>
+       <height>26</height>
+      </rect>
+     </property>
+     <property name="locale">
+      <locale language="C" country="AnyCountry"/>
+     </property>
+     <property name="text">
+      <string>Configure...</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="reset_button">
+     <property name="geometry">
+      <rect>
+       <x>125</x>
+       <y>190</y>
+       <width>93</width>
+       <height>28</height>
+      </rect>
+     </property>
+     <property name="locale">
+      <locale language="C" country="AnyCountry"/>
+     </property>
+     <property name="text">
+      <string>Reset</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="calculate_button">
+     <property name="geometry">
+      <rect>
+       <x>25</x>
+       <y>190</y>
+       <width>93</width>
+       <height>28</height>
+      </rect>
+     </property>
+     <property name="locale">
+      <locale language="C" country="AnyCountry"/>
+     </property>
+     <property name="text">
+      <string>Calculate</string>
+     </property>
+    </widget>
+    <widget class="QCheckBox" name="addFixedLoss">
+     <property name="geometry">
+      <rect>
+       <x>74</x>
+       <y>160</y>
+       <width>56</width>
+       <height>20</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>+Fixed</string>
+     </property>
+     <property name="checked">
+      <bool>true</bool>
+     </property>
+    </widget>
+   </widget>
+  </widget>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

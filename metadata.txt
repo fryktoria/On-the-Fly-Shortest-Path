@@ -1,0 +1,31 @@
+# Mandatory items:
+
+
+[general]
+name=On-the-Fly Shortest Path
+qgisMinimumVersion=3.00
+qgisMaximumVersion=3.99
+description=Interactively find shortest path between points over a line network and calculate the Fiber Loss Budget of a fiber optic network (backbone or FTTH)
+about=The "On-the-Fly Shortest Path" plugin offers an interactive measurement of distances along a line network, operating directly on the map. It calculates Distance and the Fiber Loss Budget in fiber optic networks. The plugin uses the core Network Analysis library of QGIS in order to calculate the shortest path via the Dijkstra algorithm. Subsequently, it calculates the fiber loss of this path, considering several configured parameters (connector loss, splice loss, fiber attenuation, splitters etc.). In contrast to similar algorithms of the Processing toolbox, this plugin does not create a new layer for every measurement but rather presents the path and the calculated parameters directly on screen. This functionality is similar to the original RoadGraph plugin of QGIS2. On top of this, it allows the setting of an optional middle point, forcing the path to cross this. This is helpful in networks with multiple paths between the start and stop point.  
+version=1.0
+author=Ilias Iliopoulos
+email=info@fryktoria.com
+
+# end of mandatory metadata
+
+# Optional items:
+
+experimental=True
+# deprecated flag (applies to the whole plugin, not just a single version
+deprecated=False
+tags=shortest path, dijkstra, network analysis, graph analysis, distance measurement, RoadGraph plugin, fiber, ftth, loss budget, power budget, fiber attenuation
+#homepage=
+#repository=https://github.com/fryktoria/onthefly_shortest_path
+#tracker=https://github.com/fryktoria/onthefly_shortest_path
+server=false
+hasProcessingProvider=false
+changelog=1.0:
+          - First release
+            Known issues:
+              Topology tolerance does not work as expected, if its value is higher than 0. This is a problem of the underlying network analysis functions and not of the plugin. Using topology tolerance 0 requires the line network to have topological continuity.
+
