@@ -11,7 +11,8 @@ In contrast to similar algorithms of the Processing toolbox, this plugin does no
 
 Additionaly, it allows the setting of an optional middle point, forcing the path to go through it. This is helpful in networks with multiple paths between the start and stop point. 
 
-## Instalation
+## Installation
+
 ### Install from the official QGIS plugin repository
 Not yet supported
 
@@ -113,4 +114,9 @@ The loss along the line layer is calculated as the sum of:
 2. The splice loss multiplied by the distance from the start point to the entry point on the line layer
 3. The Fixed cost, only if the checkbox `+Fixed` of the plugin panel is checked
 
- 
+## Build from Github sources
+
+1. Download all files from Github
+2. Create a directory named `On-the-Fly-Shortest-Path` and move all files to this directory
+3. Use your favorite compression tools to create a zip file **which contains the directory** and not the individual files. This structure is mandatory so that the set of files is understood by QGIS as a plugin.
+4. Install the plugin using the procedure in **[Installation](#Installation)** section. 
