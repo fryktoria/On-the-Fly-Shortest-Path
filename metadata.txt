@@ -1,6 +1,5 @@
 # Mandatory items:
 
-
 [general]
 name=On-the-Fly Shortest Path
 qgisMinimumVersion=3.00
@@ -15,7 +14,7 @@ email=info@fryktoria.com
 
 # Optional items:
 
-experimental=True
+experimental=False
 # deprecated flag (applies to the whole plugin, not just a single version
 deprecated=False
 tags=shortest path, dijkstra, network analysis, graph analysis, distance measurement, RoadGraph plugin, fiber, ftth, loss budget, power budget, fiber attenuation

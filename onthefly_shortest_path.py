@@ -492,61 +492,12 @@ class OnTheFlyShortestPath:
         layerId = self.layerList[cmbBoxIndex][1]
         my_layer = QgsProject.instance().mapLayer(layerId)        
         #print ("Using path layer ", self.layerList[cmbBoxIndex][1])
-        
-        ''' This seemed to be working but it creates a vector layer associated with the source, which is an ogr file, 
-            i.e. shp etc. It will not work with a layer originating from postgres.
-            Also, it cannot follow the changes of vertices in the layer done by the user, before saving the layer.
-            This is no good.
-            Remain here for reference. DO NOT USE            
-        
-        vectorLayer = QgsVectorLayer(layers[0].dataProvider().dataSourceUri(), '', 'ogr')
-        '''
-
-        ''' This attempt uses processing toolbox to create a memory clone of the layer.
-            Uncomment line "import processing" before use
-            Since it is called in every calculate click, it uses any change in vertices.
-            Also, since it does not care if the layer is shp or database, it should work for any type of layer.
-            IT WORKS. Only bad thing (besides loading in memory in every click of Calculate button) is that it prints 
-            a message in the Processing console 2024-03-11T19:46:42     INFO    Results: {'OUTPUT': 'output_8b6f3b52_70e4_4660_ac9a_c1f79192ff80'}
-        
-        my_layer.selectAll()
-        mem_layer = processing.run("native:saveselectedfeatures", {'INPUT': my_layer, 'OUTPUT': 'memory:'})['OUTPUT']
-        my_layer.removeSelection()
-        vectorLayer = mem_layer
-        '''
-                
-        ''' This works also with normal and temporary layers. 
-            With this method, I can set the CRS of the memory layer to EPSG:4326 so that the calculations of length and layers will be consistent to EPSG:7030
-            and I will not have to check the CRS of the original layer.
-            Works also with Multiline layer, although it needs more testing   
-            Tested the memory usage and it seems that there is a memory leakage. After I calculate with the same start and end points, there is
-            some additional memory used. I will prefer the materialize() solution            
-        
-        feats = [feat for feat in my_layer.getFeatures()]
-        #mem_layer = QgsVectorLayer( "Linestring?crs=epsg:" + str(my_layer.crs()), "clone_layer", "memory") 
-        mem_layer = QgsVectorLayer( "Linestring?crs=epsg:4326", "clone_layer", "memory")        
-        mem_layer_data = mem_layer.dataProvider()
-        mem_layer_data.addFeatures(feats)        
-        # I do not need the below because I do not care about cloning the attributes
-        #attr = my_layer.dataProvider().fields().toList()     
-        #mem_layer.updateFields() # why and where in the sequence?
-        #mem_layer_data.addAttributes(attr)       
-        vectorLayer = mem_layer
-        '''
-        
-        ''' Third option to use materialize()
-        See https://gis.stackexchange.com/questions/205947/duplicating-layer-in-memory-using-pyqgis/293942#293942
-        This is more elegant.
-        It maintains CRS and attributes. There is a way to set no attributes but I need to find out
-        '''        
         my_layer.selectAll()
         # all features
         #mem_layer = my_layer.materialize(QgsFeatureRequest().setFilterFids(my_layer.allFeatureIds()))
         # all features, no attributes. Documentation says "To disable fetching attributes, reset the FetchAttributes flag (which is set by default)"
         # which is misleading because there is no FetchAttributes flag. Yet, I tried the SubsetOfAttributes flag as below and it worked
         mem_layer = my_layer.materialize(QgsFeatureRequest().setFlags(QgsFeatureRequest.SubsetOfAttributes  ))
-        # if I want to filter features
-        #mem_layer = my_layer.materialize(QgsFeatureRequest().setFilterFids(layer.selectedFeatureIds()))
         my_layer.removeSelection()        
         # I do not want the layer on map, just in memory. I used it in order to make sure that the memory layer does 
         # not carry the attributes of the original layer

@@ -41,14 +41,14 @@ The plugin offers several user-defined options that can be set via the configura
 
 The new settings will be stored locally. The user may reset the settings to the factory defaults by pressing on the `Defaults` button.
 
-### Section Display
+### Section: Display
 
 The `Rubberband` is the visual element displaying the path from the start point to the end point. You can select the desired color/opacity and size of the Rubberband. 
 
 The `Markers` are the visual elements showing the start, middle and stop points of the shortest path analysis. You can select the desired color/opacity and size of the Markers.
 
 
-### Section Network Analysis
+### Section: Network Analysis
 
 `Decimal digits`: Set the number of decimal points for the displayed Length
 
@@ -60,7 +60,7 @@ The `Markers` are the visual elements showing the start, middle and stop points 
     
     
 
-### Section Fiber Loss Budget
+### Section: Fiber Loss Budget
 
 `Connector loss`: Set the average loss of the fiber optic connectors in use. Unit:`db`.
 
@@ -115,6 +115,8 @@ The loss along the line layer is calculated as the sum of:
 3. The Fixed cost, only if the checkbox `+Fixed` of the plugin panel is checked
 
 ## Build from Github sources
+
+Follow these instructions if you want to create manually a zip file to install into QGIS
 
 1. Download all files from Github
 2. Create a directory named `On-the-Fly-Shortest-Path` and move all files to this directory
