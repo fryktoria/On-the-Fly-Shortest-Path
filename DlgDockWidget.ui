@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>237</width>
-    <height>285</height>
+    <width>245</width>
+    <height>280</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -15,6 +15,12 @@
     <horstretch>0</horstretch>
     <verstretch>0</verstretch>
    </sizepolicy>
+  </property>
+  <property name="maximumSize">
+   <size>
+    <width>50000</width>
+    <height>280</height>
+   </size>
   </property>
   <property name="locale">
    <locale language="C" country="AnyCountry"/>
@@ -26,11 +32,17 @@
    <widget class="QFrame" name="frame">
     <property name="geometry">
      <rect>
-      <x>-10</x>
+      <x>0</x>
       <y>0</y>
       <width>241</width>
-      <height>256</height>
+      <height>249</height>
      </rect>
+    </property>
+    <property name="minimumSize">
+     <size>
+      <width>0</width>
+      <height>100</height>
+     </size>
     </property>
     <property name="locale">
      <locale language="C" country="AnyCountry"/>
@@ -44,8 +56,8 @@
     <widget class="QLabel" name="label">
      <property name="geometry">
       <rect>
-       <x>20</x>
-       <y>10</y>
+       <x>4</x>
+       <y>7</y>
        <width>41</width>
        <height>21</height>
       </rect>
@@ -57,8 +69,8 @@
     <widget class="QComboBox" name="layer_combobox">
      <property name="geometry">
       <rect>
-       <x>60</x>
-       <y>10</y>
+       <x>44</x>
+       <y>7</y>
        <width>171</width>
        <height>22</height>
       </rect>
@@ -82,8 +94,8 @@
     <widget class="QPushButton" name="start_coordinates_button">
      <property name="geometry">
       <rect>
-       <x>177</x>
-       <y>40</y>
+       <x>161</x>
+       <y>37</y>
        <width>56</width>
        <height>28</height>
       </rect>
@@ -104,8 +116,8 @@
     <widget class="QPushButton" name="middle_coordinates_button">
      <property name="geometry">
       <rect>
-       <x>177</x>
-       <y>70</y>
+       <x>161</x>
+       <y>67</y>
        <width>56</width>
        <height>28</height>
       </rect>
@@ -123,8 +135,8 @@
     <widget class="QPushButton" name="end_coordinates_button">
      <property name="geometry">
       <rect>
-       <x>177</x>
-       <y>100</y>
+       <x>161</x>
+       <y>97</y>
        <width>56</width>
        <height>28</height>
       </rect>
@@ -142,8 +154,8 @@
     <widget class="QLabel" name="label_2">
      <property name="geometry">
       <rect>
-       <x>20</x>
-       <y>135</y>
+       <x>4</x>
+       <y>132</y>
        <width>42</width>
        <height>21</height>
       </rect>
@@ -155,8 +167,8 @@
     <widget class="QLineEdit" name="resultLength">
      <property name="geometry">
       <rect>
-       <x>80</x>
-       <y>135</y>
+       <x>64</x>
+       <y>132</y>
        <width>113</width>
        <height>20</height>
       </rect>
@@ -174,8 +186,8 @@
     <widget class="QLineEdit" name="start_coordinates_textbox">
      <property name="geometry">
       <rect>
-       <x>21</x>
-       <y>44</y>
+       <x>5</x>
+       <y>41</y>
        <width>146</width>
        <height>20</height>
       </rect>
@@ -193,8 +205,8 @@
     <widget class="QLineEdit" name="middle_coordinates_textbox">
      <property name="geometry">
       <rect>
-       <x>21</x>
-       <y>73</y>
+       <x>5</x>
+       <y>70</y>
        <width>146</width>
        <height>20</height>
       </rect>
@@ -212,8 +224,8 @@
     <widget class="QLineEdit" name="end_coordinates_textbox">
      <property name="geometry">
       <rect>
-       <x>21</x>
-       <y>102</y>
+       <x>5</x>
+       <y>99</y>
        <width>146</width>
        <height>20</height>
       </rect>
@@ -228,8 +240,8 @@
     <widget class="QLabel" name="label_3">
      <property name="geometry">
       <rect>
-       <x>20</x>
-       <y>162</y>
+       <x>4</x>
+       <y>159</y>
        <width>51</width>
        <height>16</height>
       </rect>
@@ -241,8 +253,8 @@
     <widget class="QLineEdit" name="fiberLoss">
      <property name="geometry">
       <rect>
-       <x>137</x>
-       <y>160</y>
+       <x>121</x>
+       <y>157</y>
        <width>56</width>
        <height>22</height>
       </rect>
@@ -254,8 +266,8 @@
     <widget class="QLabel" name="lengthUnits">
      <property name="geometry">
       <rect>
-       <x>196</x>
-       <y>136</y>
+       <x>180</x>
+       <y>133</y>
        <width>36</width>
        <height>16</height>
       </rect>
@@ -267,8 +279,8 @@
     <widget class="QLabel" name="fiberLossUnits">
      <property name="geometry">
       <rect>
-       <x>196</x>
-       <y>162</y>
+       <x>180</x>
+       <y>159</y>
        <width>36</width>
        <height>16</height>
       </rect>
@@ -280,8 +292,8 @@
     <widget class="QPushButton" name="configure_button">
      <property name="geometry">
       <rect>
-       <x>50</x>
-       <y>225</y>
+       <x>34</x>
+       <y>222</y>
        <width>151</width>
        <height>26</height>
       </rect>
@@ -296,8 +308,8 @@
     <widget class="QPushButton" name="reset_button">
      <property name="geometry">
       <rect>
-       <x>125</x>
-       <y>190</y>
+       <x>109</x>
+       <y>187</y>
        <width>93</width>
        <height>28</height>
       </rect>
@@ -312,8 +324,8 @@
     <widget class="QPushButton" name="calculate_button">
      <property name="geometry">
       <rect>
-       <x>25</x>
-       <y>190</y>
+       <x>9</x>
+       <y>187</y>
        <width>93</width>
        <height>28</height>
       </rect>
@@ -328,8 +340,8 @@
     <widget class="QCheckBox" name="addFixedLoss">
      <property name="geometry">
       <rect>
-       <x>74</x>
-       <y>160</y>
+       <x>58</x>
+       <y>157</y>
        <width>56</width>
        <height>20</height>
       </rect>

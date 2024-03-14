@@ -1,5 +1,6 @@
 # On-the-Fly Shortest Path plugin
 
+
 ## Introduction
 The "On-the-Fly Shortest Path" QGIS plugin offers an interactive measurement of distances along a line network, operating directly on the map. It calculates Distance and the Fiber Loss Budget in fiber optic networks (backbone or FTTH). 
 
@@ -11,10 +12,30 @@ In contrast to similar algorithms of the Processing toolbox, this plugin does no
 
 Additionaly, it allows the setting of an optional middle point, forcing the path to go through it. This is helpful in networks with multiple paths between the start and stop point. 
 
+
 ## Installation
 
 ### Install from the official QGIS plugin repository
-Not yet supported
+Pending approval.
+
+### Install from the author's repository
+
+1. From the QGIS toolbar, select `Plugins -> Manage and Install Plugins...`.
+
+2. The window `Plugins|Settings` will open. From the panel on the left side of the window, select `Settings`.
+
+3. Add a new repository by clicking the `Add...` button. The form `Repository details` will open. Complete the parameters: 
+- `Name` Set to `fryktoria.com`
+- `URL`  Set to  `www.fryktoria.com/qgis_plugin_repository`
+- `Authentication` Leave empty
+- `Enabled` Make sure that it is checked
+
+The new repository will appear on the list and if the repository server has processed the request properly, the status of the repository will show as **connected**.
+
+4. From the panel on the left side of the `Plugins|Settings` window, select `All`. Navigate to the list to locate the plugin name `On-the-Fly Shortest Path` and press `Install Plugin` or `Install Experimental Plugin`. 
+
+5. On the list, of the `Plugins|Settings` window, make sure that the checkbox on the side of the plugin name is checked. This will activate the plugin.
+
 
 ### Install from a zip file
 
@@ -31,15 +52,22 @@ Also, to confirm that installation was made properly, from the QGIS toolbar, sel
 
 ## Activation
 
-The plugin panel should ve visible in the left hand side of the QGIS screen. If you do not see it, select `View -> Panels`. You should see the `On-the-Fly Shortest Path` in the list of panels. Activate it by clicking on the checkbox. 
+The plugin panel should be visible on the left hand side of the QGIS screen. If you do not see it, firt make sure that the plugin is activated.
 
-If you only see the name of the plugin in the lower left side of the left panel, you will need to adjust the size of the plugin panel to show all of its paramaters.
+1. From the QGIS toolbar, select `Plugins -> Manage and Install Plugins...`.
+
+2. The window `Plugins|Settings` will open. From the panel on the left side of the window, select `Installed`.  Navigate  the list to locate the plugin name `On-the-Fly Shortest Path`. Activate it by clicking on the checkbox on the side of the plugin name.
+
+Next, activate the plugin panel.
+1. Select `View -> Panels`. You should see the `On-the-Fly Shortest Path` in the list of panels. Activate it by clicking on the checkbox. You should now see the panel, or just the name of the plugin in the lower left side of the left panel. In the later case, adjust the size of the plugin panel by dragging the top border of the panel upwards using the mouse.
+
 
 ## Configuration
 
 The plugin offers several user-defined options that can be set via the configuration dialog. To activate this dialog, press the `Configure...` button in the plugin panel. A new dialog form opens, containg parameters grouped in sections. Note: If the plugin panel does not appear, follow the instructions in the **[Activation](#Activation)** section.
 
 The new settings will be stored locally. The user may reset the settings to the factory defaults by pressing on the `Defaults` button.
+
 
 ### Section: Display
 
@@ -59,7 +87,6 @@ The `Markers` are the visual elements showing the start, middle and stop points 
     `Detailed window`: The results will appear both in the plugin panel as well as in a window that will appear on screen. This new window will contain the details of entry, on graph and exit.
     
     
-
 ### Section: Fiber Loss Budget
 
 `Connector loss`: Set the average loss of the fiber optic connectors in use. Unit:`db`.
@@ -76,9 +103,9 @@ The `Markers` are the visual elements showing the start, middle and stop points 
 
 `Fixed`: This is a fixed value that is added to the loss calculations. It accounts for loss created by certain components, such as optical splitters in an FTTH network. Please note that this value is allocated only to the on-graph cost and not to the entry or exit cost.
 
+
 # Usage
  
-
 1. Load the layer(-s) containing the line network where the analysis of the shortest path will be mase using the normal QGIS procedures.
 2. From the plugin panel, select the desired layer for the analysis in the `Layer` selector. Please note that only the layers having a line geometry will appear. The CRS of the layers will appear enclosed in brackets. If a line layer is not associated with a CRS, analysis will not be able to take place.
 3. Press the `Start` button. The button will appear as pressed and the cursor will change to a cross. Navigate on the map and click on the Start point of your choice. 
@@ -94,9 +121,9 @@ Press the `Reset` button to hide all visual elements and clear the existing sett
    
 ## Length measurements
 
-The `Entry cost` is associated with the distance from the start point to the nearest point of the line layer. This entry point is calculated by the core QGIS network analysis library.
+The `Entry cost` is associated with the distance from the start point to the nearest point of the line layer, the entry point. This entry point is calculated by the core QGIS network analysis library.
 
-The `Exit cost` is associated with the distance from the end point to the nearest point of the line layer. This exit point is calculated by the core QGIS network analysis library.
+The `Exit cost` is associated with the distance from the end point to the nearest point of the line layer, the exit point. This exit point is calculated by the core QGIS network analysis library.
 
 The `Cost on graph` is associated with the path over the selected line layer, from the entry point to the exit point. The core QGIS network analysis library Dijkstra algorithm is used to calculate the shortest path.
 
@@ -114,11 +141,12 @@ The loss along the line layer is calculated as the sum of:
 2. The splice loss multiplied by the distance from the start point to the entry point on the line layer
 3. The Fixed cost, only if the checkbox `+Fixed` of the plugin panel is checked
 
+
 ## Build from Github sources
 
-Follow these instructions if you want to create manually a zip file to install into QGIS
+Follow these instructions if you want to create manually a zip file to install into QGIS using the process described in the **[Install from a zip file](#Install%20from%20a%20zip%20file)**  section.
 
 1. Download all files from Github
 2. Create a directory named `On-the-Fly-Shortest-Path` and move all files to this directory
 3. Use your favorite compression tools to create a zip file **which contains the directory** and not the individual files. This structure is mandatory so that the set of files is understood by QGIS as a plugin.
-4. Install the plugin using the procedure in **[Installation](#Installation)** section. 
+4. Install the plugin using the procedure in **[Installation](#Installation)** section.
