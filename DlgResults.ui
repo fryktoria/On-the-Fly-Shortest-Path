@@ -500,6 +500,9 @@
   <tabstop>costOnGraphTxt</tabstop>
   <tabstop>exitCostTxt</tabstop>
   <tabstop>totalCostTxt</tabstop>
+  <tabstop>lossEntryTxt</tabstop>
+  <tabstop>lossOnGraphTxt</tabstop>
+  <tabstop>lossExitTxt</tabstop>
   <tabstop>lossTotalTxt</tabstop>
  </tabstops>
  <resources/>

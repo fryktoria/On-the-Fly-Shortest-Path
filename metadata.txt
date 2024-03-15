@@ -2,7 +2,7 @@
 
 [general]
 name=On-the-Fly-Shortest-Path
-version=1.0.0
+version=1.0.1
 author=Ilias Iliopoulos
 email=info@fryktoria.com
 
@@ -29,6 +29,9 @@ hasProcessingProvider=false
 changelog=1.0.0:
           - First release
             Known issues:
-              The plugin supports only the English language. 
-              Topology tolerance does not work as expected, if its value is set to higher than 0. This is a problem of the underlying network analysis functions and not of the plugin. Please note that using topology tolerance 0 requires the line network to have topological continuity.
+              * The plugin supports only the English language. 
+              * Topology tolerance does not work as expected, if its value is set to higher than 0. This is a problem of the underlying network analysis functions and not of the plugin. Please note that using topology tolerance 0 requires the line network to have topological continuity.
+           1.0.1
+              * Added explicit casting to QgsPointXY objectt, since point objects were not cast implicitly in Linux
+             
 

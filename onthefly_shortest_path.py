@@ -30,6 +30,7 @@ from qgis.PyQt.QtWidgets import QDialog, QMessageBox
 from qgis.PyQt.QtCore import Qt
 from qgis.core import (QgsProject,
                        QgsVectorLayer,
+                       QgsPointXY,
                        QgsSettings,
                        QgsWkbTypes,
                        Qgis,
@@ -226,7 +227,7 @@ class OnTheFlyShortestPath:
         return
 
         
-    def populateConfigurationDlg(self, dlg, dict) -> None:
+    def populateConfigurationDlg(self, dlg:QDialog, dict:dict) -> None:
         dlg.rubberBandColor.setColor(QColor(
                                             int(dict["rubberBandColorRed"]), 
                                             int(dict["rubberBandColorGreen"]), 
@@ -261,7 +262,7 @@ class OnTheFlyShortestPath:
         return        
 
     
-    def updateConfiguration(self, dlg) -> None:
+    def updateConfiguration(self, dlg:QDialog) -> None:
         conf = self.currentConfig
         
         conf["rubberBandColorRed"] = dlg.rubberBandColor.color().red()
@@ -291,24 +292,25 @@ class OnTheFlyShortestPath:
         return        
         
 
-    def display_point(self, point, button) -> None:   
+    def display_point(self, point:QgsPointXY, button) -> None:   
         m = self.markers    
         try:
             x, y = point.x(), point.y()
             #print("Active button:", self.active_button, f" Clicked at X: {x}, Y: {y}")
             if self.start_button_pressed == True:
                 self.dockDlg.start_coordinates_textbox.setText(str(x) + " " + str(y))
-                self.startPoint = point
+                # Explicit casting to QgsPointXY required to run on Linux
+                self.startPoint = QgsPointXY(point)
                 m[0].setCenter(self.startPoint)
                 m[0].show()
             if self.middle_button_pressed == True:
                 self.dockDlg.middle_coordinates_textbox.setText(str(x) + " " + str(y))
-                self.middlePoint = point
+                self.middlePoint = QgsPointXY(point)
                 m[2].setCenter(self.middlePoint)   
                 m[2].show()                
             if self.end_button_pressed == True:
                 self.dockDlg.end_coordinates_textbox.setText(str(x) + " " + str(y))                
-                self.endPoint = point
+                self.endPoint = QgsPointXY(point)
                 m[1].setCenter(self.endPoint)
                 m[1].show()
                 
@@ -565,7 +567,7 @@ class OnTheFlyShortestPath:
         return 0
 
             
-    def findRoute(self, vectorLayer, fromPoint, toPoint) -> None:
+    def findRoute(self, vectorLayer:QgsVectorLayer, fromPoint:QgsPointXY, toPoint:QgsPointXY) -> None:
         director = QgsVectorLayerDirector(vectorLayer, -1, '', '', '', QgsVectorLayerDirector.DirectionBoth)
         strategy = QgsNetworkDistanceStrategy()
         director.addStrategy(strategy)
@@ -653,7 +655,7 @@ class OnTheFlyShortestPath:
         return            
 
 
-    def createMarkers(self, numMarkers) -> None:
+    def createMarkers(self, numMarkers:list) -> None:
         '''  Ceates markers with the default settings. The iconType of start 
         and end markers will be changed manually '''    
     
@@ -743,7 +745,7 @@ class OnTheFlyShortestPath:
         return
     
     
-    def showResultDlg(self, dlg, d) -> None:
+    def showResultDlg(self, dlg:QDialog, d:dict) -> None:
         ''' Present the results dialog. This is a modal window. All operations are suspended until this window closes '''
 
         dlg.entryCostTxt.setText(self.formatLengthValue(d["entryCost"]))

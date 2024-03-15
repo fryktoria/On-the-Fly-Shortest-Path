@@ -237,7 +237,7 @@
      <rect>
       <x>10</x>
       <y>60</y>
-      <width>111</width>
+      <width>119</width>
       <height>16</height>
      </rect>
     </property>
@@ -302,7 +302,7 @@
     <rect>
      <x>235</x>
      <y>10</y>
-     <width>221</width>
+     <width>229</width>
      <height>256</height>
     </rect>
    </property>
@@ -330,7 +330,7 @@
      <rect>
       <x>184</x>
       <y>22</y>
-      <width>21</width>
+      <width>35</width>
       <height>16</height>
      </rect>
     </property>
@@ -343,7 +343,7 @@
      <rect>
       <x>10</x>
       <y>55</y>
-      <width>106</width>
+      <width>131</width>
       <height>16</height>
      </rect>
     </property>
@@ -359,7 +359,7 @@
      <rect>
       <x>10</x>
       <y>114</y>
-      <width>71</width>
+      <width>105</width>
       <height>16</height>
      </rect>
     </property>
@@ -372,7 +372,7 @@
      <rect>
       <x>10</x>
       <y>142</y>
-      <width>81</width>
+      <width>107</width>
       <height>16</height>
      </rect>
     </property>
@@ -385,7 +385,7 @@
      <rect>
       <x>10</x>
       <y>172</y>
-      <width>86</width>
+      <width>109</width>
       <height>16</height>
      </rect>
     </property>
@@ -436,7 +436,7 @@
      <rect>
       <x>184</x>
       <y>114</y>
-      <width>21</width>
+      <width>35</width>
       <height>16</height>
      </rect>
     </property>
@@ -468,7 +468,7 @@
      <rect>
       <x>184</x>
       <y>144</y>
-      <width>21</width>
+      <width>35</width>
       <height>16</height>
      </rect>
     </property>
@@ -519,7 +519,7 @@
      <rect>
       <x>184</x>
       <y>172</y>
-      <width>31</width>
+      <width>41</width>
       <height>16</height>
      </rect>
     </property>
@@ -532,7 +532,7 @@
      <rect>
       <x>10</x>
       <y>85</y>
-      <width>111</width>
+      <width>131</width>
       <height>16</height>
      </rect>
     </property>
@@ -563,7 +563,7 @@
      </rect>
     </property>
     <property name="text">
-     <string>Fixed</string>
+     <string>Fixed loss</string>
     </property>
    </widget>
    <widget class="QDoubleSpinBox" name="fixedLoss">
@@ -584,7 +584,7 @@
      <rect>
       <x>184</x>
       <y>202</y>
-      <width>21</width>
+      <width>37</width>
       <height>16</height>
      </rect>
     </property>
@@ -599,7 +599,7 @@
      <x>340</x>
      <y>270</y>
      <width>76</width>
-     <height>26</height>
+     <height>24</height>
     </rect>
    </property>
    <property name="text">
@@ -624,9 +624,12 @@
   <tabstop>resultDialogType</tabstop>
   <tabstop>connectorLoss</tabstop>
   <tabstop>numberOfConnectorsAtEntry</tabstop>
+  <tabstop>numberOfConnectorsAtExit</tabstop>
   <tabstop>spliceLoss</tabstop>
   <tabstop>spliceFrequency</tabstop>
   <tabstop>cableLoss</tabstop>
+  <tabstop>fixedLoss</tabstop>
+  <tabstop>defaultsButton</tabstop>
  </tabstops>
  <resources/>
  <connections>
