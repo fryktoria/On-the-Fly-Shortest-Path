@@ -35,7 +35,8 @@ from qgis.core import (QgsProject,
                        QgsWkbTypes,
                        Qgis,
                        QgsDistanceArea,
-                       QgsUnitTypes,  
+                       QgsUnitTypes,
+                       QgsCoordinateReferenceSystem,                       
                        QgsFeatureRequest                       
                        )
 from qgis.gui import (QgsMapToolEmitPoint, 
@@ -117,6 +118,9 @@ class OnTheFlyShortestPath:
         # We currently use 3 (start, stop and middle) but we may
         # add more middle markers in the future
         self.markers = []
+        
+        # A list to store rubberbands
+        self.rubberBands=[]
        
         # A dictionary to pass data to the results dialog
         self.resultsDict = {
@@ -161,6 +165,8 @@ class OnTheFlyShortestPath:
         # self.dockDlg.BUTTON_NAME.clicked.connect(self.METHOD_NAME)
         self.dockDlg.start_coordinates_button.clicked.connect(self.on_dockDlg_start_coordinates_button_clicked)
         self.dockDlg.middle_coordinates_button.clicked.connect(self.on_dockDlg_middle_coordinates_button_clicked)
+        self.dockDlg.middle_coordinates_button.pressed.connect(self.on_dockDlg_middle_coordinates_button_pressed)
+        
         self.dockDlg.end_coordinates_button.clicked.connect(self.on_dockDlg_end_coordinates_button_clicked)
         self.dockDlg.calculate_button.clicked.connect(self.on_dockDlg_calculate_button_clicked)  
         self.dockDlg.reset_button.clicked.connect(self.on_dockDlg_reset_button_clicked)
@@ -179,6 +185,13 @@ class OnTheFlyShortestPath:
         QgsProject.instance().layersAdded.connect(self.populateLayerSelector)
         QgsProject.instance().layersRemoved.connect(self.populateLayerSelector)
         QgsProject.instance().layerTreeRoot().nameChanged.connect(self.populateLayerSelector)
+        
+        # Reset the start and end point coordinates when an 'on the fly' CRS transformation is activated
+        QgsProject.instance().crsChanged.connect(self.on_dockDlg_reset_button_clicked)
+        QgsProject.instance().ellipsoidChanged.connect(self.on_dockDlg_reset_button_clicked)
+        
+        # Identify the condition where another toolset is activated, so that we must unpress all buttons of the dock dialog
+        self.canvas.mapToolSet.connect(self.on_toolset_change)
         
         # We create marker 0 and 1 for start and stop points,
         # as well as 2 for the middle point. Total of 3.
@@ -347,6 +360,12 @@ class OnTheFlyShortestPath:
         return      
 
 
+    def on_toolset_change(self):
+        #print ("Toolset changed")
+        self.uncheckAllButtons()
+        return
+        
+
     def on_dockDlg_layer_selected(self):
         if self.dockDlg.layer_combobox.currentIndex != -1:
             self.previousLayerId = self.layerList[self.dockDlg.layer_combobox.currentIndex()][1]  
@@ -355,31 +374,41 @@ class OnTheFlyShortestPath:
     
       
     def on_dockDlg_start_coordinates_button_clicked(self) -> None:
-        #Show the last button pressed
-        self.uncheckAllButtons()
+        # Activate the map tool. It must be run before the button is shown as pressed
+        # so that the change tool event fires after.
+        self.canvas.setMapTool(self.pointTool)        
+        self.uncheckAllButtons()       
         self.start_button_pressed = True
         self.dockDlg.start_coordinates_button.setChecked(True)
         self.active_button = "Start coords"
-        # Activate the map tool
-        self.canvas.setMapTool(self.pointTool)
         return
         
-        
+
+    def on_dockDlg_middle_coordinates_button_pressed(self) -> None:
+        ''' Especially for middle button, if pressed while it is already checked,
+        it resets the value. This is useful when we want to reset the middle point
+        while leaving the start and stop points as they are'''
+        if self.dockDlg.middle_coordinates_button.isChecked():       
+            self.dockDlg.middle_coordinates_textbox.setText("")
+            self.markers[2].hide()
+        return
+    
+           
     def on_dockDlg_middle_coordinates_button_clicked(self) -> None:
+        self.canvas.setMapTool(self.pointTool)                
         self.uncheckAllButtons()
         self.middle_button_pressed = True
         self.dockDlg.middle_coordinates_button.setChecked(True)   
         self.active_button = "Middle coords"
-        self.canvas.setMapTool(self.pointTool)
         return
 
                 
-    def on_dockDlg_end_coordinates_button_clicked(self) -> None:                   
+    def on_dockDlg_end_coordinates_button_clicked(self) -> None: 
+        self.canvas.setMapTool(self.pointTool)
         self.uncheckAllButtons()
         self.end_button_pressed = True
         self.dockDlg.end_coordinates_button.setChecked(True)
-        self.active_button = "End coords"
-        self.canvas.setMapTool(self.pointTool)
+        self.active_button = "End coords"        
         return
 
         
@@ -450,6 +479,7 @@ class OnTheFlyShortestPath:
         self.updateConfiguration(self.configurationDlg)
         # and update the appearance of markers
         self.updateMarkerVisuals()
+        self.updateRubberBandVisuals()
         return
 
 
@@ -478,6 +508,8 @@ class OnTheFlyShortestPath:
         self.start_button_pressed = False
         self.middle_button_pressed = False  
         self.end_button_pressed = False
+        
+        self.active_button = ""
         return
  
 
@@ -523,6 +555,7 @@ class OnTheFlyShortestPath:
             if self.rb1 is None:           
                 return -1
             self.rb1.addPoint(self.endPoint)
+            self.rubberBands.insert(0, self.rb1)
             
             self.resultsDict["entryCost"] = costs1["entryCost"]
             self.resultsDict["costOnGraph"] = costs1["costOnGraph"]
@@ -536,12 +569,15 @@ class OnTheFlyShortestPath:
             #print ("Going through middle point")
             (self.rb1, costs1, middlePointOnGraph) = self.findRoute(vectorLayer, self.startPoint, self.middlePoint)
             if self.rb1 is None:
-                return -1          
+                return -1  
+            self.rubberBands.insert(0, self.rb1)
+                
             (self.rb2, costs2, finalPointOnGraph) = self.findRoute(vectorLayer, middlePointOnGraph, self.endPoint) 
-            if self.rb2 is None:
-                self.canvas.scene().removeItem(self.rb1)              
+            if self.rb2 is None:           
+                self.deleteRubberBands()
                 return -1
             self.rb2.addPoint(self.endPoint)
+            self.rubberBands.insert(1, self.rb2)            
  
             self.resultsDict["entryCost"] = costs1["entryCost"]
             self.resultsDict["costOnGraph"] = costs1["costOnGraph"] + costs2["costOnGraph"]
@@ -566,7 +602,23 @@ class OnTheFlyShortestPath:
 
         return 0
 
-            
+
+    def distanceP2P(self, crs:QgsCoordinateReferenceSystem, p1:QgsPointXY, p2:QgsPointXY) -> float:
+        ''' Returns the distance between two points, in the units of the CRS '''
+        d = QgsDistanceArea()
+        d.setSourceCrs(crs, QgsProject().instance().transformContext())
+        d.setEllipsoid(crs.ellipsoidAcronym())
+        return d.measureLine([p1, p2])
+
+
+    def crsDetails(self, crs:QgsCoordinateReferenceSystem) -> list:
+        ''' Returns a list of valuable data regarding the measurements of the CRS '''
+        d = QgsDistanceArea()
+        d.setSourceCrs(crs, QgsProject().instance().transformContext())
+        d.setEllipsoid(crs.ellipsoidAcronym())    
+        return [d.ellipsoid(), d.sourceCrs().authid(), d.sourceCrs().description(), QgsUnitTypes.toString(d.lengthUnits())]    
+    
+               
     def findRoute(self, vectorLayer:QgsVectorLayer, fromPoint:QgsPointXY, toPoint:QgsPointXY) -> None:
         director = QgsVectorLayerDirector(vectorLayer, -1, '', '', '', QgsVectorLayerDirector.DirectionBoth)
         strategy = QgsNetworkDistanceStrategy()
@@ -574,20 +626,15 @@ class OnTheFlyShortestPath:
 
         # I can use either the project crs or the line layer crs for the graph
         # and for the measurements between the points and the tied points, below
-        #sourceCrs = QgsProject().instance().crs()
-        sourceCrs = vectorLayer.sourceCrs()
+        # I prefer the project crs because it adapts to 'on the fly' project CRS transformations
+        sourceCrs = QgsProject().instance().crs()
+        #sourceCrs = vectorLayer.sourceCrs()
         
         builder = QgsGraphBuilder(sourceCrs, True, self.currentConfig["topologyTolerance"], sourceCrs.ellipsoidAcronym())
         # These are the coordinates of the points on the line that are closest to the start and stop points
         tiedPoints = director.makeGraph(builder, [fromPoint, toPoint])
         tStart, tStop = tiedPoints
         #print("Tied points on the line:", tiedPoints)
-
-        d = QgsDistanceArea()
-        d.setSourceCrs(sourceCrs, QgsProject().instance().transformContext())
-        d.setEllipsoid(sourceCrs.ellipsoidAcronym())
-        entry_cost = d.measureLine(fromPoint, tStart)
-        exit_cost = d.measureLine(tStop, toPoint)
 
         graph = builder.graph()
         idxStart = graph.findVertex(tStart)
@@ -600,14 +647,21 @@ class OnTheFlyShortestPath:
             self.iface.messageBar().pushMessage("Warning", "No route found", level=Qgis.Warning, duration=3)
             return(None, None, None)
 
+        # Measure the distance from the start and stop point to the entry and exit point of the graph
+        entry_cost = self.distanceP2P(sourceCrs, fromPoint, tStart)      
+        exit_cost = self.distanceP2P(sourceCrs, tStop, toPoint)
+        
+        # Get the details of the measurements, i.e. the listance units of the CRS
+        crsData = self.crsDetails(sourceCrs)
+
         # set all results to a dictionary to be used by calling function
         analysis_results = {
             "entryCost": entry_cost,
             "costOnGraph": costs[idxEnd],
             "exitCost": exit_cost,
-            "ellipsoid": d.ellipsoid(),
-            "crs" : d.sourceCrs().description(), 
-            "lengthUnits" : QgsUnitTypes.toString(d.lengthUnits())      
+            "ellipsoid": crsData[0],
+            "crs" : crsData[1] + '/' + crsData[2], 
+            "lengthUnits" : crsData[3]      
         }            
 
         # Add last point
@@ -643,17 +697,25 @@ class OnTheFlyShortestPath:
 
 
     def deleteRubberBands(self) -> None:
-        '''Delete existing rubberbands if they exist'''
-        try:
-            self.canvas.scene().removeItem(self.rb1)
-        except:
-            pass
-        try:    
-            self.canvas.scene().removeItem(self.rb2) 
-        except:
-            pass 
+        for rb in self.rubberBands:
+            self.canvas.scene().removeItem(rb)       
+        self.rubberBands.clear()               
         return            
 
+
+    def updateRubberBandVisuals(self) -> None:
+        ''' Update the attributes of the rubberbands'''
+        rubberBandColor = QColor(
+                                self.currentConfig["rubberBandColorRed"], 
+                                self.currentConfig["rubberBandColorGreen"], 
+                                self.currentConfig["rubberBandColorBlue"],
+                                self.currentConfig["rubberBandOpacity"]
+                                )
+        for rb in self.rubberBands:
+            rb.setColor(rubberBandColor)
+            rb.setWidth(self.currentConfig["rubberBandSize"]) 
+        return            
+       
 
     def createMarkers(self, numMarkers:list) -> None:
         '''  Ceates markers with the default settings. The iconType of start 
@@ -681,7 +743,7 @@ class OnTheFlyShortestPath:
 
         
     def updateMarkerVisuals(self) -> None:
-        ''' Update the attributes of existing objects, i.e. the markers'''
+        ''' Update the attributes of the markers'''
         markerColor = QColor(
                               int(self.currentConfig["markerColorRed"]), 
                               int(self.currentConfig["markerColorGreen"]), 
@@ -776,10 +838,10 @@ class OnTheFlyShortestPath:
                
         # Handle the peculiar case where the measurements of the start and end points return a distance unit other than meters  
         if d["lengthUnits"] != 'meters':
-            dlg.errorTxt.setText("ERROR:Units")
-            self.iface.messageBar().pushMessage("Error", 
+            dlg.errorTxt.setText("WARNING:Units")
+            self.iface.messageBar().pushMessage("Warning", 
                                                 "Distance units are in " + d["lengthUnits"], 
-                                                level=Qgis.Critical, 
+                                                level=Qgis.Warning, 
                                                 duration=5)
             dlg.entryCostUnits.setText("")
             dlg.onGraphCostUnits.setText("")

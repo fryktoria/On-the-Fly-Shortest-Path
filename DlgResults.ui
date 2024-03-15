@@ -361,7 +361,7 @@
     <rect>
      <x>60</x>
      <y>140</y>
-     <width>55</width>
+     <width>231</width>
      <height>16</height>
     </rect>
    </property>
@@ -375,8 +375,8 @@
   <widget class="QLabel" name="errorTxt">
    <property name="geometry">
     <rect>
-     <x>127</x>
-     <y>135</y>
+     <x>128</x>
+     <y>126</y>
      <width>161</width>
      <height>16</height>
     </rect>

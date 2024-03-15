@@ -2,7 +2,7 @@
 
 [general]
 name=On-the-Fly-Shortest-Path
-version=1.0.1
+version=1.0.2
 author=Ilias Iliopoulos
 email=info@fryktoria.com
 
@@ -26,6 +26,7 @@ repository=https://github.com/fryktoria/On-theFly-Shortest-Path
 tracker=https://github.com/fryktoria/On-theFly-Shortest-Path
 server=false
 hasProcessingProvider=false
+icon=logo.png
 changelog=1.0.0:
           - First release
             Known issues:
