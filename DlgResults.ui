@@ -311,9 +311,9 @@
   <widget class="QLabel" name="label_5">
    <property name="geometry">
     <rect>
-     <x>10</x>
-     <y>125</y>
-     <width>55</width>
+     <x>6</x>
+     <y>138</y>
+     <width>53</width>
      <height>16</height>
     </rect>
    </property>
@@ -327,9 +327,9 @@
   <widget class="QLabel" name="ellipsoidTxt">
    <property name="geometry">
     <rect>
-     <x>60</x>
-     <y>125</y>
-     <width>55</width>
+     <x>58</x>
+     <y>138</y>
+     <width>235</width>
      <height>16</height>
     </rect>
    </property>
@@ -343,8 +343,8 @@
   <widget class="QLabel" name="label_6">
    <property name="geometry">
     <rect>
-     <x>10</x>
-     <y>140</y>
+     <x>6</x>
+     <y>122</y>
      <width>55</width>
      <height>16</height>
     </rect>
@@ -359,9 +359,9 @@
   <widget class="QLabel" name="crsTxt">
    <property name="geometry">
     <rect>
-     <x>60</x>
-     <y>140</y>
-     <width>231</width>
+     <x>58</x>
+     <y>122</y>
+     <width>235</width>
      <height>16</height>
     </rect>
    </property>
@@ -375,9 +375,9 @@
   <widget class="QLabel" name="errorTxt">
    <property name="geometry">
     <rect>
-     <x>128</x>
-     <y>126</y>
-     <width>161</width>
+     <x>138</x>
+     <y>130</y>
+     <width>131</width>
      <height>16</height>
     </rect>
    </property>

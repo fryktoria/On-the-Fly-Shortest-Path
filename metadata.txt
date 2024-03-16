@@ -2,7 +2,7 @@
 
 [general]
 name=On-the-Fly-Shortest-Path
-version=1.0.2
+version=1.0.3
 author=Ilias Iliopoulos
 email=info@fryktoria.com
 
@@ -33,6 +33,15 @@ changelog=1.0.0:
               * The plugin supports only the English language. 
               * Topology tolerance does not work as expected, if its value is set to higher than 0. This is a problem of the underlying network analysis functions and not of the plugin. Please note that using topology tolerance 0 requires the line network to have topological continuity.
            1.0.1
-              * Added explicit casting to QgsPointXY objectt, since point objects were not cast implicitly in Linux
+              * Added explicit casting to QgsPointXY object, because it produced error on Linux
+           1.0.2
+              * Enhanced functionality for Middle button
+              * Support for point tool loose and regaining focus
+              * Created rubberband list and modified rubberband functionality to allow code to operate massively on rubberbands, regardless of their number.
+              * Beautified the measurement of off-graph lines
+              * Added update of rubberband attributes on canvas after a configuration change
+              * Changed calculation CRS to be made on project CRS rather than layer CRS, to allow 'on the fly' CRS transformations, as well as measurements with different CRS and ellipsoid.
+            1.0.3
+              * Changed the rubberband engine to cope with dynamicaly assigned points. Removed static rb1, rb2
              
 

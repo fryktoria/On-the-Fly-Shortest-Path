@@ -114,9 +114,9 @@ The `Markers` are the visual elements showing the start, middle and stop points 
 
 In cases where the user would like to force the routing of the algorithm to pass from a selected point, the `Middle` point functionality can be used. In such case, the algorithm will calculate the shortest path from the Start point to the Middle point and then, from the Middle point to the End point. The two calculations are totally independent, therefore the second path may partially coincide with the first path. The user must select the location of the points in a way that the two calculations will provide a usable resulting path.
 
-At any time the user may press any of the `Start`, `Middle` and `End` buttons and set each of them on map. The selection remains active and a new location for the point may be set.
+At any time the user may press any of the `Start`, `Middle` and `End` buttons and set each of them on map. The selection remains active and a new location for the point may be set. The `Middle` button is also equipped with the additional functionality of re-setting itself if pressed after its point has already been set. This feature helps when we wish to receive a measurement between the start and end point without a previously set middle point, but without having to set again start and end points 
 
-Press the `Reset` button to hide all visual elements and clear the existing settings for the points.
+Press the `Reset` button to hide all visual elements and clear the existing values for all points.
 
    
 ## Length measurements
@@ -127,7 +127,7 @@ The `Exit cost` is associated with the distance from the end point to the neares
 
 The `Cost on graph` is associated with the path over the selected line layer, from the entry point to the exit point. The core QGIS network analysis library Dijkstra algorithm is used to calculate the shortest path.
 
-The measurements of the lines from the start point/exit point to the graph and the distance of the path on graph are being made with different algorithms. There is a possibility that the results produce different length units. This case is identified and an error message is displayed in the Results window.
+The measurements of the lines from the start point/exit point to the graph and the distance of the path on graph are being made as per the active CRS of the QGIS project. The QGIS 'on the fly' transformation feature can be used to take measurements with different CRS. The Results window presents the CRS and ellipsoid which have been used for the measurement.
 
 ## Fiber Loss Budget measurements
 

@@ -121,6 +121,20 @@ class OnTheFlyShortestPath:
         
         # A list to store rubberbands
         self.rubberBands=[]
+        
+        # A dictionary to store the analysis points.
+        '''
+        I use a dictionary and use the keys as ordinal values to recognize
+        the start, stop and mid points. Contrary to the markers list,
+        the structure is as follows {0:startpoint, 1:middlepoint1, 3:middlepoint3, ... , n:endpoint}
+        The point with the highest key number is the end point. There may be gaps between middle points, 
+        e.g. when a middle point does not exist or it is deleted. Currently, I will use the forms
+        {0:startpoint,  2:endpoint} and
+        {0:startpoint, 1:middlepoint1, 2:endpoint}        
+        I expect that this structure is fixed to be applied in future developments with several middle points.
+        Perhaps I should modify the marker structure to operate in a similar manner
+        '''
+        self.pointsDict={}
        
         # A dictionary to pass data to the results dialog
         self.resultsDict = {
@@ -316,16 +330,21 @@ class OnTheFlyShortestPath:
                 self.startPoint = QgsPointXY(point)
                 m[0].setCenter(self.startPoint)
                 m[0].show()
+                self.pointsDict[0] = self.startPoint
+
             if self.middle_button_pressed == True:
                 self.dockDlg.middle_coordinates_textbox.setText(str(x) + " " + str(y))
                 self.middlePoint = QgsPointXY(point)
                 m[2].setCenter(self.middlePoint)   
-                m[2].show()                
+                m[2].show()
+                self.pointsDict[1] = self.middlePoint
+
             if self.end_button_pressed == True:
                 self.dockDlg.end_coordinates_textbox.setText(str(x) + " " + str(y))                
                 self.endPoint = QgsPointXY(point)
                 m[1].setCenter(self.endPoint)
                 m[1].show()
+                self.pointsDict[2] = self.endPoint
                 
         except AttributeError:
             #print("No attribute")
@@ -391,6 +410,9 @@ class OnTheFlyShortestPath:
         if self.dockDlg.middle_coordinates_button.isChecked():       
             self.dockDlg.middle_coordinates_textbox.setText("")
             self.markers[2].hide()
+            # Remove middle point
+            if 1 in self.pointsDict:
+                self.pointsDict.pop(1)
         return
     
            
@@ -428,6 +450,8 @@ class OnTheFlyShortestPath:
         
         self.uncheckAllButtons()
         self.hideMarkers()
+        
+        self.pointsDict.clear()
        
         self.populateLayerSelector()
         return
@@ -457,7 +481,7 @@ class OnTheFlyShortestPath:
         self.dockDlg.fiberLoss.setText("Processing...")
         # Necessary to update GUI before processing takes over
         self.dockDlg.repaint()
-        
+               
         #Start the algorithm. On any error, results will not be completed
         # On success, the dock widgets will be filled by the process
         if self.process() < 0:
@@ -541,51 +565,68 @@ class OnTheFlyShortestPath:
         
         
     def process(self) -> int:
+
+        # I can use either the project crs or the line layer crs for the graph
+        # and for the measurements between the points and the tied points, below
+        # I prefer the project crs because it adapts to 'on the fly' project CRS transformations
+        measureCrs = QgsProject().instance().crs()
+        #measureCrs = vectorLayer.sourceCrs()
     
         vectorLayer = self.getPathLayer() 
         
-        #print ("CRS of path layer: ", vectorLayer.crs().authid())       
+        #print ("CRS of path layer: ", vectorLayer.crs().authid())          
         if vectorLayer.crs().authid() == "":
             self.iface.messageBar().pushMessage("Error", "Path layer does not have a valid CRS", level=Qgis.Critical, duration=5)
             return -1
 
-        # When middle coordinates is not set, I will use start and end points
-        if  self.dockDlg.middle_coordinates_textbox.text() == "":        
-            (self.rb1, costs1, middlePointOnGraph) = self.findRoute(vectorLayer, self.startPoint, self.endPoint)
-            if self.rb1 is None:           
-                return -1
-            self.rb1.addPoint(self.endPoint)
-            self.rubberBands.insert(0, self.rb1)
-            
-            self.resultsDict["entryCost"] = costs1["entryCost"]
-            self.resultsDict["costOnGraph"] = costs1["costOnGraph"]
-            self.resultsDict["exitCost"] = costs1["exitCost"]
-            self.resultsDict["totalCost"] =  self.resultsDict["entryCost"] +  self.resultsDict["costOnGraph"] +  self.resultsDict["exitCost"]
-            self.resultsDict["ellipsoid"] = costs1["ellipsoid"]
-            self.resultsDict["crs"] = costs1["crs"]
-            self.resultsDict["lengthUnits"] = costs1["lengthUnits"]
+        entryCost = 0
+        costOnGraph = 0
+        exitCost = 0
 
-        else:
-            #print ("Going through middle point")
-            (self.rb1, costs1, middlePointOnGraph) = self.findRoute(vectorLayer, self.startPoint, self.middlePoint)
-            if self.rb1 is None:
-                return -1  
-            self.rubberBands.insert(0, self.rb1)
-                
-            (self.rb2, costs2, finalPointOnGraph) = self.findRoute(vectorLayer, middlePointOnGraph, self.endPoint) 
-            if self.rb2 is None:           
+        # Convert dict to a list, having only the values. I make sure the order is retained,
+        # so that I reference freely the i and the i+1 item
+        sortedPointsDict = dict(sorted(self.pointsDict.items()))
+        pointsList = list(sortedPointsDict.values())
+    
+        numPointPairs = len(pointsList) - 1
+        for i in range(0,numPointPairs): 
+
+            if i == 0:
+                ''' First rubberband, from start point to next point which can either be a middle point or the end point
+                 If the second point is a middle point, calculate the point on graph nearest to the middle point (middlePointOnGraph)
+                 to be used in next iteration. '''
+                (rb, costs, middlePointOnGraph) = self.findRoute(measureCrs, vectorLayer, pointsList[i], pointsList[i+1])
+            else:
+                # For the second rubberband, use the point on graph middlePointOnGraph calculated in the previous iteration
+                (rb, costs, middlePointOnGraph) = self.findRoute(measureCrs, vectorLayer, middlePointOnGraph, pointsList[i+1])
+            if rb is None:
                 self.deleteRubberBands()
-                return -1
-            self.rb2.addPoint(self.endPoint)
-            self.rubberBands.insert(1, self.rb2)            
- 
-            self.resultsDict["entryCost"] = costs1["entryCost"]
-            self.resultsDict["costOnGraph"] = costs1["costOnGraph"] + costs2["costOnGraph"]
-            self.resultsDict["exitCost"] = costs2["exitCost"]
-            self.resultsDict["totalCost"] =  self.resultsDict["entryCost"] +  self.resultsDict["costOnGraph"] +  self.resultsDict["exitCost"]
-            self.resultsDict["ellipsoid"] = costs1["ellipsoid"]
-            self.resultsDict["crs"] = costs1["crs"]
-            self.resultsDict["lengthUnits"] = costs1["lengthUnits"]
+                return -1 
+            self.rubberBands.insert(i, rb)    
+            # First pair
+            if i == 0:    
+                entryCost = costs["entryCost"]
+                
+            # Last pair. Note: can also be the first pair if middle point is not present   
+            if i == (numPointPairs - 1):    
+                costOnGraph += costs["costOnGraph"]
+                exitCost = costs["exitCost"]
+                # Final rubberband from the graph to the end point
+                self.rubberBands[i].addPoint(pointsList[numPointPairs])               
+            # Between two middle points    
+            else:
+                costOnGraph += costs["costOnGraph"]
+    
+        self.resultsDict["entryCost"] = entryCost
+        self.resultsDict["costOnGraph"] = costOnGraph
+        self.resultsDict["exitCost"] = exitCost
+        self.resultsDict["totalCost"] = entryCost + costOnGraph + exitCost                 
+     
+        # Get the details of the measurements, i.e. the listance units of the CRS
+        crsData = self.crsDetails(measureCrs)          
+        self.resultsDict["ellipsoid"] = crsData[0] 
+        self.resultsDict["crs"] = crsData[1] + "/" + crsData[2] 
+        self.resultsDict["lengthUnits"] = crsData[3]
 
         # Show length result in dockWidget
         self.dockDlg.resultLength.setText(self.formatLengthValue(self.resultsDict["totalCost"])) 
@@ -611,25 +652,19 @@ class OnTheFlyShortestPath:
         return d.measureLine([p1, p2])
 
 
-    def crsDetails(self, crs:QgsCoordinateReferenceSystem) -> list:
+    def crsDetails(self, crs:QgsCoordinateReferenceSystem) -> list: # list of strings  [ellipsoid, EPSG, CRS_description, Units] 
         ''' Returns a list of valuable data regarding the measurements of the CRS '''
         d = QgsDistanceArea()
         d.setSourceCrs(crs, QgsProject().instance().transformContext())
-        d.setEllipsoid(crs.ellipsoidAcronym())    
+        d.setEllipsoid(crs.ellipsoidAcronym())     
         return [d.ellipsoid(), d.sourceCrs().authid(), d.sourceCrs().description(), QgsUnitTypes.toString(d.lengthUnits())]    
     
                
-    def findRoute(self, vectorLayer:QgsVectorLayer, fromPoint:QgsPointXY, toPoint:QgsPointXY) -> None:
+    def findRoute(self, sourceCrs:QgsCoordinateReferenceSystem, vectorLayer:QgsVectorLayer, fromPoint:QgsPointXY, toPoint:QgsPointXY) -> None:
         director = QgsVectorLayerDirector(vectorLayer, -1, '', '', '', QgsVectorLayerDirector.DirectionBoth)
         strategy = QgsNetworkDistanceStrategy()
         director.addStrategy(strategy)
-
-        # I can use either the project crs or the line layer crs for the graph
-        # and for the measurements between the points and the tied points, below
-        # I prefer the project crs because it adapts to 'on the fly' project CRS transformations
-        sourceCrs = QgsProject().instance().crs()
-        #sourceCrs = vectorLayer.sourceCrs()
-        
+       
         builder = QgsGraphBuilder(sourceCrs, True, self.currentConfig["topologyTolerance"], sourceCrs.ellipsoidAcronym())
         # These are the coordinates of the points on the line that are closest to the start and stop points
         tiedPoints = director.makeGraph(builder, [fromPoint, toPoint])
@@ -650,18 +685,12 @@ class OnTheFlyShortestPath:
         # Measure the distance from the start and stop point to the entry and exit point of the graph
         entry_cost = self.distanceP2P(sourceCrs, fromPoint, tStart)      
         exit_cost = self.distanceP2P(sourceCrs, tStop, toPoint)
-        
-        # Get the details of the measurements, i.e. the listance units of the CRS
-        crsData = self.crsDetails(sourceCrs)
 
         # set all results to a dictionary to be used by calling function
         analysis_results = {
             "entryCost": entry_cost,
             "costOnGraph": costs[idxEnd],
             "exitCost": exit_cost,
-            "ellipsoid": crsData[0],
-            "crs" : crsData[1] + '/' + crsData[2], 
-            "lengthUnits" : crsData[3]      
         }            
 
         # Add last point
