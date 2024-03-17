@@ -26,7 +26,7 @@
 import os
 from qgis.PyQt import uic
 from qgis.PyQt.QtGui import QColor
-from qgis.PyQt.QtWidgets import QDialog, QMessageBox
+from qgis.PyQt.QtWidgets import QDialog, QMessageBox, QPushButton
 from qgis.PyQt.QtCore import Qt
 from qgis.core import (QgsProject,
                        QgsVectorLayer,
@@ -55,11 +55,11 @@ from qgis.analysis import *
 class OnTheFlyShortestPath:
 
     factoryDefaultSettings = {
-        "rubberBandColorRed" : 0,
-        "rubberBandColorGreen" : 0,
-        "rubberBandColorBlue" : 50,
-        "rubberBandSize" : 2,
-        "rubberBandOpacity" : 255,
+        "rubberBandColorRed" : 55,
+        "rubberBandColorGreen" : 165,
+        "rubberBandColorBlue" : 200,
+        "rubberBandOpacity" : 128,        
+        "rubberBandSize" : 8,
         "markerColorRed" : 255,
         "markerColorGreen" : 30,
         "markerColorBlue" : 50,
@@ -67,7 +67,9 @@ class OnTheFlyShortestPath:
         "markerSize" : 10,
         "decimalDigits" : 2,
         "topologyTolerance" : 0.0,
+        "includeStartStop" : 1,
         "resultDialogTypeIndex" : 0, 
+        "distanceUnitsIndex" : 0, # ["meters", "Kilometers", "yards", "feet", "nutical miles", "imperial miles"]
         "connectorLoss" : 0.4, # db per connector
         "numberOfConnectorsAtEntry" : 3,
         "numberOfConnectorsAtExit" : 2,
@@ -138,7 +140,6 @@ class OnTheFlyShortestPath:
        
         # A dictionary to pass data to the results dialog
         self.resultsDict = {
-            "costUnits" : "m",
             "entryCost" : 0,
             "costOnGraph" : 0,
             "exitCost" : 0,
@@ -161,6 +162,12 @@ class OnTheFlyShortestPath:
         # Fiber loss precision is fixed and not associated to the length decimal digits.
         # I do not think that needs a configuration parameter
         self.fiber_loss_precision = 2
+        
+        # A list to hold the option items of the configuration dialog for distance units
+        self.distanceUnits = ["meters", "Kilometers", "yards", "feet", "nautical miles", "imperial miles"]
+        # A list to hold the result units. Has the same order as the above list
+        self.resultUnitsList = ["m", "Km", "y", "ft", "NM", "mi"]
+        self.conversionFactor = [1, 0.001, 1.09361, 3.28084, 0.00053996, 0.000621371] 
 
         # Read the stored settings from the QgsSettings mechanism 
         # In Windows could be C:\Users\<username>\AppData\Roaming\QGIS\QGIS3\profiles\default\QGIS\QGIS3.ini      
@@ -255,30 +262,42 @@ class OnTheFlyShortestPath:
 
         
     def populateConfigurationDlg(self, dlg:QDialog, dict:dict) -> None:
-        dlg.rubberBandColor.setColor(QColor(
-                                            int(dict["rubberBandColorRed"]), 
-                                            int(dict["rubberBandColorGreen"]), 
-                                            int(dict["rubberBandColorBlue"]),
-                                            int(dict["rubberBandOpacity"])
-                                            )
-                                    )
+        currentRubberBandColor = QColor(
+                                        int(dict["rubberBandColorRed"]), 
+                                        int(dict["rubberBandColorGreen"]), 
+                                        int(dict["rubberBandColorBlue"]),
+                                        int(dict["rubberBandOpacity"])
+                                        )    
+        dlg.rubberBandColor.setColor(currentRubberBandColor)
         dlg.rubberBandSize.setValue(dict["rubberBandSize"])
-        dlg.markerColor.setColor(QColor(
-                                        int(dict["markerColorRed"]), 
-                                        int(dict["markerColorGreen"]), 
-                                        int(dict["markerColorBlue"]),
-                                        int(dict["markerOpacity"])
-                                        )
-                                )
+        
+        currentMarkerColor = QColor(
+                                    int(dict["markerColorRed"]), 
+                                    int(dict["markerColorGreen"]), 
+                                    int(dict["markerColorBlue"]),
+                                    int(dict["markerOpacity"])
+                                    )
+        dlg.markerColor.setColor(currentMarkerColor)
         dlg.markerSize.setValue(dict["markerSize"])
         dlg.decimalDigits.setValue(dict["decimalDigits"])
         dlg.topologyTolerance.setValue(dict["topologyTolerance"])
+        if dict["includeStartStop"] == 1:
+            dlg.includeStartStop.setChecked(True)
+        else:
+            dlg.includeStartStop.setChecked(False)       
+
+        dlg.distanceUnits.clear()
+        for index, optionTxt in enumerate(self.distanceUnits):       
+            dlg.distanceUnits.addItem(optionTxt)
+            if dict["distanceUnitsIndex"] == index:
+                dlg.distanceUnits.setCurrentIndex(index)
 
         dlg.resultDialogType.clear()
         for index, optionTxt in enumerate(self.resultTypes):       
             dlg.resultDialogType.addItem(optionTxt)
             if dict["resultDialogTypeIndex"] == index:
-                dlg.resultDialogType.setCurrentIndex(index)       
+                dlg.resultDialogType.setCurrentIndex(index)   
+                
         dlg.connectorLoss.setValue(dict["connectorLoss"])
         dlg.numberOfConnectorsAtEntry.setValue(dict["numberOfConnectorsAtEntry"])
         dlg.numberOfConnectorsAtExit.setValue(dict["numberOfConnectorsAtExit"])
@@ -290,6 +309,7 @@ class OnTheFlyShortestPath:
 
     
     def updateConfiguration(self, dlg:QDialog) -> None:
+    
         conf = self.currentConfig
         
         conf["rubberBandColorRed"] = dlg.rubberBandColor.color().red()
@@ -304,6 +324,15 @@ class OnTheFlyShortestPath:
         conf["markerSize"] = dlg.markerSize.value()
         conf["decimalDigits"] = dlg.decimalDigits.value()
         conf["topologyTolerance"] = dlg.topologyTolerance.value()
+        if dlg.includeStartStop.isChecked():
+            conf["includeStartStop"] = 1
+        else: 
+            conf["includeStartStop"] = 0
+
+        for index, optionTxt in enumerate(self.distanceUnits):          
+            if dlg.distanceUnits.currentIndex() == index:       
+                conf["distanceUnitsIndex"] = index
+        
         for index, optionTxt in enumerate(self.resultTypes):          
             if dlg.resultDialogType.currentIndex() == index:       
                 conf["resultDialogTypeIndex"] = index
@@ -391,14 +420,19 @@ class OnTheFlyShortestPath:
         #print ("index:", self.dockDlg.layer_combobox.currentIndex(), "text:",self.dockDlg.layer_combobox.currentText())
         return        
     
-      
-    def on_dockDlg_start_coordinates_button_clicked(self) -> None:
+    
+    def coordButtonClicked(self, button:QPushButton) -> None:
+        ''' Generic action routine when any of the start, stop, middle buttons is clicked '''
         # Activate the map tool. It must be run before the button is shown as pressed
         # so that the change tool event fires after.
         self.canvas.setMapTool(self.pointTool)        
-        self.uncheckAllButtons()       
+        self.uncheckAllButtons()           
+        button.setChecked(True)
+        return
+      
+    def on_dockDlg_start_coordinates_button_clicked(self) -> None:
+        self.coordButtonClicked(self.dockDlg.start_coordinates_button)
         self.start_button_pressed = True
-        self.dockDlg.start_coordinates_button.setChecked(True)
         self.active_button = "Start coords"
         return
         
@@ -417,20 +451,16 @@ class OnTheFlyShortestPath:
     
            
     def on_dockDlg_middle_coordinates_button_clicked(self) -> None:
-        self.canvas.setMapTool(self.pointTool)                
-        self.uncheckAllButtons()
+        self.coordButtonClicked(self.dockDlg.middle_coordinates_button)
         self.middle_button_pressed = True
-        self.dockDlg.middle_coordinates_button.setChecked(True)   
-        self.active_button = "Middle coords"
+        self.active_button = "Middle coords"       
         return
 
                 
     def on_dockDlg_end_coordinates_button_clicked(self) -> None: 
-        self.canvas.setMapTool(self.pointTool)
-        self.uncheckAllButtons()
+        self.coordButtonClicked(self.dockDlg.end_coordinates_button)
         self.end_button_pressed = True
-        self.dockDlg.end_coordinates_button.setChecked(True)
-        self.active_button = "End coords"        
+        self.active_button = "End coords"         
         return
 
         
@@ -478,7 +508,7 @@ class OnTheFlyShortestPath:
                           
         # Show busy                 
         self.dockDlg.resultLength.setText("Processing...")
-        self.dockDlg.fiberLoss.setText("Processing...")
+        self.dockDlg.fiberLoss.setText("...")
         # Necessary to update GUI before processing takes over
         self.dockDlg.repaint()
                
@@ -486,8 +516,7 @@ class OnTheFlyShortestPath:
         # On success, the dock widgets will be filled by the process
         if self.process() < 0:
             self.dockDlg.resultLength.setText("......")
-            self.dockDlg.fiberLoss.setText("......")        
-        
+            self.dockDlg.fiberLoss.setText("......")                
         return
 
 
@@ -546,7 +575,7 @@ class OnTheFlyShortestPath:
         '''       
         cmbBoxIndex = self.dockDlg.layer_combobox.currentIndex()
         if cmbBoxIndex < 0:
-            return
+            return None
         layerId = self.layerList[cmbBoxIndex][1]
         my_layer = QgsProject.instance().mapLayer(layerId)        
         #print ("Using path layer ", self.layerList[cmbBoxIndex][1])
@@ -573,6 +602,8 @@ class OnTheFlyShortestPath:
         #measureCrs = vectorLayer.sourceCrs()
     
         vectorLayer = self.getPathLayer() 
+        if vectorLayer is None:
+             return -1
         
         #print ("CRS of path layer: ", vectorLayer.crs().authid())          
         if vectorLayer.crs().authid() == "":
@@ -595,10 +626,10 @@ class OnTheFlyShortestPath:
                 ''' First rubberband, from start point to next point which can either be a middle point or the end point
                  If the second point is a middle point, calculate the point on graph nearest to the middle point (middlePointOnGraph)
                  to be used in next iteration. '''
-                (rb, costs, middlePointOnGraph) = self.findRoute(measureCrs, vectorLayer, pointsList[i], pointsList[i+1])
+                (rb, costs, middlePointOnGraph) = self.findRoute(measureCrs, vectorLayer, pointsList[i], pointsList[i+1], self.currentConfig["includeStartStop"])
             else:
                 # For the second rubberband, use the point on graph middlePointOnGraph calculated in the previous iteration
-                (rb, costs, middlePointOnGraph) = self.findRoute(measureCrs, vectorLayer, middlePointOnGraph, pointsList[i+1])
+                (rb, costs, middlePointOnGraph) = self.findRoute(measureCrs, vectorLayer, middlePointOnGraph, pointsList[i+1], False)
             if rb is None:
                 self.deleteRubberBands()
                 return -1 
@@ -612,29 +643,39 @@ class OnTheFlyShortestPath:
                 costOnGraph += costs["costOnGraph"]
                 exitCost = costs["exitCost"]
                 # Final rubberband from the graph to the end point
-                self.rubberBands[i].addPoint(pointsList[numPointPairs])               
+                if self.currentConfig["includeStartStop"]:
+                    self.rubberBands[i].addPoint(pointsList[numPointPairs])               
             # Between two middle points    
             else:
                 costOnGraph += costs["costOnGraph"]
     
-        self.resultsDict["entryCost"] = entryCost
-        self.resultsDict["costOnGraph"] = costOnGraph
-        self.resultsDict["exitCost"] = exitCost
-        self.resultsDict["totalCost"] = entryCost + costOnGraph + exitCost                 
+        self.resultsDict["entryCost"] = self.convertDistanceUnits(entryCost, self.currentConfig["distanceUnitsIndex"])
+        self.resultsDict["costOnGraph"] = self.convertDistanceUnits(costOnGraph, self.currentConfig["distanceUnitsIndex"])
+        self.resultsDict["exitCost"] = self.convertDistanceUnits(exitCost, self.currentConfig["distanceUnitsIndex"])
+        self.resultsDict["totalCost"] = self.convertDistanceUnits(entryCost + costOnGraph + exitCost, self.currentConfig["distanceUnitsIndex"])                
      
         # Get the details of the measurements, i.e. the listance units of the CRS
         crsData = self.crsDetails(measureCrs)          
         self.resultsDict["ellipsoid"] = crsData[0] 
         self.resultsDict["crs"] = crsData[1] + "/" + crsData[2] 
-        self.resultsDict["lengthUnits"] = crsData[3]
-
+        #self.resultsDict["lengthUnits"] = crsData[3]
+        
+        # From 1.0.4, we use the converted units
+        self.resultsDict["lengthUnits"] = self.resultUnitsList[self.currentConfig["distanceUnitsIndex"]]
+        
         # Show length result in dockWidget
-        self.dockDlg.resultLength.setText(self.formatLengthValue(self.resultsDict["totalCost"])) 
+        if self.currentConfig["includeStartStop"]:
+            self.dockDlg.resultLength.setText(self.formatLengthValue(self.resultsDict["totalCost"])) 
+        else:
+            self.dockDlg.resultLength.setText(self.formatLengthValue(self.resultsDict["costOnGraph"]))
         self.dockDlg.lengthUnits.setText(self.resultsDict["lengthUnits"])
         
         # Calculate fiber loss parameters and show result in dockWidget
         self.calculateFiberLoss()
-        self.dockDlg.fiberLoss.setText(self.formatLossValue(self.resultsDict["fiberTotalLoss"]))
+        if self.currentConfig["includeStartStop"]:
+            self.dockDlg.fiberLoss.setText(self.formatLossValue(self.resultsDict["fiberTotalLoss"]))
+        else:
+            self.dockDlg.fiberLoss.setText(self.formatLossValue(self.resultsDict["fiberLossOnGraph"]))
         self.dockDlg.fiberLossUnits.setText(self.resultsDict["fiberLossUnits"])
         
         # Show the results dialog, if configured to do so
@@ -651,7 +692,11 @@ class OnTheFlyShortestPath:
         d.setEllipsoid(crs.ellipsoidAcronym())
         return d.measureLine([p1, p2])
 
-
+    def convertDistanceUnits(self, value:float, index:int) -> float:
+        ''' Converts a distance from meters to any of the allowed units '''
+        return value * self.conversionFactor[index]
+                       
+                       
     def crsDetails(self, crs:QgsCoordinateReferenceSystem) -> list: # list of strings  [ellipsoid, EPSG, CRS_description, Units] 
         ''' Returns a list of valuable data regarding the measurements of the CRS '''
         d = QgsDistanceArea()
@@ -660,12 +705,14 @@ class OnTheFlyShortestPath:
         return [d.ellipsoid(), d.sourceCrs().authid(), d.sourceCrs().description(), QgsUnitTypes.toString(d.lengthUnits())]    
     
                
-    def findRoute(self, sourceCrs:QgsCoordinateReferenceSystem, vectorLayer:QgsVectorLayer, fromPoint:QgsPointXY, toPoint:QgsPointXY) -> None:
-        director = QgsVectorLayerDirector(vectorLayer, -1, '', '', '', QgsVectorLayerDirector.DirectionBoth)
+    def findRoute(self, currentCrs:QgsCoordinateReferenceSystem, pathLayer:QgsVectorLayer, fromPoint:QgsPointXY, toPoint:QgsPointXY, addStartPoint = False) -> None:
+        ''' Runs dijkstra and create the rubberbands ''' 
+        
+        director = QgsVectorLayerDirector(pathLayer, -1, '', '', '', QgsVectorLayerDirector.DirectionBoth)
         strategy = QgsNetworkDistanceStrategy()
         director.addStrategy(strategy)
        
-        builder = QgsGraphBuilder(sourceCrs, True, self.currentConfig["topologyTolerance"], sourceCrs.ellipsoidAcronym())
+        builder = QgsGraphBuilder(currentCrs, True, self.currentConfig["topologyTolerance"], currentCrs.ellipsoidAcronym())
         # These are the coordinates of the points on the line that are closest to the start and stop points
         tiedPoints = director.makeGraph(builder, [fromPoint, toPoint])
         tStart, tStop = tiedPoints
@@ -683,8 +730,8 @@ class OnTheFlyShortestPath:
             return(None, None, None)
 
         # Measure the distance from the start and stop point to the entry and exit point of the graph
-        entry_cost = self.distanceP2P(sourceCrs, fromPoint, tStart)      
-        exit_cost = self.distanceP2P(sourceCrs, tStop, toPoint)
+        entry_cost = self.distanceP2P(currentCrs, fromPoint, tStart)      
+        exit_cost = self.distanceP2P(currentCrs, tStop, toPoint)
 
         # set all results to a dictionary to be used by calling function
         analysis_results = {
@@ -703,9 +750,8 @@ class OnTheFlyShortestPath:
 
         rb = self.createRubberBand()
 
-        # This may require coordinate transformation if project's CRS
-        # is different than layer's CRS
-        rb.addPoint(fromPoint)
+        if addStartPoint:
+            rb.addPoint(fromPoint)     
         for p in route:
             rb.addPoint(p)  
             
@@ -844,10 +890,10 @@ class OnTheFlyShortestPath:
         dlg.exitCostTxt.setText(self.formatLengthValue(d["exitCost"]))
         dlg.totalCostTxt.setText(self.formatLengthValue(d["totalCost"]))
 
-        dlg.entryCostUnits.setText(d["costUnits"])
-        dlg.onGraphCostUnits.setText(d["costUnits"])
-        dlg.exitCostUnits.setText(d["costUnits"])
-        dlg.totalCostUnits.setText(d["costUnits"])
+        dlg.entryCostUnits.setText(d["lengthUnits"])
+        dlg.onGraphCostUnits.setText(d["lengthUnits"])
+        dlg.exitCostUnits.setText(d["lengthUnits"])
+        dlg.totalCostUnits.setText(d["lengthUnits"])
         
         # Fiber loss precision is fixed and not associated to the length decimal digits.
         # I do not think that needs a configuration parameter
@@ -864,7 +910,8 @@ class OnTheFlyShortestPath:
                         
         dlg.ellipsoidTxt.setText(d["ellipsoid"])
         dlg.crsTxt.setText(d["crs"])
-               
+        
+        ''' OBSOLETE         
         # Handle the peculiar case where the measurements of the start and end points return a distance unit other than meters  
         if d["lengthUnits"] != 'meters':
             dlg.errorTxt.setText("WARNING:Units")
@@ -878,10 +925,13 @@ class OnTheFlyShortestPath:
             dlg.totalCostUnits.setText("")
         else:
             dlg.errorTxt.setText("")
-                
+        '''
+        # Keep for future use
+        dlg.errorTxt.setText("")
+        
         # exec() is required instead of show() to make the result window modal. 
         # The setting in Qt Designer does not work
         dlg.exec()  
          
-                        
+
 

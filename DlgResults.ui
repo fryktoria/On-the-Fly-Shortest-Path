@@ -32,7 +32,10 @@
    </size>
   </property>
   <property name="windowTitle">
-   <string>Cost results</string>
+   <string>Results</string>
+  </property>
+  <property name="locale">
+   <locale language="C" country="AnyCountry"/>
   </property>
   <property name="modal">
    <bool>true</bool>
@@ -184,7 +187,7 @@
     <locale language="C" country="AnyCountry"/>
    </property>
    <property name="text">
-    <string>Total cost</string>
+    <string>Total</string>
    </property>
   </widget>
   <widget class="Line" name="line">
@@ -216,7 +219,7 @@
     <locale language="C" country="AnyCountry"/>
    </property>
    <property name="text">
-    <string>Exit cost</string>
+    <string>Exit</string>
    </property>
   </widget>
   <widget class="QLabel" name="label_3">
@@ -232,7 +235,7 @@
     <locale language="C" country="AnyCountry"/>
    </property>
    <property name="text">
-    <string>Entry cost</string>
+    <string>Entry</string>
    </property>
   </widget>
   <widget class="QLabel" name="label">
@@ -248,7 +251,7 @@
     <locale language="C" country="AnyCountry"/>
    </property>
    <property name="text">
-    <string>Cost on graph</string>
+    <string>Οn graph</string>
    </property>
   </widget>
   <widget class="QLineEdit" name="exitCostTxt">
@@ -311,8 +314,8 @@
   <widget class="QLabel" name="label_5">
    <property name="geometry">
     <rect>
-     <x>6</x>
-     <y>138</y>
+     <x>4</x>
+     <y>142</y>
      <width>53</width>
      <height>16</height>
     </rect>
@@ -327,8 +330,8 @@
   <widget class="QLabel" name="ellipsoidTxt">
    <property name="geometry">
     <rect>
-     <x>58</x>
-     <y>138</y>
+     <x>56</x>
+     <y>142</y>
      <width>235</width>
      <height>16</height>
     </rect>
@@ -343,8 +346,8 @@
   <widget class="QLabel" name="label_6">
    <property name="geometry">
     <rect>
-     <x>6</x>
-     <y>122</y>
+     <x>4</x>
+     <y>126</y>
      <width>55</width>
      <height>16</height>
     </rect>
@@ -359,8 +362,8 @@
   <widget class="QLabel" name="crsTxt">
    <property name="geometry">
     <rect>
-     <x>58</x>
-     <y>122</y>
+     <x>56</x>
+     <y>126</y>
      <width>235</width>
      <height>16</height>
     </rect>

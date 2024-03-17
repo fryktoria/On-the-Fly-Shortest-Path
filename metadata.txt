@@ -2,7 +2,7 @@
 
 [general]
 name=On-the-Fly-Shortest-Path
-version=1.0.3
+version=1.0.4
 author=Ilias Iliopoulos
 email=info@fryktoria.com
 
@@ -43,5 +43,11 @@ changelog=1.0.0:
               * Changed calculation CRS to be made on project CRS rather than layer CRS, to allow 'on the fly' CRS transformations, as well as measurements with different CRS and ellipsoid.
             1.0.3
               * Changed the rubberband engine to cope with dynamicaly assigned points. Removed static rb1, rb2
+            1.0.4
+              * Added distance units conversion
+              * Added selection to exclude entry and exit cost
+              * Renamed variables sourceCrs to avoid confusion with same name methods
+              * Added example shapefile
+              * Changes logo icon with a simpler one
              
 
