@@ -78,24 +78,25 @@ The `Markers` are the visual elements showing the start, middle and stop points 
 
 ### Section: Network Analysis
 
-`Units`: Set the type of distance units to present the result. Note: All measurements are made internally in meters. A simple conversion factor is applied.   
-
-`Decimal digits`: Set the number of decimal points for the displayed Length
-
-`Topology tolerance`: Set the topology tolerance to account for topological discontinuities of the line network. Using topology tolerance 0 requires the line network to have topological continuity. The units of this setting conform to the units specified in the associated ellipsoid, defined below.
-
-`Show cost as`: You can select from the following options:
-   `Summary`: The results of the analysis will appear in the plugin panel. The result will contain the total cost, including the entry cost, cost on graph and the exit cost.
-   `Detailed window`: The results will appear both in the plugin panel as well as in a window that will appear on screen. This new window will contain the details of entry, on graph and exit.
-   
-`Include entry/exit points`: When checked, the path is drawn from the start point to the nearest point on the line, along the line and finally to the exit point. When unchecked, only the path along the line is drawn. 
-
 `Use ellipsoid of the following CRS`: Distance measurements are taken based on the ellipsoid associated with the selected CRS. This feature allows viewing the map and coordinates on one CRS and take measurements on another. The following options are provided:
 `Project CRS`: The CRS of the project, as appears on the bottom right side of the QGIS status bar and can be modified for 'on-the-fly' CRS transformations is used for measurements.
 `Layer CRS`: The CRS of the line layer is used
 `Custom CRS`: A custom CRS can be selected. For users who do not work mainly on a global scale and operate several projects in an area covered by one ellipsoid, it is advised to use this option. 
-  
-    
+
+After selecting the CRS, information labels regarding the ellisoid associated with the selected CRS, as well as the units of the CRS are updated.
+
+`Topology tolerance`: Set the topology tolerance to account for topological discontinuities of the line network. Using topology tolerance 0 requires the line network to have topological continuity. The units of this setting should conform to the `CRS units` indication above.
+
+`Result units`: Set the type of distance units to present the result. Note: All measurements are made internally in meters. A simple conversion factor is applied.   
+
+`Decimal digits`: Set the number of decimal points for the displayed Length
+
+`Include entry/exit points`: When checked, the path is drawn from the start point to the nearest point on the line, along the line and finally to the exit point. When unchecked, only the path along the line is drawn. 
+
+`Show result in`: You can select from the following options:
+   `Panel`: The results of the analysis will appear in the plugin panel. The result will contain the total cost, including the entry cost, cost on graph and the exit cost.
+   `Length`: The results will appear both in the plugin panel as well as in a window that will appear on screen. This new window will contain the details of entry, on graph and exit. Only length information is shown.
+   `Length and loss`: Length and Fiber loss budget is shown in a window.    
     
 ### Section: Fiber Loss Budget
 
