@@ -2,7 +2,7 @@
 
 [general]
 name=On-the-Fly-Shortest-Path
-version=1.0.4
+version=1.1.0
 author=Ilias Iliopoulos
 email=info@fryktoria.com
 
@@ -17,7 +17,7 @@ about=The "On-the-Fly Shortest Path" plugin offers an interactive measurement of
 
 # Optional items:
 
-experimental=True
+experimental=False
 # deprecated flag (applies to the whole plugin, not just a single version
 deprecated=False
 tags=shortest path, dijkstra, network analysis, graph analysis, distance measurement, RoadGraph plugin, fiber, ftth, loss budget, power budget, fiber attenuation
@@ -28,10 +28,9 @@ server=false
 hasProcessingProvider=false
 icon=logo.png
 changelog=1.0.0:
-          - First release
+          - First experimental release
             Known issues:
-              * The plugin supports only the English language. 
-              * Topology tolerance does not work as expected, if its value is set to higher than 0. This is a problem of the underlying network analysis functions and not of the plugin. Please note that using topology tolerance 0 requires the line network to have topological continuity.
+              * The plugin supports only the English language.
            1.0.1
               * Added explicit casting to QgsPointXY object, because it produced error on Linux
            1.0.2
@@ -49,5 +48,10 @@ changelog=1.0.0:
               * Renamed variables sourceCrs to avoid confusion with same name methods
               * Added example shapefile
               * Changes logo icon with a simpler one
+            1.0.5
+              * Added check for unit conversion if base unit is not meters
+              * Added selection of CRS for measurements
+              * Added new results window without fiber loss data.
+                
              
 

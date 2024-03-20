@@ -6,14 +6,20 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>465</width>
-    <height>360</height>
+    <width>467</width>
+    <height>434</height>
    </rect>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>100</width>
+    <height>50</height>
+   </size>
   </property>
   <property name="maximumSize">
    <size>
-    <width>465</width>
-    <height>400</height>
+    <width>467</width>
+    <height>434</height>
    </size>
   </property>
   <property name="windowTitle">
@@ -26,7 +32,7 @@
    <property name="geometry">
     <rect>
      <x>80</x>
-     <y>324</y>
+     <y>396</y>
      <width>165</width>
      <height>36</height>
     </rect>
@@ -47,9 +53,9 @@
   <widget class="QGroupBox" name="groupBox">
    <property name="geometry">
     <rect>
-     <x>5</x>
-     <y>10</y>
-     <width>221</width>
+     <x>232</x>
+     <y>2</y>
+     <width>230</width>
      <height>131</height>
     </rect>
    </property>
@@ -179,13 +185,26 @@
     </property>
    </widget>
   </widget>
+  <widget class="QPushButton" name="defaultsButton">
+   <property name="geometry">
+    <rect>
+     <x>308</x>
+     <y>404</y>
+     <width>76</width>
+     <height>24</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Defaults</string>
+   </property>
+  </widget>
   <widget class="QGroupBox" name="groupBox_2">
    <property name="geometry">
     <rect>
-     <x>5</x>
-     <y>145</y>
+     <x>6</x>
+     <y>2</y>
      <width>221</width>
-     <height>179</height>
+     <height>395</height>
     </rect>
    </property>
    <property name="locale">
@@ -197,11 +216,191 @@
    <property name="alignment">
     <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
    </property>
+   <widget class="QCheckBox" name="includeStartStop">
+    <property name="geometry">
+     <rect>
+      <x>8</x>
+      <y>326</y>
+      <width>167</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="layoutDirection">
+     <enum>Qt::LeftToRight</enum>
+    </property>
+    <property name="text">
+     <string>Include entry/exit points</string>
+    </property>
+    <property name="checked">
+     <bool>true</bool>
+    </property>
+   </widget>
+   <widget class="QgsProjectionSelectionWidget" name="mQgsProjectionSelectionWidget">
+    <property name="geometry">
+     <rect>
+      <x>12</x>
+      <y>126</y>
+      <width>191</width>
+      <height>27</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QRadioButton" name="selectProjectCrs">
+    <property name="geometry">
+     <rect>
+      <x>22</x>
+      <y>48</y>
+      <width>95</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Project CRS</string>
+    </property>
+    <property name="checked">
+     <bool>true</bool>
+    </property>
+   </widget>
+   <widget class="QRadioButton" name="selectLayerCrs">
+    <property name="geometry">
+     <rect>
+      <x>22</x>
+      <y>72</y>
+      <width>95</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Layer CRS</string>
+    </property>
+   </widget>
+   <widget class="QRadioButton" name="selectCustomCrs">
+    <property name="geometry">
+     <rect>
+      <x>22</x>
+      <y>98</y>
+      <width>101</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Custom CRS</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_21">
+    <property name="geometry">
+     <rect>
+      <x>6</x>
+      <y>28</y>
+      <width>205</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Use ellipsoid of the following CRS</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_6">
+    <property name="geometry">
+     <rect>
+      <x>8</x>
+      <y>212</y>
+      <width>119</width>
+      <height>49</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Topology tolerance (in CRS units)</string>
+    </property>
+    <property name="wordWrap">
+     <bool>true</bool>
+    </property>
+   </widget>
+   <widget class="QDoubleSpinBox" name="topologyTolerance">
+    <property name="geometry">
+     <rect>
+      <x>126</x>
+      <y>220</y>
+      <width>87</width>
+      <height>22</height>
+     </rect>
+    </property>
+    <property name="locale">
+     <locale language="C" country="AnyCountry"/>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+    </property>
+    <property name="decimals">
+     <number>5</number>
+    </property>
+    <property name="maximum">
+     <double>100000.000000000000000</double>
+    </property>
+    <property name="stepType">
+     <enum>QAbstractSpinBox::AdaptiveDecimalStepType</enum>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_22">
+    <property name="geometry">
+     <rect>
+      <x>8</x>
+      <y>168</y>
+      <width>105</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Ellipsoid</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="measurementEllipsoid">
+    <property name="geometry">
+     <rect>
+      <x>60</x>
+      <y>164</y>
+      <width>155</width>
+      <height>25</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Ellipsoid</string>
+    </property>
+    <property name="wordWrap">
+     <bool>true</bool>
+    </property>
+   </widget>
+   <widget class="QComboBox" name="distanceUnits">
+    <property name="geometry">
+     <rect>
+      <x>100</x>
+      <y>264</y>
+      <width>109</width>
+      <height>22</height>
+     </rect>
+    </property>
+    <property name="editable">
+     <bool>true</bool>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_20">
+    <property name="geometry">
+     <rect>
+      <x>8</x>
+      <y>268</y>
+      <width>87</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Result units</string>
+    </property>
+   </widget>
    <widget class="QLabel" name="label_5">
     <property name="geometry">
      <rect>
-      <x>10</x>
-      <y>62</y>
+      <x>8</x>
+      <y>306</y>
       <width>91</width>
       <height>16</height>
      </rect>
@@ -213,8 +412,8 @@
    <widget class="QSpinBox" name="decimalDigits">
     <property name="geometry">
      <rect>
-      <x>168</x>
-      <y>56</y>
+      <x>164</x>
+      <y>302</y>
       <width>42</width>
       <height>22</height>
      </rect>
@@ -235,49 +434,24 @@
      <number>1</number>
     </property>
    </widget>
-   <widget class="QLabel" name="label_6">
+   <widget class="QLabel" name="label_7">
     <property name="geometry">
      <rect>
-      <x>10</x>
-      <y>92</y>
-      <width>119</width>
+      <x>8</x>
+      <y>360</y>
+      <width>91</width>
       <height>16</height>
      </rect>
     </property>
     <property name="text">
-     <string>Topology tolerance</string>
-    </property>
-   </widget>
-   <widget class="QDoubleSpinBox" name="topologyTolerance">
-    <property name="geometry">
-     <rect>
-      <x>125</x>
-      <y>88</y>
-      <width>85</width>
-      <height>22</height>
-     </rect>
-    </property>
-    <property name="locale">
-     <locale language="C" country="AnyCountry"/>
-    </property>
-    <property name="alignment">
-     <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-    </property>
-    <property name="decimals">
-     <number>6</number>
-    </property>
-    <property name="maximum">
-     <double>1000.990000000000009</double>
-    </property>
-    <property name="stepType">
-     <enum>QAbstractSpinBox::AdaptiveDecimalStepType</enum>
+     <string>Show result in</string>
     </property>
    </widget>
    <widget class="QComboBox" name="resultDialogType">
     <property name="geometry">
      <rect>
-      <x>100</x>
-      <y>122</y>
+      <x>102</x>
+      <y>356</y>
       <width>111</width>
       <height>22</height>
      </rect>
@@ -286,72 +460,40 @@
      <locale language="C" country="AnyCountry"/>
     </property>
    </widget>
-   <widget class="QLabel" name="label_7">
+   <widget class="QLabel" name="label_23">
     <property name="geometry">
      <rect>
-      <x>10</x>
-      <y>122</y>
-      <width>91</width>
+      <x>8</x>
+      <y>196</y>
+      <width>63</width>
       <height>16</height>
      </rect>
     </property>
     <property name="text">
-     <string>Show cost as</string>
+     <string>CRS units</string>
     </property>
    </widget>
-   <widget class="QCheckBox" name="includeStartStop">
+   <widget class="QLabel" name="crsUnits">
     <property name="geometry">
      <rect>
-      <x>10</x>
-      <y>152</y>
-      <width>167</width>
-      <height>20</height>
-     </rect>
-    </property>
-    <property name="layoutDirection">
-     <enum>Qt::LeftToRight</enum>
-    </property>
-    <property name="text">
-     <string>Include entry/exit points</string>
-    </property>
-    <property name="checked">
-     <bool>true</bool>
-    </property>
-   </widget>
-   <widget class="QComboBox" name="distanceUnits">
-    <property name="geometry">
-     <rect>
-      <x>100</x>
-      <y>26</y>
-      <width>109</width>
-      <height>22</height>
-     </rect>
-    </property>
-    <property name="editable">
-     <bool>true</bool>
-    </property>
-   </widget>
-   <widget class="QLabel" name="label_20">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>30</y>
-      <width>55</width>
+      <x>74</x>
+      <y>196</y>
+      <width>135</width>
       <height>16</height>
      </rect>
     </property>
     <property name="text">
-     <string>Units</string>
+     <string>TextLabel</string>
     </property>
    </widget>
   </widget>
   <widget class="QGroupBox" name="groupBox_3">
    <property name="geometry">
     <rect>
-     <x>235</x>
-     <y>10</y>
-     <width>229</width>
-     <height>313</height>
+     <x>232</x>
+     <y>144</y>
+     <width>230</width>
+     <height>253</height>
     </rect>
    </property>
    <property name="locale">
@@ -641,19 +783,6 @@
     </property>
    </widget>
   </widget>
-  <widget class="QPushButton" name="defaultsButton">
-   <property name="geometry">
-    <rect>
-     <x>284</x>
-     <y>330</y>
-     <width>76</width>
-     <height>24</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Defaults</string>
-   </property>
-  </widget>
  </widget>
  <customwidgets>
   <customwidget>
@@ -661,17 +790,26 @@
    <extends>QToolButton</extends>
    <header>qgscolorbutton.h</header>
   </customwidget>
+  <customwidget>
+   <class>QgsProjectionSelectionWidget</class>
+   <extends>QWidget</extends>
+   <header>qgsprojectionselectionwidget.h</header>
+  </customwidget>
  </customwidgets>
  <tabstops>
+  <tabstop>selectProjectCrs</tabstop>
+  <tabstop>selectLayerCrs</tabstop>
+  <tabstop>selectCustomCrs</tabstop>
+  <tabstop>mQgsProjectionSelectionWidget</tabstop>
+  <tabstop>topologyTolerance</tabstop>
   <tabstop>distanceUnits</tabstop>
   <tabstop>decimalDigits</tabstop>
-  <tabstop>topologyTolerance</tabstop>
-  <tabstop>resultDialogType</tabstop>
   <tabstop>includeStartStop</tabstop>
+  <tabstop>resultDialogType</tabstop>
+  <tabstop>rubberBandColor</tabstop>
+  <tabstop>rubberBandSize</tabstop>
   <tabstop>markerColor</tabstop>
   <tabstop>markerSize</tabstop>
-  <tabstop>rubberBandSize</tabstop>
-  <tabstop>rubberBandColor</tabstop>
   <tabstop>connectorLoss</tabstop>
   <tabstop>numberOfConnectorsAtEntry</tabstop>
   <tabstop>numberOfConnectorsAtExit</tabstop>

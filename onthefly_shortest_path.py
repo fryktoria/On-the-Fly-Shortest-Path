@@ -37,7 +37,8 @@ from qgis.core import (QgsProject,
                        QgsDistanceArea,
                        QgsUnitTypes,
                        QgsCoordinateReferenceSystem,                       
-                       QgsFeatureRequest                       
+                       QgsFeatureRequest,
+                       QgsCoordinateTransform                       
                        )
 from qgis.gui import (QgsMapToolEmitPoint, 
                       QgsDockWidget, 
@@ -70,6 +71,8 @@ class OnTheFlyShortestPath:
         "includeStartStop" : 1,
         "resultDialogTypeIndex" : 0, 
         "distanceUnitsIndex" : 0, # ["meters", "Kilometers", "yards", "feet", "nutical miles", "imperial miles"]
+        "selectedCrsMethod" : 0, # 0 Project, 1 Layer, 2 Custom
+        "customCrs" : 0, # EPSG id
         "connectorLoss" : 0.4, # db per connector
         "numberOfConnectorsAtEntry" : 3,
         "numberOfConnectorsAtExit" : 2,
@@ -91,13 +94,17 @@ class OnTheFlyShortestPath:
         # Set up the Panel using the docked widget
         self.dockDlg = uic.loadUi(os.path.join(os.path.dirname(__file__), "./", "DlgDockWidget.ui"))   
         self.iface.addDockWidget(Qt.LeftDockWidgetArea, self.dockDlg)
-        
+
+        # Load the configuration form
+        self.configurationDlg = uic.loadUi(os.path.join(os.path.dirname(__file__), "./", "DlgConfiguration.ui"))
+      
         # Load the results form
         self.resultsDlg = uic.loadUi(os.path.join(os.path.dirname(__file__), "./", "DlgResults.ui"))
         self.resultsDlg.modal = True
 
-        # Load the configuration form
-        self.configurationDlg = uic.loadUi(os.path.join(os.path.dirname(__file__), "./", "DlgConfiguration.ui"))
+        # Load the results form without the fiber data
+        self.resultsDlgNoFiber = uic.loadUi(os.path.join(os.path.dirname(__file__), "./", "DlgResultsNoFiber.ui"))
+        self.resultsDlgNoFiber.modal = True
 
         # set up the tool to click on screen and get the coordinates
         self.pointTool = QgsMapToolEmitPoint(self.canvas)
@@ -111,7 +118,7 @@ class OnTheFlyShortestPath:
 
         # A list to hold the option items in the resultDialogType combobox of the 
         # configuration dialog
-        self.resultTypes = ["Summary", "Detailed window"]
+        self.resultTypes = ["Panel", "Length", "Length and Loss"]
 
         # A dictionary to store configuration parameters
         self.currentConfig = {}
@@ -195,6 +202,7 @@ class OnTheFlyShortestPath:
         self.dockDlg.layer_combobox.activated.connect(self.on_dockDlg_layer_selected)
         
         self.resultsDlg.OkButton.clicked.connect(self.on_resultsDlg_results_ok)
+        self.resultsDlgNoFiber.OkButton.clicked.connect(self.on_resultsDlgNoFiber_results_ok)
         
         # The configuration dialog does not have two independent buttons but a "buttonBox" with two visual buttons
         # where the entire buttonBox widget activates the accepted (click OK) and rejejeted (click cancel) events
@@ -202,15 +210,20 @@ class OnTheFlyShortestPath:
         self.configurationDlg.buttonBox.rejected.connect(self.on_configurationDlg_config_complete_cancel)
         self.configurationDlg.defaultsButton.clicked.connect(self.on_configurationDlg_config_reset_defaults)
         
+        self.configurationDlg.selectProjectCrs.toggled.connect(self.on_configurationDlg_selectCrsChange)
+        self.configurationDlg.selectLayerCrs.toggled.connect(self.on_configurationDlg_selectCrsChange)
+        self.configurationDlg.selectCustomCrs.toggled.connect(self.on_configurationDlg_selectCrsChange)
+        self.configurationDlg.mQgsProjectionSelectionWidget.crsChanged.connect(self.on_configurationDlg_customCrsChange)
+        
         # Identify when a new layer is added, removed, re-named to the project in order to re-populate the layers
         QgsProject.instance().layersAdded.connect(self.populateLayerSelector)
         QgsProject.instance().layersRemoved.connect(self.populateLayerSelector)
         QgsProject.instance().layerTreeRoot().nameChanged.connect(self.populateLayerSelector)
         
-        # Reset the start and end point coordinates when an 'on the fly' CRS transformation is activated
-        QgsProject.instance().crsChanged.connect(self.on_dockDlg_reset_button_clicked)
-        QgsProject.instance().ellipsoidChanged.connect(self.on_dockDlg_reset_button_clicked)
-        
+        # Identify when the project CRS changes
+        QgsProject.instance().crsChanged.connect(self.on_project_crsChanged)
+        #QgsProject.instance().ellipsoidChanged.connect(self.on_project_crsChanged)
+               
         # Identify the condition where another toolset is activated, so that we must unpress all buttons of the dock dialog
         self.canvas.mapToolSet.connect(self.on_toolset_change)
         
@@ -223,6 +236,9 @@ class OnTheFlyShortestPath:
         self.markers[1].setIconType(QgsVertexMarker.ICON_INVERTED_TRIANGLE)             
         # Hide all markers. We will show each one when needed
         self.hideMarkers()  
+        
+        # Remember the current project CRS so that we can convert coordinates if the project CRS is changed
+        self.projectCrs = QgsProject().instance().crs()
         
         return
         
@@ -296,8 +312,17 @@ class OnTheFlyShortestPath:
         for index, optionTxt in enumerate(self.resultTypes):       
             dlg.resultDialogType.addItem(optionTxt)
             if dict["resultDialogTypeIndex"] == index:
-                dlg.resultDialogType.setCurrentIndex(index)   
-                
+                dlg.resultDialogType.setCurrentIndex(index)  
+
+        self.temporaryCrsMethod = dict["selectedCrsMethod"]
+        self.setConfigurationSelectCrs(dict["selectedCrsMethod"])  
+        dlg.mQgsProjectionSelectionWidget.setCrs(QgsCoordinateReferenceSystem.fromEpsgId(dict["customCrs"]))  
+        
+        crs = self.activeCrs()
+        crsData = self.crsDetails(crs)
+        dlg.measurementEllipsoid.setText(crsData[0] + "  " + crsData[1] + "/" + crsData[2]) 
+        dlg.crsUnits.setText(self.crsDistanceUnits(crs))
+                       
         dlg.connectorLoss.setValue(dict["connectorLoss"])
         dlg.numberOfConnectorsAtEntry.setValue(dict["numberOfConnectorsAtEntry"])
         dlg.numberOfConnectorsAtExit.setValue(dict["numberOfConnectorsAtExit"])
@@ -336,6 +361,19 @@ class OnTheFlyShortestPath:
         for index, optionTxt in enumerate(self.resultTypes):          
             if dlg.resultDialogType.currentIndex() == index:       
                 conf["resultDialogTypeIndex"] = index
+        
+        # "selectedCrsMethod" is set by the event handler
+        conf["selectedCrsMethod"] = self.temporaryCrsMethod
+        
+        try:
+            # I did not find a method to return the EPSG is as ineteger. I remove the first 5 characters "EPSG:" 
+            epsgId = int(dlg.mQgsProjectionSelectionWidget.crs().authid()[5:])
+        except:
+            #epsgId = -1
+            #If Invalid layer, set to EPSG:4326 WGS 84
+            epsgId=4326              
+        conf["customCrs"] = epsgId
+                       
         conf["connectorLoss"] = dlg.connectorLoss.value()
         conf["numberOfConnectorsAtEntry"] = dlg.numberOfConnectorsAtEntry.value()
         conf["numberOfConnectorsAtExit"] = dlg.numberOfConnectorsAtExit.value()
@@ -377,7 +415,7 @@ class OnTheFlyShortestPath:
                 
         except AttributeError:
             #print("No attribute")
-            iface.messageBar().pushMessage("Error", "Exception: No attribute", level=Qgis.Critical)
+            self.iface.messageBar().pushMessage("Error", "Exception: No attribute", level=Qgis.Critical)
         return
 
 
@@ -546,11 +584,83 @@ class OnTheFlyShortestPath:
         self.populateConfigurationDlg(self.configurationDlg, self.factoryDefaultSettings.copy())
         return
  
+
+    def on_configurationDlg_selectCrsChange(self) -> None:
+        
+        # Get the radio button that sent the signal
+        rb = self.configurationDlg.sender()
+        # Check if the radio button is checked
+        if rb.isChecked():            
+            if rb.text() == "Project CRS":
+                self.temporaryCrsMethod = 0                 
+            elif rb.text() == "Layer CRS":
+                self.temporaryCrsMethod = 1                
+            else:
+                self.temporaryCrsMethod = 2
+                
+            self.setConfigurationSelectCrs(self.temporaryCrsMethod) 
+        return            
+
+
+    def on_configurationDlg_customCrsChange(self) -> None:  
+        crs = self.configurationDlg.mQgsProjectionSelectionWidget.crs()
+        crsData = self.crsDetails(crs)
+        self.configurationDlg.measurementEllipsoid.setText(crsData[0] + " " + crsData[1] + "/" + crsData[2]) 
+        self.configurationDlg.crsUnits.setText(self.crsDistanceUnits(crs))
+    
+              
+    def setConfigurationSelectCrs(self, crsMethod:int) -> None:
+        
+        if crsMethod == 0:
+            self.configurationDlg.selectProjectCrs.setChecked(True)    
+            self.configurationDlg.mQgsProjectionSelectionWidget.setEnabled(False)
+            crs = QgsProject().instance().crs()
+            
+        elif crsMethod == 1:
+                self.configurationDlg.selectLayerCrs.setChecked(True)    
+                self.configurationDlg.mQgsProjectionSelectionWidget.setEnabled(False)  
+                if self.getPathLayer() is None:
+                    crs = None
+                else:    
+                    crs = self.getPathLayer().sourceCrs()
+                
+        elif crsMethod == 2:    
+            self.configurationDlg.selectCustomCrs.setChecked(True)    
+            self.configurationDlg.mQgsProjectionSelectionWidget.setEnabled(True)
+            crs = self.configurationDlg.mQgsProjectionSelectionWidget.crs() 
+            
+        crsData = self.crsDetails(crs)
+        self.configurationDlg.measurementEllipsoid.setText(crsData[0] + " " + crsData[1] + "/" + crsData[2]) 
+        self.configurationDlg.crsUnits.setText(self.crsDistanceUnits(crs))
+            
+        return    
+    
+    
+    def on_project_crsChanged(self) -> None:
+        ''' Function to run when the project CRS is changed '''
+        #print ("Event CRS changed")
+        #print ("Transforming from ", self.projectCrs.description(), " to ", QgsProject().instance().crs().description())  
+        newCrs = QgsProject().instance().crs()        
+        self.transformInputData(self.projectCrs, newCrs)
+        self.projectCrs = newCrs
+
+        # Update also the configuration dialog which is non modal and could be open
+        crsData = self.crsDetails(newCrs)
+        self.configurationDlg.measurementEllipsoid.setText(crsData[0] + " " + crsData[1] + "/" + crsData[2]) 
+        self.configurationDlg.crsUnits.setText(self.crsDistanceUnits(newCrs))
+               
+        return
+ 
  
     def on_resultsDlg_results_ok(self) -> None:
         self.resultsDlg.hide()
         return
 
+
+    def on_resultsDlgNoFiber_results_ok(self) -> None:
+        self.resultsDlgNoFiber.hide()
+        return
+        
          
     def uncheckAllButtons(self) -> None:
         dlg = self.dockDlg
@@ -588,26 +698,43 @@ class OnTheFlyShortestPath:
         my_layer.removeSelection()        
         # I do not want the layer on map, just in memory. I used it in order to make sure that the memory layer does 
         # not carry the attributes of the original layer
-        # QgsProject.instance().addMapLayer(mem_layer)       
-        
+        # QgsProject.instance().addMapLayer(mem_layer)               
         return mem_layer
         
+
+    def activeCrs(self) -> QgsCoordinateReferenceSystem:
+        ''' Returns the QgsCoordinateReferenceSystem to be used for measurements 
+            This can be either the Project CRS, the CRS of the line layer or a Custom CRS '''         
+        
+        if self.currentConfig["selectedCrsMethod"] == 0:
+            crs = QgsProject().instance().crs()
+        elif self.currentConfig["selectedCrsMethod"] == 1:
+            if self.getPathLayer() is None:
+                crs = None
+            else:    
+                crs = self.getPathLayer().sourceCrs()
+        else:
+            crs = QgsCoordinateReferenceSystem.fromEpsgId(self.currentConfig["customCrs"]) 
+        return crs            
+    
+
+
         
     def process(self) -> int:
 
-        # I can use either the project crs or the line layer crs for the graph
-        # and for the measurements between the points and the tied points, below
-        # I prefer the project crs because it adapts to 'on the fly' project CRS transformations
-        measureCrs = QgsProject().instance().crs()
-        #measureCrs = vectorLayer.sourceCrs()
-    
-        vectorLayer = self.getPathLayer() 
-        if vectorLayer is None:
+        pathLayer = self.getPathLayer() 
+        if pathLayer is None:
              return -1
         
-        #print ("CRS of path layer: ", vectorLayer.crs().authid())          
-        if vectorLayer.crs().authid() == "":
+        #print ("CRS of path layer: ", pathLayer.crs().authid())          
+        if pathLayer.crs().authid() == "":
             self.iface.messageBar().pushMessage("Error", "Path layer does not have a valid CRS", level=Qgis.Critical, duration=5)
+            return -1
+
+        # Local variable to avoid length calculations
+        measureCrs = self.activeCrs() 
+        if measureCrs is None:
+            self.iface.messageBar().pushMessage("Error", "Path layer is not set", level=Qgis.Critical, duration=5)
             return -1
 
         entryCost = 0
@@ -618,18 +745,23 @@ class OnTheFlyShortestPath:
         # so that I reference freely the i and the i+1 item
         sortedPointsDict = dict(sorted(self.pointsDict.items()))
         pointsList = list(sortedPointsDict.values())
-    
-        numPointPairs = len(pointsList) - 1
+
+
+        ''' The coordinates stored when clicking the buttons are those of the Project CRS. We like this because we want to associated
+            these values with what is shown on the current map. We need to transform coordinates if necessary '''  
+        trPointsList = self.transformedPointsList(pointsList, self.projectCrs, measureCrs)
+           
+        numPointPairs = len(trPointsList) - 1
         for i in range(0,numPointPairs): 
 
             if i == 0:
                 ''' First rubberband, from start point to next point which can either be a middle point or the end point
                  If the second point is a middle point, calculate the point on graph nearest to the middle point (middlePointOnGraph)
                  to be used in next iteration. '''
-                (rb, costs, middlePointOnGraph) = self.findRoute(measureCrs, vectorLayer, pointsList[i], pointsList[i+1], self.currentConfig["includeStartStop"])
+                (rb, costs, middlePointOnGraph) = self.findRoute(measureCrs, pathLayer, trPointsList[i], trPointsList[i+1], self.currentConfig["includeStartStop"])
             else:
                 # For the second rubberband, use the point on graph middlePointOnGraph calculated in the previous iteration
-                (rb, costs, middlePointOnGraph) = self.findRoute(measureCrs, vectorLayer, middlePointOnGraph, pointsList[i+1], False)
+                (rb, costs, middlePointOnGraph) = self.findRoute(measureCrs, pathLayer, middlePointOnGraph, trPointsList[i+1], False)
             if rb is None:
                 self.deleteRubberBands()
                 return -1 
@@ -644,25 +776,35 @@ class OnTheFlyShortestPath:
                 exitCost = costs["exitCost"]
                 # Final rubberband from the graph to the end point
                 if self.currentConfig["includeStartStop"]:
-                    self.rubberBands[i].addPoint(pointsList[numPointPairs])               
+                    self.rubberBands[i].addPoint(self.transformPointCoordinates(trPointsList[numPointPairs], measureCrs, self.projectCrs))
+              
             # Between two middle points    
             else:
                 costOnGraph += costs["costOnGraph"]
-    
-        self.resultsDict["entryCost"] = self.convertDistanceUnits(entryCost, self.currentConfig["distanceUnitsIndex"])
-        self.resultsDict["costOnGraph"] = self.convertDistanceUnits(costOnGraph, self.currentConfig["distanceUnitsIndex"])
-        self.resultsDict["exitCost"] = self.convertDistanceUnits(exitCost, self.currentConfig["distanceUnitsIndex"])
-        self.resultsDict["totalCost"] = self.convertDistanceUnits(entryCost + costOnGraph + exitCost, self.currentConfig["distanceUnitsIndex"])                
-     
-        # Get the details of the measurements, i.e. the listance units of the CRS
+       
+        # Get the details of the measurements, i.e. the distance units of the CRS
         crsData = self.crsDetails(measureCrs)          
         self.resultsDict["ellipsoid"] = crsData[0] 
         self.resultsDict["crs"] = crsData[1] + "/" + crsData[2] 
-        #self.resultsDict["lengthUnits"] = crsData[3]
-        
-        # From 1.0.4, we use the converted units
-        self.resultsDict["lengthUnits"] = self.resultUnitsList[self.currentConfig["distanceUnitsIndex"]]
-        
+        self.resultsDict["lengthUnits"] = crsData[3]
+
+        ''' We expect that the distance units returned by crsData[3] will be meters in order to make 
+            our conversions. Most CRS and associated ellipsoids' units are in meters or can be converted by QGIS from 
+            feet or other unit to meters. If not, or in case a CRS is not defined for the project,
+            we present a warning and return the values and units returnded by QgsDistanceArea class without conversion '''
+        if self.resultsDict["lengthUnits"] == "meters":
+            conversionIndex = self.currentConfig["distanceUnitsIndex"]
+            # From 1.0.4, we use the converted units
+            self.resultsDict["lengthUnits"] = self.resultUnitsList[self.currentConfig["distanceUnitsIndex"]]
+        else:    
+            conversionIndex = -1
+            self.iface.messageBar().pushMessage("Warning", "Base distance unit is not meters but " + crsData[3] +". Unit conversion is disabled", level=Qgis.Warning, duration=5)
+            
+        self.resultsDict["entryCost"] = self.convertDistanceUnits(entryCost, conversionIndex)
+        self.resultsDict["costOnGraph"] = self.convertDistanceUnits(costOnGraph, conversionIndex)
+        self.resultsDict["exitCost"] = self.convertDistanceUnits(exitCost, conversionIndex)
+        self.resultsDict["totalCost"] = self.convertDistanceUnits(entryCost + costOnGraph + exitCost, conversionIndex)  
+     
         # Show length result in dockWidget
         if self.currentConfig["includeStartStop"]:
             self.dockDlg.resultLength.setText(self.formatLengthValue(self.resultsDict["totalCost"])) 
@@ -679,9 +821,11 @@ class OnTheFlyShortestPath:
         self.dockDlg.fiberLossUnits.setText(self.resultsDict["fiberLossUnits"])
         
         # Show the results dialog, if configured to do so
-        if self.currentConfig["resultDialogTypeIndex"] != 0:
+        if self.currentConfig["resultDialogTypeIndex"] == 1:
+            self.showResultDlg(self.resultsDlgNoFiber, self.resultsDict) 
+        elif self.currentConfig["resultDialogTypeIndex"] == 2:            
             self.showResultDlg(self.resultsDlg, self.resultsDict)
-
+            
         return 0
 
 
@@ -693,26 +837,43 @@ class OnTheFlyShortestPath:
         return d.measureLine([p1, p2])
 
     def convertDistanceUnits(self, value:float, index:int) -> float:
-        ''' Converts a distance from meters to any of the allowed units '''
-        return value * self.conversionFactor[index]
+        ''' Converts a distance from meters to any of the allowed units, or the same value if the index is not recognized
+            The index is expected to be the index in lists self.resultUnitsList[] and self.conversionFactor[]        '''
+        if index < 0:
+            return value
+        else:
+            return value * self.conversionFactor[index]
                        
                        
     def crsDetails(self, crs:QgsCoordinateReferenceSystem) -> list: # list of strings  [ellipsoid, EPSG, CRS_description, Units] 
         ''' Returns a list of valuable data regarding the measurements of the CRS '''
-        d = QgsDistanceArea()
-        d.setSourceCrs(crs, QgsProject().instance().transformContext())
-        d.setEllipsoid(crs.ellipsoidAcronym())     
-        return [d.ellipsoid(), d.sourceCrs().authid(), d.sourceCrs().description(), QgsUnitTypes.toString(d.lengthUnits())]    
+        '''Be protective in case a transformation is not possible '''
+        try:
+            d = QgsDistanceArea()
+            d.setSourceCrs(crs, QgsProject().instance().transformContext())
+            d.setEllipsoid(crs.ellipsoidAcronym())     
+            return [d.ellipsoid(), d.sourceCrs().authid(), d.sourceCrs().description(), QgsUnitTypes.toString(d.lengthUnits())]    
+        except:
+            return ["?", "?", "?", "?"]
     
                
     def findRoute(self, currentCrs:QgsCoordinateReferenceSystem, pathLayer:QgsVectorLayer, fromPoint:QgsPointXY, toPoint:QgsPointXY, addStartPoint = False) -> None:
         ''' Runs dijkstra and create the rubberbands ''' 
         
-        director = QgsVectorLayerDirector(pathLayer, -1, '', '', '', QgsVectorLayerDirector.DirectionBoth)
-        strategy = QgsNetworkDistanceStrategy()
-        director.addStrategy(strategy)
+        ''' An exception may occur if QGIS does not know how to make a transformation, e.g.
+               No transform is available between IAU_2015:200021660 - Kleopatra (2015) - Sphere / Ocentric / Tranverse Mercator and ESRI:102082 - Korea_2000_Korea_Central_Belt_2010.
+               Unknown error (code 4096)
+        '''
+        try:
+            director = QgsVectorLayerDirector(pathLayer, -1, '', '', '', QgsVectorLayerDirector.DirectionBoth)
+            strategy = QgsNetworkDistanceStrategy()
+            director.addStrategy(strategy)
        
-        builder = QgsGraphBuilder(currentCrs, True, self.currentConfig["topologyTolerance"], currentCrs.ellipsoidAcronym())
+            builder = QgsGraphBuilder(currentCrs, True, self.currentConfig["topologyTolerance"], currentCrs.ellipsoidAcronym())
+        except:
+            return(None, None, None)
+        
+        
         # These are the coordinates of the points on the line that are closest to the start and stop points
         tiedPoints = director.makeGraph(builder, [fromPoint, toPoint])
         tStart, tStop = tiedPoints
@@ -725,7 +886,6 @@ class OnTheFlyShortestPath:
 
         if tree[idxEnd] == -1:
             #print('No route!')
-            #QMessageBox.information(None, "Costs", "No route")
             self.iface.messageBar().pushMessage("Warning", "No route found", level=Qgis.Warning, duration=3)
             return(None, None, None)
 
@@ -750,10 +910,12 @@ class OnTheFlyShortestPath:
 
         rb = self.createRubberBand()
 
+
+        # I need to transform to the map coordinates in order to draw
         if addStartPoint:
-            rb.addPoint(fromPoint)     
+            rb.addPoint(self.transformPointCoordinates(fromPoint, currentCrs, self.projectCrs))     
         for p in route:
-            rb.addPoint(p)  
+            rb.addPoint(self.transformPointCoordinates(p, currentCrs, self.projectCrs))   
             
         return (rb, analysis_results, tStop)
 
@@ -766,7 +928,8 @@ class OnTheFlyShortestPath:
                             self.currentConfig["rubberBandColorBlue"],
                             self.currentConfig["rubberBandOpacity"],
                             
-                           ))
+                           )
+                    )
         rb.setWidth(self.currentConfig["rubberBandSize"])
         return (rb)        
 
@@ -885,6 +1048,7 @@ class OnTheFlyShortestPath:
     def showResultDlg(self, dlg:QDialog, d:dict) -> None:
         ''' Present the results dialog. This is a modal window. All operations are suspended until this window closes '''
 
+        ''' Length section '''
         dlg.entryCostTxt.setText(self.formatLengthValue(d["entryCost"]))
         dlg.costOnGraphTxt.setText(self.formatLengthValue(d["costOnGraph"]))
         dlg.exitCostTxt.setText(self.formatLengthValue(d["exitCost"]))
@@ -895,22 +1059,25 @@ class OnTheFlyShortestPath:
         dlg.exitCostUnits.setText(d["lengthUnits"])
         dlg.totalCostUnits.setText(d["lengthUnits"])
         
-        # Fiber loss precision is fixed and not associated to the length decimal digits.
-        # I do not think that needs a configuration parameter
-
-        dlg.lossEntryTxt.setText(self.formatLossValue(d["fiberLossEntry"]))
-        dlg.lossOnGraphTxt.setText(self.formatLossValue(d["fiberLossOnGraph"]))
-        dlg.lossExitTxt.setText(self.formatLossValue(d["fiberLossExit"]))
-        dlg.lossTotalTxt.setText(self.formatLossValue(d["fiberTotalLoss"]))
-             
-        dlg.fiberLossUnitsEntry.setText(d["fiberLossUnits"])
-        dlg.fiberLossUnitsOnGraph.setText(d["fiberLossUnits"])
-        dlg.fiberLossUnitsExit.setText(d["fiberLossUnits"])
-        dlg.fiberLossUnitsTotal.setText(d["fiberLossUnits"])
-                        
+        ''' Fiber section '''
+        if dlg != self.resultsDlgNoFiber:        
+            # Fiber loss precision is fixed and not associated to the length decimal digits.
+            # I do not think that needs a configuration parameter
+            dlg.lossEntryTxt.setText(self.formatLossValue(d["fiberLossEntry"]))
+            dlg.lossOnGraphTxt.setText(self.formatLossValue(d["fiberLossOnGraph"]))
+            dlg.lossExitTxt.setText(self.formatLossValue(d["fiberLossExit"]))
+            dlg.lossTotalTxt.setText(self.formatLossValue(d["fiberTotalLoss"]))
+                 
+            dlg.fiberLossUnitsEntry.setText(d["fiberLossUnits"])
+            dlg.fiberLossUnitsOnGraph.setText(d["fiberLossUnits"])
+            dlg.fiberLossUnitsExit.setText(d["fiberLossUnits"])
+            dlg.fiberLossUnitsTotal.setText(d["fiberLossUnits"])
+        
+        ''' CRS and Ellipsoid section '''        
         dlg.ellipsoidTxt.setText(d["ellipsoid"])
         dlg.crsTxt.setText(d["crs"])
         
+        ''' Error message section '''
         ''' OBSOLETE         
         # Handle the peculiar case where the measurements of the start and end points return a distance unit other than meters  
         if d["lengthUnits"] != 'meters':
@@ -932,6 +1099,107 @@ class OnTheFlyShortestPath:
         # exec() is required instead of show() to make the result window modal. 
         # The setting in Qt Designer does not work
         dlg.exec()  
-         
+
+        
+    def transformPointCoordinates(self, point:QgsPointXY, sourceCRS:str, targetCrs:str) -> QgsPointXY:
+        ''' Transforms the coordinates of a point object from a source CRS to a target CRS. CRS to be input as "EPSG:xxxx" '''   
+
+        if sourceCRS == targetCrs:
+            return  point
+        
+        '''
+        try:        
+            tr = QgsCoordinateTransform(QgsCoordinateReferenceSystem(sourceCRS), QgsCoordinateReferenceSystem(targetCrs), QgsProject.instance())
+        except:
+            self.iface.messageBar().pushMessage("Error", "Exception: Not valid transformation. Returns same point coordinates", level=Qgis.Critical)
+        
+        if tr.isValid():
+            try:
+                transformedPoint = tr.transform(point)
+                print ("Point ", point, " To ", transformedPoint)                                
+                return transformedPoint
+            except:
+                self.iface.messageBar().pushMessage("Error", "Exception: transform() failed", level=Qgis.Critical)
+                return point                
+        else:
+            print ("Not valid transformation. Returns same point coordinates")
+            self.iface.messageBar().pushMessage("Error", "Not valid transformation. Returns same point coordinates", level=Qgis.Critical)
+            return point            
+        '''
+        tr = QgsCoordinateTransform(QgsCoordinateReferenceSystem(sourceCRS), QgsCoordinateReferenceSystem(targetCrs), QgsProject.instance())
+        transformedPoint = tr.transform(point)                               
+        return transformedPoint
+        
+        
+    def transformedPointsList(self, points, fromCrs:QgsCoordinateReferenceSystem, toCrs:QgsCoordinateReferenceSystem) -> None:
+        trPoint = []
+        for i, point in enumerate(points):
+            trPoint.append(self.transformPointCoordinates(points[i], fromCrs.authid(), toCrs.authid())) 
+        return trPoint
 
 
+    def transformInputData(self, fromCrs:QgsCoordinateReferenceSystem, toCrs:QgsCoordinateReferenceSystem) -> None:
+
+        for key, point in self.pointsDict.items():  
+            #originalPoint = self.pointsDict[key]
+            trPoint = self.transformPointCoordinates(point, fromCrs.authid(), toCrs.authid())            
+            self.pointsDict[key] = trPoint
+            self.markers[self.pointIndexToMarkerIndex(key)].setCenter(trPoint) 
+            if key == 0:
+                self.dockDlg.start_coordinates_textbox.setText(str(trPoint.x()) + " " + str(trPoint.y()))
+                self.startPoint = QgsPointXY(trPoint) 
+            elif key == 1:
+                self.dockDlg.middle_coordinates_textbox.setText(str(trPoint.x()) + " " + str(trPoint.y()))
+                self.middlePoint = QgsPointXY(trPoint) 
+            elif key == 2:
+                self.dockDlg.end_coordinates_textbox.setText(str(trPoint.x()) + " " + str(trPoint.y()))
+                self.endPoint = QgsPointXY(trPoint)    
+        
+        return
+
+
+    ''' Need to be modified if multiple markers '''
+    def pointIndexToMarkerIndex(self, pointIndex:int) -> int:
+        if pointIndex == 0:
+           return 0
+        elif pointIndex == 2:
+            return 1
+        else:
+            return 2
+
+    def crsDistanceUnits(self, crs:QgsCoordinateReferenceSystem) -> str:
+        ''' Returns the distance units of a CRS, in human readable format '''
+        if crs is None:
+            return "Undefined"
+        else:
+            return QgsUnitTypes.toString(crs.mapUnits())         
+
+    '''        
+    def unitMap(self, distanceUnit: QgsUnitTypes) -> str:
+        # Returns a DistanceUnit to a human readable format
+        if distanceUnit == QgsUnitTypes.DistanceMeters: 
+            return "Meters"
+        elif distanceUnit == QgsUnitTypes.DistanceDegrees: 
+            return "Degrees" # for planar geographic CRS distance measurements
+        elif distanceUnit == QgsUnitTypes.DistanceKilometers: 
+            return "Kilometers"           
+        elif distanceUnit == QgsUnitTypes.DistanceFeet: 
+            return "Imperial feet"
+        elif distanceUnit == QgsUnitTypes.DistanceNauticalMiles: 
+            return "Nautical miles"
+        elif distanceUnit == QgsUnitTypes.DistanceYards: 
+            return "Imperial yards"
+        elif distanceUnit == QgsUnitTypes.DistanceMiles: 
+            return "Terrestrial miles"
+        elif distanceUnit == QgsUnitTypes.DistanceCentimeters: 
+            return "Centimeters"
+        elif distanceUnit == QgsUnitTypes.DistanceMillimeters: 
+            return "Millimeters"
+        #elif distanceUnit == QgsUnitTypes.Inches: 
+        #    return "Inches" # (since QGIS 3.32) Looks peculiar, should be DistanceInches. 
+        # I prefer to exclude to avoid runtime error in case of unknown distance which is more probable to occur
+        elif distanceUnit == QgsUnitTypes.DistanceUnknownUnit: 
+            return "Unknown"
+        else:
+            return "Unknown"
+        '''
