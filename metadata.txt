@@ -52,6 +52,8 @@ changelog=1.0.0:
               * Added check for unit conversion if base unit is not meters
               * Added selection of CRS for measurements
               * Added new results window without fiber loss data.
+             1.0.6
+              * Added topology tolerance units
                 
              
 

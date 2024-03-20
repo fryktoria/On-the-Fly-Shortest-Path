@@ -68,6 +68,7 @@ class OnTheFlyShortestPath:
         "markerSize" : 10,
         "decimalDigits" : 2,
         "topologyTolerance" : 0.0,
+        "toleranceUnitsIndex" : 0,
         "includeStartStop" : 1,
         "resultDialogTypeIndex" : 0, 
         "distanceUnitsIndex" : 0, # ["meters", "Kilometers", "yards", "feet", "nutical miles", "imperial miles"]
@@ -171,10 +172,10 @@ class OnTheFlyShortestPath:
         self.fiber_loss_precision = 2
         
         # A list to hold the option items of the configuration dialog for distance units
-        self.distanceUnits = ["meters", "Kilometers", "yards", "feet", "nautical miles", "imperial miles"]
+        self.distanceUnits = ["meters", "Kilometers", "yards", "feet", "nautical miles", "miles"]
         # A list to hold the result units. Has the same order as the above list
         self.resultUnitsList = ["m", "Km", "y", "ft", "NM", "mi"]
-        self.conversionFactor = [1, 0.001, 1.09361, 3.28084, 0.00053996, 0.000621371] 
+        self.conversionFactor = [1, 0.001, 1.0936132983377078, 3.280839895013123, 0.0005399568034557236, 0.0006213711922373339] 
 
         # Read the stored settings from the QgsSettings mechanism 
         # In Windows could be C:\Users\<username>\AppData\Roaming\QGIS\QGIS3\profiles\default\QGIS\QGIS3.ini      
@@ -320,9 +321,15 @@ class OnTheFlyShortestPath:
         
         crs = self.activeCrs()
         crsData = self.crsDetails(crs)
-        dlg.measurementEllipsoid.setText(crsData[0] + "  " + crsData[1] + "/" + crsData[2]) 
+        dlg.measurementEllipsoid.setText(crsData[0]) 
         dlg.crsUnits.setText(self.crsDistanceUnits(crs))
-                       
+        
+        dlg.toleranceUnits.clear()
+        for index, optionTxt in enumerate(self.distanceUnits):       
+            dlg.toleranceUnits.addItem(optionTxt)
+            if dict["toleranceUnitsIndex"] == index:
+                dlg.toleranceUnits.setCurrentIndex(index)
+        
         dlg.connectorLoss.setValue(dict["connectorLoss"])
         dlg.numberOfConnectorsAtEntry.setValue(dict["numberOfConnectorsAtEntry"])
         dlg.numberOfConnectorsAtExit.setValue(dict["numberOfConnectorsAtExit"])
@@ -357,6 +364,10 @@ class OnTheFlyShortestPath:
         for index, optionTxt in enumerate(self.distanceUnits):          
             if dlg.distanceUnits.currentIndex() == index:       
                 conf["distanceUnitsIndex"] = index
+
+        for index, optionTxt in enumerate(self.distanceUnits):          
+            if dlg.toleranceUnits.currentIndex() == index:       
+                conf["toleranceUnitsIndex"] = index
         
         for index, optionTxt in enumerate(self.resultTypes):          
             if dlg.resultDialogType.currentIndex() == index:       
@@ -605,7 +616,7 @@ class OnTheFlyShortestPath:
     def on_configurationDlg_customCrsChange(self) -> None:  
         crs = self.configurationDlg.mQgsProjectionSelectionWidget.crs()
         crsData = self.crsDetails(crs)
-        self.configurationDlg.measurementEllipsoid.setText(crsData[0] + " " + crsData[1] + "/" + crsData[2]) 
+        self.configurationDlg.measurementEllipsoid.setText(crsData[0]) 
         self.configurationDlg.crsUnits.setText(self.crsDistanceUnits(crs))
     
               
@@ -630,7 +641,7 @@ class OnTheFlyShortestPath:
             crs = self.configurationDlg.mQgsProjectionSelectionWidget.crs() 
             
         crsData = self.crsDetails(crs)
-        self.configurationDlg.measurementEllipsoid.setText(crsData[0] + " " + crsData[1] + "/" + crsData[2]) 
+        self.configurationDlg.measurementEllipsoid.setText(crsData[0]) 
         self.configurationDlg.crsUnits.setText(self.crsDistanceUnits(crs))
             
         return    
@@ -646,7 +657,7 @@ class OnTheFlyShortestPath:
 
         # Update also the configuration dialog which is non modal and could be open
         crsData = self.crsDetails(newCrs)
-        self.configurationDlg.measurementEllipsoid.setText(crsData[0] + " " + crsData[1] + "/" + crsData[2]) 
+        self.configurationDlg.measurementEllipsoid.setText(crsData[0]) 
         self.configurationDlg.crsUnits.setText(self.crsDistanceUnits(newCrs))
                
         return
@@ -869,7 +880,9 @@ class OnTheFlyShortestPath:
             strategy = QgsNetworkDistanceStrategy()
             director.addStrategy(strategy)
        
-            builder = QgsGraphBuilder(currentCrs, True, self.currentConfig["topologyTolerance"], currentCrs.ellipsoidAcronym())
+            topologyTolerance = self.toleranceToMapUnits(currentCrs, self.currentConfig["toleranceUnitsIndex"], self.currentConfig["topologyTolerance"])
+            builder = QgsGraphBuilder(currentCrs, True, topologyTolerance, currentCrs.ellipsoidAcronym())
+            
         except:
             return(None, None, None)
         
@@ -1077,22 +1090,6 @@ class OnTheFlyShortestPath:
         dlg.ellipsoidTxt.setText(d["ellipsoid"])
         dlg.crsTxt.setText(d["crs"])
         
-        ''' Error message section '''
-        ''' OBSOLETE         
-        # Handle the peculiar case where the measurements of the start and end points return a distance unit other than meters  
-        if d["lengthUnits"] != 'meters':
-            dlg.errorTxt.setText("WARNING:Units")
-            self.iface.messageBar().pushMessage("Warning", 
-                                                "Distance units are in " + d["lengthUnits"], 
-                                                level=Qgis.Warning, 
-                                                duration=5)
-            dlg.entryCostUnits.setText("")
-            dlg.onGraphCostUnits.setText("")
-            dlg.exitCostUnits.setText("")
-            dlg.totalCostUnits.setText("")
-        else:
-            dlg.errorTxt.setText("")
-        '''
         # Keep for future use
         dlg.errorTxt.setText("")
         
@@ -1174,32 +1171,11 @@ class OnTheFlyShortestPath:
         else:
             return QgsUnitTypes.toString(crs.mapUnits())         
 
-    '''        
-    def unitMap(self, distanceUnit: QgsUnitTypes) -> str:
-        # Returns a DistanceUnit to a human readable format
-        if distanceUnit == QgsUnitTypes.DistanceMeters: 
-            return "Meters"
-        elif distanceUnit == QgsUnitTypes.DistanceDegrees: 
-            return "Degrees" # for planar geographic CRS distance measurements
-        elif distanceUnit == QgsUnitTypes.DistanceKilometers: 
-            return "Kilometers"           
-        elif distanceUnit == QgsUnitTypes.DistanceFeet: 
-            return "Imperial feet"
-        elif distanceUnit == QgsUnitTypes.DistanceNauticalMiles: 
-            return "Nautical miles"
-        elif distanceUnit == QgsUnitTypes.DistanceYards: 
-            return "Imperial yards"
-        elif distanceUnit == QgsUnitTypes.DistanceMiles: 
-            return "Terrestrial miles"
-        elif distanceUnit == QgsUnitTypes.DistanceCentimeters: 
-            return "Centimeters"
-        elif distanceUnit == QgsUnitTypes.DistanceMillimeters: 
-            return "Millimeters"
-        #elif distanceUnit == QgsUnitTypes.Inches: 
-        #    return "Inches" # (since QGIS 3.32) Looks peculiar, should be DistanceInches. 
-        # I prefer to exclude to avoid runtime error in case of unknown distance which is more probable to occur
-        elif distanceUnit == QgsUnitTypes.DistanceUnknownUnit: 
-            return "Unknown"
-        else:
-            return "Unknown"
-        '''
+
+    def toleranceToMapUnits(self, crs:QgsCoordinateReferenceSystem, toleranceUnitsIndex:int, topologyTolerance:float) -> float:
+        ''' Converts the tolerance value from the units set in the configuration dialog to the map units of the CRS'''
+        configuredUnitIndex = toleranceUnitsIndex
+        toleranceUnits = self.distanceUnits[configuredUnitIndex]
+        unit = QgsUnitTypes.stringToDistanceUnit(toleranceUnits)[0]
+        toleranceMapUnits = QgsUnitTypes.fromUnitToUnitFactor(unit, crs.mapUnits()) * topologyTolerance
+        return toleranceMapUnits
