@@ -54,6 +54,8 @@ changelog=1.0.0:
               * Added new results window without fiber loss data.
              1.0.6
               * Added topology tolerance units
+             1.0.7
+              * Modified topology tolerance resolution to 0.1mm
                 
              
 

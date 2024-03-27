@@ -23,6 +23,11 @@
 
 """
 
+__author__ = 'Ilias Iliopoulos'
+__date__ = 'March 2024'
+__copyright__ = '(C) 2024, Ilias Iliopoulos'
+
+
 import os
 from qgis.PyQt import uic
 from qgis.PyQt.QtGui import QColor
