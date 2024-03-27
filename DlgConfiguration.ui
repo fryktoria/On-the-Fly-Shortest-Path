@@ -351,7 +351,7 @@
      </rect>
     </property>
     <property name="text">
-     <string>Ellipsoid</string>
+     <string>Ellipsoid:</string>
     </property>
    </widget>
    <widget class="QLabel" name="measurementEllipsoid">
@@ -470,7 +470,7 @@
      </rect>
     </property>
     <property name="text">
-     <string>CRS units</string>
+     <string>CRS units:</string>
     </property>
    </widget>
    <widget class="QLabel" name="crsUnits">
