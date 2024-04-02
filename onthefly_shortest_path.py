@@ -238,13 +238,17 @@ class OnTheFlyShortestPath:
         # Additional middle points may be added in the future
         self.createMarkers(3)
         # Change the default icon only for the start and stop markers 
-        self.markers[0].setIconType(QgsVertexMarker.ICON_TRIANGLE)
-        self.markers[1].setIconType(QgsVertexMarker.ICON_INVERTED_TRIANGLE)             
+        # Issue #2. Use only icons allowed to be used as vertex markers
+        self.markers[0].setIconType(QgsVertexMarker.ICON_CIRCLE)
+        self.markers[1].setIconType(QgsVertexMarker.ICON_BOX)             
         # Hide all markers. We will show each one when needed
         self.hideMarkers()  
         
         # Remember the current project CRS so that we can convert coordinates if the project CRS is changed
         self.projectCrs = QgsProject().instance().crs()
+        
+        # Issue #1. Populate combobox immediately upon installation, when layers are already loaded 
+        self.populateLayerSelector()
         
         return
         

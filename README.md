@@ -16,7 +16,9 @@ Additionaly, it allows the setting of an optional middle point, forcing the path
 ## Installation
 
 ### Install from the official QGIS plugin repository
-Pending approval.
+1. From the QGIS toolbar, select `Plugins -> Manage and Install Plugins...`.
+
+2. From the panel on the left side of the `Plugins|Settings` window, select `All`. Navigate to the list to locate the plugin name `On-the-Fly Shortest Path` and press `Install Plugin`. Optionally, you can use the `Search...` facility to locate the plugin by typing its name `On-the-Fly Shortest Path`.
 
 ### Install from the author's repository
 

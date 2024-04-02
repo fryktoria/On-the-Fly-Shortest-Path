@@ -2,7 +2,7 @@
 
 [general]
 name=On-the-Fly-Shortest-Path
-version=1.1.0
+version=1.1.1
 author=Ilias Iliopoulos
 email=info@fryktoria.com
 
@@ -11,7 +11,7 @@ qgisMaximumVersion=3.99
 
 description=Interactively find shortest path between points over a line network and calculate the Fiber Loss Budget of a fiber optic network (backbone or FTTH)
 
-about=The "On-the-Fly Shortest Path" plugin offers an interactive measurement of distances along a line network, operating directly on the map. It calculates Distance and the Fiber Loss Budget in fiber optic networks. The plugin uses the core Network Analysis library of QGIS in order to calculate the shortest path via the Dijkstra algorithm. Subsequently, it calculates the fiber loss of this path, considering several configured parameters (connector loss, splice loss, fiber attenuation, splitters etc.). In contrast to similar algorithms of the Processing toolbox, this plugin does not create a new layer for every measurement but rather presents the path and the calculated parameters directly on screen. This functionality is similar to the original RoadGraph plugin of QGIS2. On top of this, it allows the setting of an optional middle point, forcing the path to cross this. This is helpful in networks with multiple paths between the start and stop point.  
+about=The "On-the-Fly Shortest Path" plugin offers an interactive measurement of distances along a line network, operating directly on the map. It calculates Distance and the Fiber Loss Budget in fiber optic networks. The plugin uses the core Network Analysis library of QGIS in order to calculate the shortest path via the Dijkstra algorithm. Subsequently, it calculates the fiber loss of this path, considering several configured parameters (connector loss, splice loss, fiber attenuation, splitters etc.). In contrast to similar algorithms of the Processing toolbox, this plugin does not create a new layer for every measurement but rather presents the path and the calculated parameters directly on screen. This functionality is similar to the original RoadGraph plugin of QGIS2. In addition, the plugin allows the setting of an optional middle point, forcing the path to go first from the start point to the middle point and then from the middle point to the end point. This is helpful in networks with multiple paths between the start and stop point where the user wants to direct the algorithm to use a preferred path.  
 
 # end of mandatory metadata
 
