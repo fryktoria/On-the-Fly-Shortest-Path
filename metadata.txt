@@ -58,6 +58,8 @@ changelog=1.0.0:
               * Modified topology tolerance resolution to 0.1mm
              1.1.0
               * First non-experimental release
+             1.1.1
+              * Fixed marker symbols which were not supported in earlier QGIS versions (e.g. 3.18)
                 
              
 
