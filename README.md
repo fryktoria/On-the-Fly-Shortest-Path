@@ -10,7 +10,7 @@ Subsequently, it calculates the Fiber Loss Budget of this path, considering seve
 
 In contrast to similar algorithms of the Processing toolbox, this plugin does not create a new layer for every measurement but rather presents the path and the calculated parameters directly on screen. This functionality is similar to the original RoadGraph plugin of QGIS2. 
 
-Additionaly, it allows the setting of an optional middle point, forcing the path to go through it. This is helpful in networks with multiple paths between the start and stop point. 
+In addition, the plugin allows the setting of an optional middle point, forcing the path to go first from the start point to the middle point and then from the middle point to the end point. This is helpful in networks with multiple paths between the start and stop point where the user wants to direct the algorithm to use a preferred path. 
 
 
 ## Installation
@@ -19,25 +19,6 @@ Additionaly, it allows the setting of an optional middle point, forcing the path
 1. From the QGIS toolbar, select `Plugins -> Manage and Install Plugins...`.
 
 2. From the panel on the left side of the `Plugins|Settings` window, select `All`. Navigate to the list to locate the plugin name `On-the-Fly Shortest Path` and press `Install Plugin`. Optionally, you can use the `Search...` facility to locate the plugin by typing its name `On-the-Fly Shortest Path`.
-
-### Install from the author's repository
-
-1. From the QGIS toolbar, select `Plugins -> Manage and Install Plugins...`.
-
-2. The window `Plugins|Settings` will open. From the panel on the left side of the window, select `Settings`.
-
-3. Add a new repository by clicking the `Add...` button. The form `Repository details` will open. Complete the parameters: 
-- `Name` Set to `fryktoria.com`
-- `URL`  Set to  `www.fryktoria.com/qgis_plugin_repository`
-- `Authentication` Leave empty
-- `Enabled` Make sure that it is checked
-
-The new repository will appear on the list and if the repository server has processed the request properly, the status of the repository will show as **connected**.
-
-4. From the panel on the left side of the `Plugins|Settings` window, select `All`. Navigate to the list to locate the plugin name `On-the-Fly Shortest Path` and press `Install Plugin` or `Install Experimental Plugin`. 
-
-5. On the list, of the `Plugins|Settings` window, make sure that the checkbox on the side of the plugin name is checked. This will activate the plugin.
-
 
 ### Install from a zip file
 
@@ -51,10 +32,19 @@ After installation is complete, you should be able to see the plugin name in the
 
 Also, to confirm that installation was made properly, from the QGIS toolbar, select `View -> Panels`. You should see the `On-the-Fly Shortest Path` in the list of panels. Activate it by clicking on the checkbox. 
 
+## Build from Github sources
+
+Follow these instructions if you want to create manually a zip file to install into QGIS using the process described in the __[Install from a zip file](#install%20from%20a%20zip%20file)__  section.
+
+1. Download all files from Github
+2. Create a directory named `On-the-Fly-Shortest-Path` and move all files to this directory
+3. Use your favorite compression tools to create a zip file __which contains the directory__ and not the individual files. This structure is mandatory so that the set of files is understood by QGIS as a plugin.
+4. Install the plugin using the procedure in __[Installation](#installation)__ section.
+
 
 ## Activation
 
-The plugin panel should be visible on the left hand side of the QGIS screen. If you do not see it, firt make sure that the plugin is activated.
+The plugin panel should be visible on the left hand side of the QGIS screen. If you do not see it, first make sure that the plugin is activated.
 
 1. From the QGIS toolbar, select `Plugins -> Manage and Install Plugins...`.
 
@@ -81,13 +71,18 @@ The `Markers` are the visual elements showing the start, middle and stop points 
 ### Section: Network Analysis
 
 `Use ellipsoid of the following CRS`: Distance measurements are taken based on the ellipsoid associated with the selected CRS. This feature allows viewing the map and coordinates on one CRS and take measurements on another. The following options are provided:
+
 `Project CRS`: The CRS of the project, as appears on the bottom right side of the QGIS status bar and can be modified for 'on-the-fly' CRS transformations is used for measurements.
+
 `Layer CRS`: The CRS of the line layer is used
+
 `Custom CRS`: A custom CRS can be selected. For users who do not work mainly on a global scale and operate several projects in an area covered by one ellipsoid, it is advised to use this option. 
 
 After selecting the CRS, information labels regarding the ellisoid associated with the selected CRS, as well as the units of the CRS are updated.
 
-`Topology tolerance`: Set the topology tolerance to account for topological discontinuities of the line network. Using topology tolerance 0 requires the line network to have topological continuity. The units of this setting should conform to the `CRS units` indication above.
+`Topology tolerance`: Set the topology tolerance to account for topological discontinuities of the line network. Using topology tolerance 0 requires the line network to have topological continuity. The units of this setting should conform to the `CRS units` indication above. __WARNING: If the CRS units is in degrees, please note that there will be a significant difference between the measured distance of a gap between lines against the value set in the topology tolerance. It is advised to use a CRS having an invariable map unit, such as meters.__
+
+`Tolerance units`: Set the distance units associated with the `Topology tolerance` setting.
 
 `Result units`: Set the type of distance units to present the result. Note: All measurements are made internally in meters. A simple conversion factor is applied.   
 
@@ -96,8 +91,11 @@ After selecting the CRS, information labels regarding the ellisoid associated wi
 `Include entry/exit points`: When checked, the path is drawn from the start point to the nearest point on the line, along the line and finally to the exit point. When unchecked, only the path along the line is drawn. 
 
 `Show result in`: You can select from the following options:
+
    `Panel`: The results of the analysis will appear in the plugin panel. The result will contain the total cost, including the entry cost, cost on graph and the exit cost.
+   
    `Length`: The results will appear both in the plugin panel as well as in a window that will appear on screen. This new window will contain the details of entry, on graph and exit. Only length information is shown.
+   
    `Length and loss`: Length and Fiber loss budget is shown in a window.    
     
 ### Section: Fiber Loss Budget
@@ -159,11 +157,3 @@ The loss along the line layer is calculated as the sum of:
 NOTE: When the `Include entry/exit points` of the configuration dialog is checked, the total loss from entry point, along the line and to the exit point appears in the panel. When unchecked, only the loss along the line appears in the panel. This includes only the splice loss along the line network and the Fixed loss. 
 
 
-## Build from Github sources
-
-Follow these instructions if you want to create manually a zip file to install into QGIS using the process described in the **[Install from a zip file](#Install%20from%20a%20zip%20file)**  section.
-
-1. Download all files from Github
-2. Create a directory named `On-the-Fly-Shortest-Path` and move all files to this directory
-3. Use your favorite compression tools to create a zip file **which contains the directory** and not the individual files. This structure is mandatory so that the set of files is understood by QGIS as a plugin.
-4. Install the plugin using the procedure in **[Installation](#Installation)** section.

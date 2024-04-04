@@ -21,7 +21,7 @@ experimental=False
 # deprecated flag (applies to the whole plugin, not just a single version
 deprecated=False
 tags=shortest path, dijkstra, network analysis, graph analysis, distance measurement, RoadGraph plugin, fiber, ftth, loss budget, power budget, fiber attenuation
-homepage=https://github.com/fryktoria/On-theFly-Shortest-Path
+homepage=https://fryktoria.github.io/On-the-Fly-Shortest-Path/
 repository=https://github.com/fryktoria/On-theFly-Shortest-Path
 tracker=https://github.com/fryktoria/On-theFly-Shortest-Path
 server=false
@@ -59,7 +59,10 @@ changelog=1.0.0:
              1.1.0
               * First non-experimental release
              1.1.1
-              * Fixed marker symbols which were not supported in earlier QGIS versions (e.g. 3.18)
+              * Fixed marker symbols which were not supported in earlier QGIS versions. Fixed backwards compatibility to symbols available from QGIS version 3.0, unfortunately limiting the available symbols. 
+             1.1.2
+              * Update of README.md.
+              * Set minimum size of dock widget
                 
              
 
