@@ -43,17 +43,23 @@ from qgis.core import (QgsProject,
                        QgsUnitTypes,
                        QgsCoordinateReferenceSystem,                       
                        QgsFeatureRequest,
-                       QgsCoordinateTransform                       
+                       QgsCoordinateTransform,
+                       QgsMessageOutput                       
                        )
 from qgis.gui import (QgsMapToolEmitPoint, 
                       QgsDockWidget, 
                       QgsVertexMarker, 
                       QgsLayoutDesignerInterface,
                       QgsRubberBand,
+                      QgsHelp
                       )
 from qgis.analysis import *
 
-
+#from qgis.PyQt.QtCore import QUrl
+#from qgis.PyQt.QtWebEngineWidgets import QWebEngineView
+#from qgis.PyQt.QtWidgets import QApplication
+#import sys
+import requests
 
 class OnTheFlyShortestPath:
 
@@ -101,7 +107,10 @@ class OnTheFlyShortestPath:
     distanceUnits = ["meters", "Kilometers", "yards", "feet", "nautical miles", "miles"]
     # A list to hold the result units. Has the same order as the above list
     resultUnitsList = ["m", "Km", "y", "ft", "NM", "mi"]
-    conversionFactor = [1, 0.001, 1.0936132983377078, 3.280839895013123, 0.0005399568034557236, 0.0006213711922373339]     
+    conversionFactor = [1, 0.001, 1.0936132983377078, 3.280839895013123, 0.0005399568034557236, 0.0006213711922373339]  
+
+    # Web page containing the help text
+    helpURL = "https://fryktoria.github.io/On-the-Fly-Shortest-Path/"    
     
     def __init__(self, iface):
 
@@ -209,6 +218,8 @@ class OnTheFlyShortestPath:
         self.dockDlg.reset_button.clicked.connect(self.on_dockDlg_reset_button_clicked)
         self.dockDlg.configure_button.clicked.connect(self.on_dockDlg_configure_button_clicked)  
         self.dockDlg.layer_combobox.activated.connect(self.on_dockDlg_layer_selected)
+        
+        self.dockDlg.helpButton.clicked.connect(self.on_dockDlg_help_button_clicked)
         
         self.resultsDlg.OkButton.clicked.connect(self.on_resultsDlg_results_ok)
         self.resultsDlgNoFiber.OkButton.clicked.connect(self.on_resultsDlgNoFiber_results_ok)
@@ -1196,3 +1207,24 @@ class OnTheFlyShortestPath:
         unit = QgsUnitTypes.stringToDistanceUnit(toleranceUnits)[0]
         toleranceMapUnits = QgsUnitTypes.fromUnitToUnitFactor(unit, crs.mapUnits()) * topologyTolerance
         return toleranceMapUnits
+
+
+    def on_dockDlg_help_button_clicked(self) -> None:
+        dlg = QgsMessageOutput.createMessageOutput()
+        dlg.setTitle("Help")        
+        r = requests.get(self.helpURL)
+        if r.status_code == 200:       
+            #print(r.text)
+            dlg.setMessage(r.text, QgsMessageOutput.MessageHtml)          
+        else:
+            html = (
+                "<html><body>"
+                "<h4>Online help not available</h4>"
+                "</body>"
+                "</html>"
+            )
+            dlg.setMessage(html, QgsMessageOutput.MessageHtml)
+            
+        dlg.showMessage()
+        return    
+        

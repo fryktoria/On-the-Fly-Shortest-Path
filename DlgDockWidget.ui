@@ -298,9 +298,9 @@
     <widget class="QPushButton" name="configure_button">
      <property name="geometry">
       <rect>
-       <x>34</x>
+       <x>10</x>
        <y>222</y>
-       <width>151</width>
+       <width>91</width>
        <height>26</height>
       </rect>
      </property>
@@ -357,6 +357,19 @@
      </property>
      <property name="checked">
       <bool>true</bool>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="helpButton">
+     <property name="geometry">
+      <rect>
+       <x>109</x>
+       <y>222</y>
+       <width>93</width>
+       <height>26</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Help...</string>
      </property>
     </widget>
    </widget>

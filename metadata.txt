@@ -63,6 +63,9 @@ changelog=1.0.0:
              1.1.2
               * Update of README.md.
               * Set minimum size of dock widget
+             1.1.3
+              * Better memory management
+              * Added Help button
                 
              
 
