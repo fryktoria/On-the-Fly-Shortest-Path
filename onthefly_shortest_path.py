@@ -53,9 +53,6 @@ from qgis.gui import (QgsMapToolEmitPoint,
                       )
 from qgis.analysis import *
 
-# Test to clone layer using processing algorithms
-#import processing
-
 
 
 class OnTheFlyShortestPath:
@@ -87,10 +84,27 @@ class OnTheFlyShortestPath:
         "cableLoss" : 0.25,       # db/Km    
         "fixedLoss" : 0  # db e.g. Acccount for splitters 1:2->4db, 1:4->7db, 1:8->11db, 1:16->15db, 1:32->19db, 1:64->23db
     }
+    
+    defaultStartMarkerIcon = QgsVertexMarker.ICON_CIRCLE
+    defaultEndMarkerIcon = QgsVertexMarker.ICON_BOX
+    defaultMiddleMarkerIcon = QgsVertexMarker.ICON_CROSS    
 
+    # pluginName used as prefix in storing and reading configuration settings
+    pluginName = "OtFShortestPath"    
+
+    # Set the decimal digits for the presentation of fiber loss in the results window
+    # Fiber loss precision is fixed and not associated to the length decimal digits.
+    # I do not think that needs a configuration parameter
+    fiber_loss_precision = 2
+        
+    # A list to hold the option items of the configuration dialog for distance units
+    distanceUnits = ["meters", "Kilometers", "yards", "feet", "nautical miles", "miles"]
+    # A list to hold the result units. Has the same order as the above list
+    resultUnitsList = ["m", "Km", "y", "ft", "NM", "mi"]
+    conversionFactor = [1, 0.001, 1.0936132983377078, 3.280839895013123, 0.0005399568034557236, 0.0006213711922373339]     
+    
     def __init__(self, iface):
-        # pluginName used as prefix in storing and reading configuration settings
-        self.pluginName = "OtFShortestPath"
+
         self.iface = iface
         self.canvas = self.iface.mapCanvas()
 
@@ -98,18 +112,18 @@ class OnTheFlyShortestPath:
         self.plugin_dir = os.path.dirname(__file__)
 
         # Set up the Panel using the docked widget
-        self.dockDlg = uic.loadUi(os.path.join(os.path.dirname(__file__), "./", "DlgDockWidget.ui"))   
+        self.dockDlg = uic.loadUi(os.path.join(self.plugin_dir, "./", "DlgDockWidget.ui"))   
         self.iface.addDockWidget(Qt.LeftDockWidgetArea, self.dockDlg)
 
         # Load the configuration form
-        self.configurationDlg = uic.loadUi(os.path.join(os.path.dirname(__file__), "./", "DlgConfiguration.ui"))
+        self.configurationDlg = uic.loadUi(os.path.join(self.plugin_dir, "./", "DlgConfiguration.ui"))
       
         # Load the results form
-        self.resultsDlg = uic.loadUi(os.path.join(os.path.dirname(__file__), "./", "DlgResults.ui"))
+        self.resultsDlg = uic.loadUi(os.path.join(self.plugin_dir, "./", "DlgResults.ui"))
         self.resultsDlg.modal = True
 
         # Load the results form without the fiber data
-        self.resultsDlgNoFiber = uic.loadUi(os.path.join(os.path.dirname(__file__), "./", "DlgResultsNoFiber.ui"))
+        self.resultsDlgNoFiber = uic.loadUi(os.path.join(self.plugin_dir, "./", "DlgResultsNoFiber.ui"))
         self.resultsDlgNoFiber.modal = True
 
         # set up the tool to click on screen and get the coordinates
@@ -171,17 +185,6 @@ class OnTheFlyShortestPath:
         self.layerList = []
         self.previousLayerId = ""
         
-        # Set the decimal digits for the presentation of fiber loss in the results window
-        # Fiber loss precision is fixed and not associated to the length decimal digits.
-        # I do not think that needs a configuration parameter
-        self.fiber_loss_precision = 2
-        
-        # A list to hold the option items of the configuration dialog for distance units
-        self.distanceUnits = ["meters", "Kilometers", "yards", "feet", "nautical miles", "miles"]
-        # A list to hold the result units. Has the same order as the above list
-        self.resultUnitsList = ["m", "Km", "y", "ft", "NM", "mi"]
-        self.conversionFactor = [1, 0.001, 1.0936132983377078, 3.280839895013123, 0.0005399568034557236, 0.0006213711922373339] 
-
         # Read the stored settings from the QgsSettings mechanism 
         # In Windows could be C:\Users\<username>\AppData\Roaming\QGIS\QGIS3\profiles\default\QGIS\QGIS3.ini      
         self.readQgsSettings()
@@ -239,15 +242,15 @@ class OnTheFlyShortestPath:
         self.createMarkers(3)
         # Change the default icon only for the start and stop markers 
         # Issue #2. Use only icons allowed to be used as vertex markers
-        self.markers[0].setIconType(QgsVertexMarker.ICON_CIRCLE)
-        self.markers[1].setIconType(QgsVertexMarker.ICON_BOX)             
+        self.markers[0].setIconType(self.defaultStartMarkerIcon)
+        self.markers[1].setIconType(self.defaultEndMarkerIcon)             
         # Hide all markers. We will show each one when needed
         self.hideMarkers()  
         
-        # Remember the current project CRS so that we can convert coordinates if the project CRS is changed
+        # Remember the current QGIS Project CRS so that we can convert coordinates if the project CRS is changed
         self.projectCrs = QgsProject().instance().crs()
         
-        # Issue #1. Populate combobox immediately upon installation, when layers are already loaded 
+        # Issue #1. Populate combobox immediately upon installation, to cover the case where layers are already loaded 
         self.populateLayerSelector()
         
         return
@@ -257,7 +260,7 @@ class OnTheFlyShortestPath:
         ''' Clean up resources '''
         self.canvas.unsetMapTool(self.pointTool)
         return
-
+ 
  
     def readQgsSettings(self) -> None:
         ''' Read from the QGIS repository and update the local dictionary of the current configuration.
@@ -386,7 +389,7 @@ class OnTheFlyShortestPath:
         conf["selectedCrsMethod"] = self.temporaryCrsMethod
         
         try:
-            # I did not find a method to return the EPSG is as ineteger. I remove the first 5 characters "EPSG:" 
+            # I did not find a method to return the EPSG is as integer. I remove the first 5 characters "EPSG:" 
             epsgId = int(dlg.mQgsProjectionSelectionWidget.crs().authid()[5:])
         except:
             #epsgId = -1
@@ -444,7 +447,7 @@ class OnTheFlyShortestPath:
         # Get all map layers in the project
         layers = QgsProject.instance().mapLayers()
         # Iterate over layers and identify open line layers
-        # Create a list containing (layer name, unique layer id, layer crs) from which 
+        # Create a list containing (layer name, unique layer id) from which 
         # I will populate the combo box and be able to work with the index and the unique id,
         # having the name only for presentation purposes 
         self.layerList.clear()
@@ -539,8 +542,7 @@ class OnTheFlyShortestPath:
         self.uncheckAllButtons()
         self.hideMarkers()
         
-        self.pointsDict.clear()
-       
+        self.pointsDict.clear()       
         self.populateLayerSelector()
         return
                 
@@ -639,10 +641,12 @@ class OnTheFlyShortestPath:
         elif crsMethod == 1:
                 self.configurationDlg.selectLayerCrs.setChecked(True)    
                 self.configurationDlg.mQgsProjectionSelectionWidget.setEnabled(False)  
-                if self.getPathLayer() is None:
+                
+                layer = self.selectedLayer()
+                if layer is None:
                     crs = None
                 else:    
-                    crs = self.getPathLayer().sourceCrs()
+                    crs = layer.sourceCrs()
                 
         elif crsMethod == 2:    
             self.configurationDlg.selectCustomCrs.setChecked(True)    
@@ -696,31 +700,35 @@ class OnTheFlyShortestPath:
         return
  
 
-    def getPathLayer(self) -> QgsVectorLayer: 
-        ''' Returns a memory clone of the line layer, over which the shortest path will be searched.
-        This copy contains all features of the original layer, having only the geometry but not the attributes.
-        This is to make the copy more light for the system. Yet, we cannot make use of any attributes for the analysis.
-        If in the future we add some functionality requiring the analysis of attributes, we can add only the selected 
-        attributes into the clone.
-        '''       
+    def selectedLayer(self) -> QgsVectorLayer:
+        ''' Returns the layer id of the layer selected in the combo box '''
         cmbBoxIndex = self.dockDlg.layer_combobox.currentIndex()
         if cmbBoxIndex < 0:
             return None
         layerId = self.layerList[cmbBoxIndex][1]
         my_layer = QgsProject.instance().mapLayer(layerId)        
-        #print ("Using path layer ", self.layerList[cmbBoxIndex][1])
-        my_layer.selectAll()
-        # all features
-        #mem_layer = my_layer.materialize(QgsFeatureRequest().setFilterFids(my_layer.allFeatureIds()))
-        # all features, no attributes. Documentation says "To disable fetching attributes, reset the FetchAttributes flag (which is set by default)"
-        # which is misleading because there is no FetchAttributes flag. Yet, I tried the SubsetOfAttributes flag as below and it worked
-        mem_layer = my_layer.materialize(QgsFeatureRequest().setFlags(QgsFeatureRequest.SubsetOfAttributes  ))
-        my_layer.removeSelection()        
+        #print ("Using path layer ", self.layerList[cmbBoxIndex][1]) 
+        return my_layer        
+
+       
+    def createMemLayer(self, inputLayer) -> QgsVectorLayer:
+        ''' Creates and returns a memory clone of the line layer, over which the shortest path will be searched.
+        This copy contains all features of the original layer, having only the geometry but not the attributes.
+        This is to make the copy more light for the system. Yet, we cannot make use of any attributes for the analysis.
+        If in the future we add some functionality requiring the analysis of attributes, we can add only the selected 
+        attributes into the clone.
+        '''  
+        inputLayer.selectAll()
+        mem_layer = inputLayer.materialize(QgsFeatureRequest().setFlags(QgsFeatureRequest.SubsetOfAttributes  ))
+        if not mem_layer.isValid():
+            self.iface.messageBar().pushMessage("Error", "Failed to create memory layer", level=Qgis.Critical, duration=5)
+            return None
+        inputLayer.removeSelection()            
         # I do not want the layer on map, just in memory. I used it in order to make sure that the memory layer does 
         # not carry the attributes of the original layer
         # QgsProject.instance().addMapLayer(mem_layer)               
-        return mem_layer
-        
+        return mem_layer    
+
 
     def activeCrs(self) -> QgsCoordinateReferenceSystem:
         ''' Returns the QgsCoordinateReferenceSystem to be used for measurements 
@@ -729,22 +737,22 @@ class OnTheFlyShortestPath:
         if self.currentConfig["selectedCrsMethod"] == 0:
             crs = QgsProject().instance().crs()
         elif self.currentConfig["selectedCrsMethod"] == 1:
-            if self.getPathLayer() is None:
+            layer = self.selectedLayer()
+            if layer is None:
                 crs = None
             else:    
-                crs = self.getPathLayer().sourceCrs()
+                crs = layer.sourceCrs()
         else:
             crs = QgsCoordinateReferenceSystem.fromEpsgId(self.currentConfig["customCrs"]) 
         return crs            
     
 
-
-        
+      
     def process(self) -> int:
 
-        pathLayer = self.getPathLayer() 
+        pathLayer = self.selectedLayer() 
         if pathLayer is None:
-             return -1
+             return -1     
         
         #print ("CRS of path layer: ", pathLayer.crs().authid())          
         if pathLayer.crs().authid() == "":
@@ -754,7 +762,7 @@ class OnTheFlyShortestPath:
         # Local variable to avoid length calculations
         measureCrs = self.activeCrs() 
         if measureCrs is None:
-            self.iface.messageBar().pushMessage("Error", "Path layer is not set", level=Qgis.Critical, duration=5)
+            self.iface.messageBar().pushMessage("Error", "Invalid measure CRS", level=Qgis.Critical, duration=5)
             return -1
 
         entryCost = 0
@@ -983,7 +991,7 @@ class OnTheFlyShortestPath:
     
         for i in range(numMarkers):
             self.markers.insert(i, QgsVertexMarker(self.canvas))        
-            self.markers[i].setIconType(QgsVertexMarker.ICON_CROSS) # or ICON_CROSS, ICON_X
+            self.markers[i].setIconType(self.defaultMiddleMarkerIcon) # e.g. ICON_CROSS, ICON_X
             markerColor = QColor(
                                 int(self.currentConfig["markerColorRed"]), 
                                 int(self.currentConfig["markerColorGreen"]), 
