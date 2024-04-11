@@ -140,7 +140,7 @@ After selecting the CRS, information labels regarding the ellipsoid associated w
 
 # <a name="usage"></a>Usage
 
-__NOTE: The text below refers to the names of buttons as per their functionality. Since plugin version 1.3.0, the text of the buttons has been replaced by icons. The icons are self-explainable. Alternatively, you may hover over a button with the mouse . A tooltip will appear and present the action to be taken when the button is pressed.__  
+__NOTE: The text below refers to the names of buttons as per their functionality. Since plugin version 1.2.0, the text of the buttons has been replaced by icons. The icons are self-explainable. Alternatively, you may hover over a button with the mouse . A tooltip will appear and present the action to be taken when the button is pressed.__  
  
 1. Load the layer(-s) containing the line network where the analysis of the shortest path will be made, using the normal QGIS procedures for loading projects or individual layers.
 
