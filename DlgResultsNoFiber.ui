@@ -216,7 +216,7 @@
     <locale language="C" country="AnyCountry"/>
    </property>
    <property name="text">
-    <string>Οn graph</string>
+    <string>Οn path</string>
    </property>
   </widget>
   <widget class="QLineEdit" name="exitCostTxt">

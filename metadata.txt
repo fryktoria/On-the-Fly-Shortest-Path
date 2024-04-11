@@ -2,7 +2,7 @@
 
 [general]
 name=On-the-Fly-Shortest-Path
-version=1.1.1
+version=1.2.0
 author=Ilias Iliopoulos
 email=info@fryktoria.com
 
@@ -11,7 +11,7 @@ qgisMaximumVersion=3.99
 
 description=Interactively find shortest path between points over a line network and calculate the Fiber Loss Budget of a fiber optic network (backbone or FTTH)
 
-about=The "On-the-Fly Shortest Path" plugin offers an interactive measurement of distances along a line network, operating directly on the map. It calculates Distance and the Fiber Loss Budget in fiber optic networks. The plugin uses the core Network Analysis library of QGIS in order to calculate the shortest path via the Dijkstra algorithm. Subsequently, it calculates the fiber loss of this path, considering several configured parameters (connector loss, splice loss, fiber attenuation, splitters etc.). In contrast to similar algorithms of the Processing toolbox, this plugin does not create a new layer for every measurement but rather presents the path and the calculated parameters directly on screen. This functionality is similar to the original RoadGraph plugin of QGIS2. In addition, the plugin allows the setting of an optional middle point, forcing the path to go first from the start point to the middle point and then from the middle point to the end point. This is helpful in networks with multiple paths between the start and stop point where the user wants to direct the algorithm to use a preferred path.  
+about=The "On-the-Fly Shortest Path" plugin offers an interactive measurement of distances along a line network, operating directly on the map. It calculates Distance and the Fiber Loss Budget in fiber optic networks. The plugin uses the core Network Analysis library of QGIS in order to calculate the shortest path via the Dijkstra algorithm. Subsequently, it calculates the fiber loss of this path, considering several configured parameters (connector loss, splice loss, fiber attenuation, splitters etc.). In contrast to similar algorithms of the Processing toolbox, this plugin does not create a new layer for every measurement but rather presents the path and the calculated parameters directly on screen. This functionality is similar to the original RoadGraph plugin of QGIS2. In addition, the plugin allows the setting of optional middle points, forcing the path to go first from the start point to each one of the  middle points and finally to the end point. This is helpful in networks with multiple paths between the start and stop point where the user wants to direct the algorithm to use a preferred path.  
 
 # end of mandatory metadata
 
@@ -23,7 +23,7 @@ deprecated=False
 tags=shortest path, dijkstra, network analysis, graph analysis, distance measurement, RoadGraph plugin, fiber, ftth, loss budget, power budget, fiber attenuation
 homepage=https://fryktoria.github.io/On-the-Fly-Shortest-Path/
 repository=https://github.com/fryktoria/On-theFly-Shortest-Path
-tracker=https://github.com/fryktoria/On-theFly-Shortest-Path
+tracker=https://github.com/fryktoria/On-theFly-Shortest-Path/issues
 server=false
 hasProcessingProvider=false
 icon=logo.png
@@ -63,9 +63,22 @@ changelog=1.0.0:
              1.1.2
               * Update of README.md.
               * Set minimum size of dock widget
-             1.1.3
+             1.1.3 (not released in public)
               * Better memory management
-              * Added Help button
+              * Introduced Help button
+             1.2.0
+              * Introduced support for multiple layers
+              * Replaced dock widget text with icons
+              * Introduced two middle markers, for a total of three
+              * Introduced a dialog to present the coordinates of all markers
+              * Introduced a formatting option for coordinates ("x y", "y x", "x, y", "y, x")
+              * Introduced a presentation option to hide fiber loss, for users who are only interested in lengths
+              * Introduced highlight on coordinate buttons to show when coordinates are assigned to them
+              * Introduced a button to store the result of the analysis as a temporary layer
+              * Introduced a configuration option to store the result of the analysis as a temporary layer
+              * Introduced a configuration option to store the layer that results from the merging of the selected layers, as a temporary layer
+
+             
                 
              
 

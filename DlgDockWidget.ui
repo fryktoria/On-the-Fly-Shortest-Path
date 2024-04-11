@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>226</width>
-    <height>280</height>
+    <width>232</width>
+    <height>240</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -19,14 +19,17 @@
   <property name="minimumSize">
    <size>
     <width>95</width>
-    <height>280</height>
+    <height>240</height>
    </size>
   </property>
   <property name="maximumSize">
    <size>
     <width>50000</width>
-    <height>280</height>
+    <height>240</height>
    </size>
+  </property>
+  <property name="toolTip">
+   <string>Fiber loss</string>
   </property>
   <property name="locale">
    <locale language="C" country="AnyCountry"/>
@@ -35,19 +38,37 @@
    <string>On-the-Fly Shortest Path</string>
   </property>
   <widget class="QWidget" name="dockWidgetContents">
+   <property name="minimumSize">
+    <size>
+     <width>0</width>
+     <height>225</height>
+    </size>
+   </property>
+   <property name="maximumSize">
+    <size>
+     <width>16777215</width>
+     <height>225</height>
+    </size>
+   </property>
    <widget class="QFrame" name="frame">
     <property name="geometry">
      <rect>
       <x>0</x>
       <y>0</y>
       <width>227</width>
-      <height>253</height>
+      <height>225</height>
      </rect>
     </property>
     <property name="minimumSize">
      <size>
-      <width>0</width>
-      <height>100</height>
+      <width>50</width>
+      <height>85</height>
+     </size>
+    </property>
+    <property name="maximumSize">
+     <size>
+      <width>16777215</width>
+      <height>225</height>
      </size>
     </property>
     <property name="locale">
@@ -63,95 +84,115 @@
      <property name="geometry">
       <rect>
        <x>4</x>
-       <y>7</y>
-       <width>41</width>
-       <height>21</height>
+       <y>8</y>
+       <width>24</width>
+       <height>24</height>
       </rect>
+     </property>
+     <property name="toolTip">
+      <string>Select one or more layers...</string>
      </property>
      <property name="text">
-      <string>Layer</string>
-     </property>
-    </widget>
-    <widget class="QComboBox" name="layer_combobox">
-     <property name="geometry">
-      <rect>
-       <x>44</x>
-       <y>7</y>
-       <width>171</width>
-       <height>22</height>
-      </rect>
-     </property>
-     <property name="locale">
-      <locale language="C" country="AnyCountry"/>
-     </property>
-     <property name="editable">
-      <bool>false</bool>
-     </property>
-     <property name="currentIndex">
-      <number>-1</number>
-     </property>
-     <property name="placeholderText">
       <string/>
      </property>
-     <property name="duplicatesEnabled">
+     <property name="pixmap">
+      <pixmap>icons/layer-stack2.svg</pixmap>
+     </property>
+     <property name="scaledContents">
       <bool>true</bool>
      </property>
     </widget>
-    <widget class="QPushButton" name="start_coordinates_button">
+    <widget class="QPushButton" name="startCoordinatesButton">
      <property name="geometry">
       <rect>
        <x>161</x>
-       <y>37</y>
+       <y>40</y>
        <width>56</width>
-       <height>28</height>
+       <height>24</height>
       </rect>
+     </property>
+     <property name="toolTip">
+      <string>Click here and then on map to set Start point ...</string>
      </property>
      <property name="locale">
       <locale language="C" country="AnyCountry"/>
      </property>
      <property name="text">
-      <string>Start</string>
+      <string/>
+     </property>
+     <property name="icon">
+      <iconset>
+       <normaloff>icons/start.png</normaloff>icons/start.png</iconset>
+     </property>
+     <property name="iconSize">
+      <size>
+       <width>48</width>
+       <height>48</height>
+      </size>
      </property>
      <property name="checkable">
       <bool>true</bool>
      </property>
-     <property name="checked">
-      <bool>false</bool>
-     </property>
     </widget>
-    <widget class="QPushButton" name="middle_coordinates_button">
+    <widget class="QPushButton" name="middleCoordinatesButton">
      <property name="geometry">
       <rect>
-       <x>161</x>
-       <y>67</y>
+       <x>10</x>
+       <y>68</y>
        <width>56</width>
-       <height>28</height>
+       <height>24</height>
       </rect>
+     </property>
+     <property name="toolTip">
+      <string>Click here and then on map to set Middle point 1 ...</string>
      </property>
      <property name="locale">
       <locale language="C" country="AnyCountry"/>
      </property>
      <property name="text">
-      <string>Middle</string>
+      <string/>
+     </property>
+     <property name="icon">
+      <iconset>
+       <normaloff>icons/m1.png</normaloff>icons/m1.png</iconset>
+     </property>
+     <property name="iconSize">
+      <size>
+       <width>48</width>
+       <height>48</height>
+      </size>
      </property>
      <property name="checkable">
       <bool>true</bool>
      </property>
     </widget>
-    <widget class="QPushButton" name="end_coordinates_button">
+    <widget class="QPushButton" name="endCoordinatesButton">
      <property name="geometry">
       <rect>
        <x>161</x>
        <y>97</y>
        <width>56</width>
-       <height>28</height>
+       <height>22</height>
       </rect>
+     </property>
+     <property name="toolTip">
+      <string>Click here and then on map to set End point ...</string>
      </property>
      <property name="locale">
       <locale language="C" country="AnyCountry"/>
      </property>
      <property name="text">
-      <string>End</string>
+      <string/>
+     </property>
+     <property name="icon">
+      <iconset>
+       <normaloff>icons/end.png</normaloff>icons/end.png</iconset>
+     </property>
+     <property name="iconSize">
+      <size>
+       <width>48</width>
+       <height>48</height>
+      </size>
      </property>
      <property name="checkable">
       <bool>true</bool>
@@ -160,21 +201,30 @@
     <widget class="QLabel" name="label_2">
      <property name="geometry">
       <rect>
-       <x>4</x>
-       <y>132</y>
-       <width>42</width>
-       <height>21</height>
+       <x>20</x>
+       <y>128</y>
+       <width>29</width>
+       <height>24</height>
       </rect>
      </property>
+     <property name="toolTip">
+      <string>Length result</string>
+     </property>
      <property name="text">
-      <string>Length</string>
+      <string/>
+     </property>
+     <property name="pixmap">
+      <pixmap>icons/ruler.svg</pixmap>
+     </property>
+     <property name="scaledContents">
+      <bool>true</bool>
      </property>
     </widget>
     <widget class="QLineEdit" name="resultLength">
      <property name="geometry">
       <rect>
        <x>64</x>
-       <y>132</y>
+       <y>128</y>
        <width>115</width>
        <height>20</height>
       </rect>
@@ -189,7 +239,7 @@
       <bool>true</bool>
      </property>
     </widget>
-    <widget class="QLineEdit" name="start_coordinates_textbox">
+    <widget class="QLineEdit" name="startCoordinatesTextbox">
      <property name="geometry">
       <rect>
        <x>12</x>
@@ -197,6 +247,9 @@
        <width>146</width>
        <height>20</height>
       </rect>
+     </property>
+     <property name="toolTip">
+      <string>Start point coordinates</string>
      </property>
      <property name="locale">
       <locale language="C" country="AnyCountry"/>
@@ -208,33 +261,17 @@
       <bool>true</bool>
      </property>
     </widget>
-    <widget class="QLineEdit" name="middle_coordinates_textbox">
+    <widget class="QLineEdit" name="endCoordinatesTextbox">
      <property name="geometry">
       <rect>
        <x>12</x>
-       <y>71</y>
+       <y>98</y>
        <width>146</width>
        <height>20</height>
       </rect>
      </property>
-     <property name="locale">
-      <locale language="C" country="AnyCountry"/>
-     </property>
-     <property name="readOnly">
-      <bool>true</bool>
-     </property>
-     <property name="placeholderText">
-      <string>optional</string>
-     </property>
-    </widget>
-    <widget class="QLineEdit" name="end_coordinates_textbox">
-     <property name="geometry">
-      <rect>
-       <x>12</x>
-       <y>100</y>
-       <width>146</width>
-       <height>20</height>
-      </rect>
+     <property name="toolTip">
+      <string>End point coordinates</string>
      </property>
      <property name="locale">
       <locale language="C" country="AnyCountry"/>
@@ -246,14 +283,23 @@
     <widget class="QLabel" name="label_3">
      <property name="geometry">
       <rect>
-       <x>4</x>
+       <x>18</x>
        <y>159</y>
-       <width>65</width>
-       <height>16</height>
+       <width>40</width>
+       <height>17</height>
       </rect>
      </property>
+     <property name="toolTip">
+      <string>Fiber loss result</string>
+     </property>
      <property name="text">
-      <string>Fiber loss</string>
+      <string/>
+     </property>
+     <property name="pixmap">
+      <pixmap>icons/otdr.png</pixmap>
+     </property>
+     <property name="scaledContents">
+      <bool>true</bool>
      </property>
     </widget>
     <widget class="QLineEdit" name="fiberLoss">
@@ -273,9 +319,9 @@
      <property name="geometry">
       <rect>
        <x>182</x>
-       <y>133</y>
+       <y>128</y>
        <width>36</width>
-       <height>16</height>
+       <height>21</height>
       </rect>
      </property>
      <property name="text">
@@ -286,7 +332,7 @@
      <property name="geometry">
       <rect>
        <x>182</x>
-       <y>160</y>
+       <y>159</y>
        <width>36</width>
        <height>16</height>
       </rect>
@@ -295,65 +341,162 @@
       <string>units</string>
      </property>
     </widget>
-    <widget class="QPushButton" name="configure_button">
+    <widget class="QPushButton" name="configureButton">
      <property name="geometry">
       <rect>
-       <x>10</x>
-       <y>222</y>
-       <width>91</width>
+       <x>156</x>
+       <y>186</y>
+       <width>33</width>
        <height>26</height>
       </rect>
      </property>
-     <property name="locale">
-      <locale language="C" country="AnyCountry"/>
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
      </property>
-     <property name="text">
+     <property name="minimumSize">
+      <size>
+       <width>33</width>
+       <height>26</height>
+      </size>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>33</width>
+       <height>26</height>
+      </size>
+     </property>
+     <property name="toolTip">
       <string>Configure...</string>
      </property>
+     <property name="locale">
+      <locale language="C" country="AnyCountry"/>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+     <property name="icon">
+      <iconset>
+       <normaloff>icons/settings.svg</normaloff>icons/settings.svg</iconset>
+     </property>
     </widget>
-    <widget class="QPushButton" name="reset_button">
+    <widget class="QPushButton" name="resetButton">
      <property name="geometry">
       <rect>
-       <x>109</x>
-       <y>187</y>
-       <width>93</width>
-       <height>28</height>
+       <x>80</x>
+       <y>186</y>
+       <width>40</width>
+       <height>26</height>
       </rect>
+     </property>
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="minimumSize">
+      <size>
+       <width>40</width>
+       <height>26</height>
+      </size>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>40</width>
+       <height>26</height>
+      </size>
+     </property>
+     <property name="toolTip">
+      <string>Reset all markers and paths</string>
      </property>
      <property name="locale">
       <locale language="C" country="AnyCountry"/>
      </property>
      <property name="text">
-      <string>Reset</string>
+      <string/>
+     </property>
+     <property name="icon">
+      <iconset>
+       <normaloff>icons/undo.svg</normaloff>icons/undo.svg</iconset>
+     </property>
+     <property name="iconSize">
+      <size>
+       <width>32</width>
+       <height>32</height>
+      </size>
      </property>
     </widget>
-    <widget class="QPushButton" name="calculate_button">
+    <widget class="QPushButton" name="calculateButton">
      <property name="geometry">
       <rect>
-       <x>9</x>
-       <y>187</y>
-       <width>93</width>
-       <height>28</height>
+       <x>4</x>
+       <y>186</y>
+       <width>74</width>
+       <height>26</height>
       </rect>
+     </property>
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="minimumSize">
+      <size>
+       <width>74</width>
+       <height>26</height>
+      </size>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>74</width>
+       <height>26</height>
+      </size>
+     </property>
+     <property name="toolTip">
+      <string>Calculate, find and measure path...</string>
      </property>
      <property name="locale">
       <locale language="C" country="AnyCountry"/>
      </property>
      <property name="text">
-      <string>Calculate</string>
+      <string/>
+     </property>
+     <property name="icon">
+      <iconset>
+       <normaloff>icons/measure.svg</normaloff>icons/measure.svg</iconset>
+     </property>
+     <property name="iconSize">
+      <size>
+       <width>20</width>
+       <height>20</height>
+      </size>
      </property>
     </widget>
     <widget class="QCheckBox" name="addFixedLoss">
      <property name="geometry">
       <rect>
-       <x>62</x>
-       <y>156</y>
-       <width>56</width>
-       <height>20</height>
+       <x>64</x>
+       <y>158</y>
+       <width>39</width>
+       <height>17</height>
       </rect>
      </property>
+     <property name="toolTip">
+      <string>Check to add 'Fixed loss' amount</string>
+     </property>
+     <property name="layoutDirection">
+      <enum>Qt::RightToLeft</enum>
+     </property>
      <property name="text">
-      <string>+Fixed</string>
+      <string/>
+     </property>
+     <property name="icon">
+      <iconset>
+       <normaloff>icons/add-fixed.svg</normaloff>icons/add-fixed.svg</iconset>
      </property>
      <property name="checked">
       <bool>true</bool>
@@ -362,33 +505,219 @@
     <widget class="QPushButton" name="helpButton">
      <property name="geometry">
       <rect>
-       <x>109</x>
-       <y>222</y>
-       <width>93</width>
+       <x>190</x>
+       <y>186</y>
+       <width>33</width>
        <height>26</height>
       </rect>
      </property>
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="minimumSize">
+      <size>
+       <width>33</width>
+       <height>26</height>
+      </size>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>33</width>
+       <height>26</height>
+      </size>
+     </property>
+     <property name="toolTip">
+      <string>Online help...</string>
+     </property>
+     <property name="statusTip">
+      <string/>
+     </property>
+     <property name="whatsThis">
+      <string/>
+     </property>
      <property name="text">
-      <string>Help...</string>
+      <string/>
+     </property>
+     <property name="icon">
+      <iconset>
+       <normaloff>icons/question.svg</normaloff>icons/question.svg</iconset>
+     </property>
+    </widget>
+    <widget class="QgsCheckableComboBox" name="layerCombobox">
+     <property name="geometry">
+      <rect>
+       <x>36</x>
+       <y>6</y>
+       <width>181</width>
+       <height>25</height>
+      </rect>
+     </property>
+     <property name="toolTip">
+      <string>Select one or multiple layers</string>
+     </property>
+     <property name="editable">
+      <bool>true</bool>
+     </property>
+     <property name="duplicatesEnabled">
+      <bool>true</bool>
+     </property>
+     <property name="defaultText">
+      <string/>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="middle2CoordinatesButton">
+     <property name="geometry">
+      <rect>
+       <x>68</x>
+       <y>68</y>
+       <width>56</width>
+       <height>24</height>
+      </rect>
+     </property>
+     <property name="toolTip">
+      <string>Click here and then on map to set Middle point 2 ...</string>
+     </property>
+     <property name="locale">
+      <locale language="C" country="AnyCountry"/>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+     <property name="icon">
+      <iconset>
+       <normaloff>icons/m2.png</normaloff>icons/m2.png</iconset>
+     </property>
+     <property name="iconSize">
+      <size>
+       <width>48</width>
+       <height>48</height>
+      </size>
+     </property>
+     <property name="checkable">
+      <bool>true</bool>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="middle3CoordinatesButton">
+     <property name="geometry">
+      <rect>
+       <x>126</x>
+       <y>68</y>
+       <width>56</width>
+       <height>24</height>
+      </rect>
+     </property>
+     <property name="toolTip">
+      <string>Click here and then on map to set Middle point 3 ...</string>
+     </property>
+     <property name="locale">
+      <locale language="C" country="AnyCountry"/>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+     <property name="icon">
+      <iconset>
+       <normaloff>icons/m3.png</normaloff>icons/m3.png</iconset>
+     </property>
+     <property name="iconSize">
+      <size>
+       <width>48</width>
+       <height>48</height>
+      </size>
+     </property>
+     <property name="checkable">
+      <bool>true</bool>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="eyeButton">
+     <property name="geometry">
+      <rect>
+       <x>184</x>
+       <y>68</y>
+       <width>33</width>
+       <height>24</height>
+      </rect>
+     </property>
+     <property name="toolTip">
+      <string>Show coordinates for all points</string>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+     <property name="icon">
+      <iconset>
+       <normaloff>icons/eye.svg</normaloff>icons/eye.svg</iconset>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="addLayerButton">
+     <property name="geometry">
+      <rect>
+       <x>122</x>
+       <y>186</y>
+       <width>33</width>
+       <height>26</height>
+      </rect>
+     </property>
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="minimumSize">
+      <size>
+       <width>33</width>
+       <height>26</height>
+      </size>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>33</width>
+       <height>26</height>
+      </size>
+     </property>
+     <property name="toolTip">
+      <string>Add result as a layer</string>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+     <property name="icon">
+      <iconset>
+       <normaloff>icons/add-layer.svg</normaloff>icons/add-layer.svg</iconset>
      </property>
     </widget>
    </widget>
   </widget>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>QgsCheckableComboBox</class>
+   <extends>QComboBox</extends>
+   <header>qgscheckablecombobox.h</header>
+  </customwidget>
+ </customwidgets>
  <tabstops>
-  <tabstop>layer_combobox</tabstop>
-  <tabstop>start_coordinates_button</tabstop>
-  <tabstop>middle_coordinates_button</tabstop>
-  <tabstop>end_coordinates_button</tabstop>
+  <tabstop>layerCombobox</tabstop>
+  <tabstop>startCoordinatesTextbox</tabstop>
+  <tabstop>startCoordinatesButton</tabstop>
+  <tabstop>middleCoordinatesButton</tabstop>
+  <tabstop>middle2CoordinatesButton</tabstop>
+  <tabstop>middle3CoordinatesButton</tabstop>
+  <tabstop>eyeButton</tabstop>
+  <tabstop>endCoordinatesTextbox</tabstop>
+  <tabstop>endCoordinatesButton</tabstop>
   <tabstop>resultLength</tabstop>
   <tabstop>addFixedLoss</tabstop>
   <tabstop>fiberLoss</tabstop>
-  <tabstop>calculate_button</tabstop>
-  <tabstop>reset_button</tabstop>
-  <tabstop>configure_button</tabstop>
-  <tabstop>start_coordinates_textbox</tabstop>
-  <tabstop>middle_coordinates_textbox</tabstop>
-  <tabstop>end_coordinates_textbox</tabstop>
+  <tabstop>calculateButton</tabstop>
+  <tabstop>resetButton</tabstop>
+  <tabstop>addLayerButton</tabstop>
+  <tabstop>configureButton</tabstop>
+  <tabstop>helpButton</tabstop>
  </tabstops>
  <resources/>
  <connections/>
