@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+<!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>On-the-Fly Shortest Path plugin | On-the-Fly-Shortest-Path</title>
+<meta name="generator" content="Jekyll v3.9.5" />
+<meta property="og:title" content="On-the-Fly Shortest Path QGIS plugin" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="QGIS plugin to interactively find shortest path between points over a line network and calculate the Fiber Loss Budget of a fiber optic network (backbone or FTTH)" />
+<meta property="og:description" content="QGIS plugin to interactively find shortest path between points over a line network and calculate the Fiber Loss Budget of a fiber optic network (backbone or FTTH)" />
+<link rel="canonical" href="https://fryktoria.github.io/On-the-Fly-Shortest-Path/" />
+<meta property="og:url" content="https://fryktoria.github.io/On-the-Fly-Shortest-Path/" />
+<meta property="og:site_name" content="On-the-Fly-Shortest-Path" />
+<meta property="og:type" content="website" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="On-the-Fly Shortest Path QGIS plugin" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebSite","description":"QGIS plugin to interactively find shortest path between points over a line network and calculate the Fiber Loss Budget of a fiber optic network (backbone or FTTH)","headline":"On-the-Fly Shortest Path plugin","name":"On-the-Fly-Shortest-Path","url":"https://fryktoria.github.io/On-the-Fly-Shortest-Path/"}</script>
+<!-- End Jekyll SEO tag -->
+
+    <!-- link rel="stylesheet" href="/On-the-Fly-Shortest-Path/assets/css/style.css?v=4df5ea7ec05fd1d4f8d58aa53dff816c56a74f3e"> -->
+    
+    <link rel="stylesheet" href="styles.css">
+    
+    
+    <!-- start custom head snippets, customize with your own _includes/head-custom.html file -->
+
+
+
+<!-- You can set your favicon here -->
+<!-- link rel="shortcut icon" type="image/x-icon" href="/On-the-Fly-Shortest-Path/favicon.ico" -->
+
+<!-- end custom head snippets -->
+
+  </head>
+  <body>
+    <div class="container-lg px-3 my-5 markdown-body">
+      
+      <h1 id="on-the-fly-shortest-path-plugin">On-the-Fly Shortest Path QGIS plugin</h1>
+
+<p><img src="./title3.png" alt="Title" width="530" height="279" /></p>
+
+<h2 id="introduction">Introduction</h2>
+<p>The “On-the-Fly Shortest Path” QGIS plugin offers an interactive measurement of distances along a line network, operating directly on the map. It calculates Distance and the Fiber Loss Budget in fiber optic networks (backbone or FTTH).</p>
+
+<p>The plugin makes use of the Dijkstra algorithm of the core Network Analysis library of QGIS in order to calculate the shortest path and to measure the distance from start to end.</p>
+
+<p>Subsequently, it calculates the Fiber Loss Budget of this path, considering several configured parameters (connector loss, splice loss, fiber attenuation, splitters etc.).</p>
+
+<p>In contrast to similar algorithms of the Processing toolbox, this plugin does not create a new layer for every measurement but rather presents the path and the calculated parameters directly on screen, allowing for massively continuous measurements, hence the "On-the-Fly" name of this plugin. This functionality is similar to the original RoadGraph plugin of QGIS2.</p>
+
+<p>In addition, the plugin allows the setting of optional middle points, forcing the path to go first from the start point to each one of the middle points and finally to the end point. This is helpful in networks with multiple paths between the start and stop point where the user wants to direct the algorithm to use a preferred path.</p>
+
+<h2 id="quick-links">Quick links</h2>
+
+<p><a href="https://fryktoria.github.io/On-the-Fly-Shortest-Path/">Online documentation</a> is available, containing the details of the latest release.</p>
+
+<ul>
+  <li><a href="#usage">Usage instructions</a></li>
+  <li><a href="#configuration">Configuration parameters</a></li>
+  <li><a href="#installation">Installation</a></li>
+  <li><a href="#handling-of-multiple-layers">Handling of multiple layers</a></li>
+  <li><a href="https://fryktoria.github.io/On-the-Fly-Shortest-Path/">Online documentation</a></li>
+</ul>
+
+<h2 id="support-issues-and-new-features">Support, Issues and new features</h2>
+
+<p>The plugin documentation can be found online in <a href="https://fryktoria.github.io/On-the-Fly-Shortest-Path/">the project page</a>. </p>
+
+<p>Github registered users may report bugs in the <a href="https://github.com/fryktoria/On-the-Fly-Shortest-Path/issues">Github issues URL</a>. Others may send a mail to <a href="mailto:info@fryktoria.com">info@fryktoria.com</a></p>
+
+<p>You can participate in the development with new ideas, using the <a href="https://github.com/fryktoria/On-the-Fly-Shortest-Path/discussions/">Github discussions URL</a>. </p>
+
+
+
+<h2 id="-installation"><a name="installation"></a> Installation</h2>
+
+<h3 id="install-from-the-official-qgis-plugin-repository">Install from the official QGIS plugin repository</h3>
+<ol>
+  <li>
+    <p>From the QGIS toolbar, select <code class="language-plaintext highlighter-rouge">Plugins -&gt; Manage and Install Plugins...</code>.</p>
+  </li>
+  <li>
+    <p>From the panel on the left side of the <code class="language-plaintext highlighter-rouge">Plugins|Settings</code> window, select <code class="language-plaintext highlighter-rouge">All</code>. Navigate the list to locate the plugin name <code class="language-plaintext highlighter-rouge">On-the-Fly Shortest Path</code> and press <code class="language-plaintext highlighter-rouge">Install Plugin</code>. Optionally, you can use the <code class="language-plaintext highlighter-rouge">Search...</code> facility to locate the plugin by typing its name <code class="language-plaintext highlighter-rouge">On-the-Fly Shortest Path</code>.</p>
+  </li>
+</ol>
+
+<h3 id="install-from-a-zip-file"><a name="install-from-a-zip-file"></a>Install from a zip file</h3>
+
+<p>Releases of the plugin in zip file format are available on <a href= "https://github.com/fryktoria/On-the-Fly-Shortest-Path/releases"> the Releases section of Github</a>.</p>
+
+<ol>
+  <li>
+    <p>Download the zip file containing the plugin to a directory of your choice.</p>
+  </li>
+  <li>
+    <p>From the QGIS toolbar, select <code class="language-plaintext highlighter-rouge">Plugins -&gt; Manage and Install Plugins...</code>.</p>
+  </li>
+  <li>
+    <p>From the panel on the left side of the new form, select <code class="language-plaintext highlighter-rouge">Install from ZIP</code>. Select the file downloaded in step 1.</p>
+  </li>
+</ol>
+
+<p>After installation is complete, you should be able to see the plugin name in the list of installed plugins.</p>
+
+<p>Also, to confirm that installation was made properly, from the QGIS toolbar, select <code class="language-plaintext highlighter-rouge">View -&gt; Panels</code>. You should see the <code class="language-plaintext highlighter-rouge">On-the-Fly Shortest Path</code> in the list of panels. Activate it by clicking on the checkbox.</p>
+
+<h2 id="build-from-github-sources">Build from Github sources</h2>
+
+<p>Follow these instructions if you want to create manually a zip file to install into QGIS using the process described in the <a href="#install_from_a_zip_file">Install from a zip file</a>  section.</p>
+
+<ol>
+  <li>Download all files from Github</li>
+  <li>Create a directory named <code class="language-plaintext highlighter-rouge">On-the-Fly-Shortest-Path</code> and move all files to this directory</li>
+  <li>Use your favorite compression tools to create a zip file <strong>which contains the directory</strong> and not the individual files. This structure is mandatory so that the set of files is understood by QGIS as a plugin.</li>
+  <li>Install the plugin using the procedure in <a href="#installation">Installation</a> section.</li>
+</ol>
+
+<h2 id="activation"><a name="activation"></a>Activation</h2>
+
+<p>The plugin panel should be visible on the left-hand side of the QGIS screen. If you do not see it, first make sure that the plugin is activated.</p>
+
+<ol>
+  <li>
+    <p>From the QGIS toolbar, select <code class="language-plaintext highlighter-rouge">Plugins -&gt; Manage and Install Plugins...</code>.</p>
+  </li>
+  <li>
+    <p>The window <code class="language-plaintext highlighter-rouge">Plugins|Settings</code> will open. From the panel on the left side of the window, select <code class="language-plaintext highlighter-rouge">Installed</code>. Navigate  the list to locate the plugin name <code class="language-plaintext highlighter-rouge">On-the-Fly Shortest Path</code>. Activate it by clicking on the checkbox on the side of the plugin name.</p>
+  </li>
+</ol>
+
+<p>Next, activate the plugin panel.</p>
+<ol>
+  <li>Select <code class="language-plaintext highlighter-rouge">View -&gt; Panels</code>. You should see the <code class="language-plaintext highlighter-rouge">On-the-Fly Shortest Path</code> in the list of panels. Activate it by clicking on the checkbox. You should now see the panel, or just the name of the plugin in the lower left side of the left panel. In the later case, adjust the size of the plugin panel by dragging the top border of the panel upwards using the mouse.</li>
+</ol>
+
+
+
+
+<h2 id="configuration"><a name="configuration"></a>Configuration</h2>
+
+<p>The plugin offers several user-defined options that can be set via the configuration dialog. To activate this dialog, press the <code class="language-plaintext highlighter-rouge">Configure...</code><img src="./icons/settings.svg" alt="Configuration button" width="15" height="15"> button in the plugin panel. A new dialog form opens, containing parameters grouped in sections.</p>
+
+<p><img src="dlg_configuration.png" alt="Configuration dialog screenshot" width="474" height="502" /></p>
+
+<p>The new settings will be stored locally and will be available next time QGIS is started. The user may reset the settings to the factory defaults by clicking the <code class="language-plaintext highlighter-rouge">Defaults</code> button.</p>
+
+
+
+<h3 id="section-display">Section: Display</h3>
+
+<p>The <code class="language-plaintext highlighter-rouge">Rubberband</code> is the visual element displaying the path from the start point to the end point. You can select the desired color/opacity and size of the Rubberband.</p>
+
+<p>The <code class="language-plaintext highlighter-rouge">Markers</code> are the visual elements showing the start, middle and end points of the shortest path analysis. You can select the desired color/opacity and size of the Markers.</p>
+
+<p><code class="language-plaintext highlighter-rouge">Snap method</code> option. While the user is setting the position of the markers on the map, a map tool allows the identification of map elements under the cursor. When the tool locates an element within the distance set by parameter <code class="language-plaintext highlighter-rouge">Snap pixels</code>, it presents a <strong>blue box</strong> that is automatically snapped to:</p>
+
+<ol>
+  <li><code class="language-plaintext highlighter-rouge">None</code> Snapping tool is disabled</li>
+  <li><code class="language-plaintext highlighter-rouge">Vertex</code> Snapping takes place a) at the vertices of lines, when the cursor is over a linestring and b) at points, when the cursor is over a point layer point</li>
+  <li><code class="language-plaintext highlighter-rouge">Edge</code> Snapping takes place during the entire length of lines</li>
+</ol>
+
+<p>The <code class="language-plaintext highlighter-rouge">Snap pixels</code> parameter defines the minimum distance in pixels at which the tool will identify a nearby element.</p> 
+
+<p>The <code class="language-plaintext highlighter-rouge">Snap to map</code> parameter defines if the point clicked by the user will snap to the feature on the map, at the coordinates of the snapping tool. If the checkbox is not checked, the selection point will be the point on map that the user clicked, regardless of the appearance or position of the snapping tool. Please refer to the <a href="#snapping-tool">Snapping Tool</a> section for details.</p> 
+
+
+<p>The <code class="language-plaintext highlighter-rouge">Coordinate format</code> may be selected from a variety of options (with or without a comma separator, xy or yx), so that they can be easily copied and pasted to other applications that require a specific format.</p>
+
+
+
+
+<h3 id="section-network-analysis">Section: Network Analysis</h3>
+
+<p><code class="language-plaintext highlighter-rouge">Use ellipsoid of the following CRS</code>: Distance measurements are taken based on the ellipsoid associated with the selected CRS. This feature allows viewing the map and coordinates on one CRS and take measurements on another. The following options are provided:</p>
+
+<ul>
+<li><code class="language-plaintext highlighter-rouge">Project CRS</code>: The CRS of the project, as appears on the bottom right side of the QGIS status bar and can be modified for ‘on-the-fly’ CRS transformations is used for measurements.</li>
+
+<li><code class="language-plaintext highlighter-rouge">Layer CRS</code>: When one single line layer is selected, the CRS of this line layer is used. <strong>Note: When multiple layers are selected, the Project CRS is used instead.</strong></li>
+
+<li><code class="language-plaintext highlighter-rouge">Custom CRS</code>: A custom CRS can be selected from the dropdown list. For users who work mainly on a local scale and operate several projects in an area covered by one ellipsoid, it is advised to use this option. Measurements using the ellipsoid and local datum of the custom CRS provide more accurate length results within the extents of the CRS area (e.g. a country).</li>
+
+</ul>
+
+<p>After selecting the CRS, information labels regarding the ellipsoid associated with the selected CRS, as well as the units of the CRS are updated.</p>
+
+<p><code class="language-plaintext highlighter-rouge">Topology tolerance</code>: Set the topology tolerance to account for topological discontinuities of the line network. Setting topology tolerance to zero requires the network to having being designed with  topological continuity. The crossing from a line segment to the other considers <strong>only the vertices<strong> of both lines.  The topology tolerance value signifies the minimum distance between vertices of two lines that the algorithm will consider as eligible to cross. Please note that the algorithm of the QGIS Network Analysis Library presents a peculiarity that the crossing of the gap between the two lines will not take place between the nearest vertices but from the previous (or the next) vertex. The topology tolerance <strong>should be set to the minimum value</strong> that produces the desired results.</p>
+
+<p><code class="language-plaintext highlighter-rouge">Tolerance units</code>: Set the distance units associated with the <code class="language-plaintext highlighter-rouge">Topology tolerance</code> setting.</p>
+
+<p><code class="language-plaintext highlighter-rouge">Result units</code>: Set the type of distance units to present the result. Note: All measurements are made internally in meters. A simple conversion factor is applied.</p>
+
+<p><code class="language-plaintext highlighter-rouge">Decimal digits</code>: Set the number of decimal points for the displayed Length</p>
+
+<p><code class="language-plaintext highlighter-rouge">Show result in</code>: You can select from the following options:</p>
+
+<ol>
+<li><code class="language-plaintext highlighter-rouge">Panel, Length and loss</code>: The results of the analysis will appear in the plugin panel. The result will contain the total length, including the entry length, length on the path along the line network and the exit length.</li>
+
+<li><code class="language-plaintext highlighter-rouge">Panel, Length only</code>: For users who are not interested in fiber calculations, these data can be hidden, both from the panel as well as from the results window.</li>
+
+<li><code class="language-plaintext highlighter-rouge">Window, length and loss</code>: The results will appear both in the plugin panel as well as in a window that will appear on screen. This new window will contain the details of entry, on line network and exit. Only length information is shown.</li>
+
+<li><code class="language-plaintext highlighter-rouge">Window, length only</code>: The results will appear both in the plugin panel as well as in a window. Only length data are presented. The fiber calculations, both in the panel and the result window are hidden.</li>
+
+</ol>
+
+<p><code class="language-plaintext highlighter-rouge">Include entry/exit lengths</code>: When checked, the path is drawn from the Start marker to the nearest point on the line, along the line and finally to the End marker. When unchecked, only the path along the line is drawn.</p>
+
+<p>In Fiber loss calculations, when checked, the result includes the fiber loss from the line to the Start and End markers, such as the connector loss etc. When unchecked, only the fiber attenuation and the splice loss along the line, as well as the Fixed loss amount is calculated. Please refer to <a href="#fiber-loss-budget-measurements">Fiber Loss Budget measurements</a> for details.</p> 
+
+<p><code class="language-plaintext highlighter-rouge">Add result layer</code>: When checked, the result of the analysis will create a new temporary layer. This layer contains as fields all results of the analysis.</p>
+
+<p><code class="language-plaintext highlighter-rouge">Add merged layer</code>: When checked, the merged layer will appear as a temporary layer. If only one single layer has been selected, no merged layer is produced since no merging takes place. <strong>WARNING: For efficient memory usage, please use this feature only when absolutely necessary, e.g. for debugging of a routing analysis. It is advised to reset it, after debugging is complete. </strong></p>
+
+
+
+
+<h3 id="section-fiber-loss-budget">Section: Fiber Loss Budget</h3>
+
+<p><code class="language-plaintext highlighter-rouge">Connector loss</code>: Set the average loss of the fiber optic connectors in use. Unit:<code class="language-plaintext highlighter-rouge">db</code>.</p>
+
+<p><code class="language-plaintext highlighter-rouge">Connectors at entry</code>: Set the number of connectors expected at the start point of the analysis. As an example, this can include the connector at the Optical Line Terminal (OLT), the connectors at the Optical Distribution Frames (ODF) etc.</p>
+
+<p><code class="language-plaintext highlighter-rouge">Connectors at exit</code>: Set the number of connectors expected at the end point of the analysis. As an example, this can include the connectors at the customer premises, such as the customer-side ODF and the customer Optical Network Terminal (ONT).</p>
+
+<p><code class="language-plaintext highlighter-rouge">Splice loss</code>: Set the average loss at every optical splice made on the fiber cable. Unit:<code class="language-plaintext highlighter-rouge">db</code>.</p>
+
+<p><code class="language-plaintext highlighter-rouge">Splice every</code>: Set the frequency of splices of the fiber optic network. Usually, a design parameter of a fiber optic network sets a splice every so many kilometers.</p>
+
+<p><code class="language-plaintext highlighter-rouge">Fiber attenuation</code>: Set the average attenuation of the fiber optic cables used in the network. Unit:<code class="language-plaintext highlighter-rouge">db</code>.</p>
+
+<p><code class="language-plaintext highlighter-rouge">Fixed loss</code>: This is a fixed value that is added to the loss calculations. It accounts for loss created by certain components, such as optical splitters in an FTTH network. Please note that this value is allocated only to the on-graph cost and not to the entry or exit cost.</p>
+
+
+
+<h1 id="usage"><a name="usage"></a>Usage</h1>
+
+<p>Measurement operations are performed via the Panel.</p>
+
+<p><img src="./dockwidget_decsription.png" alt="Panel" /></p>
+
+<p>The panel may also appear without presenting the fiber data, depending on the configuration option set in parameter <code class="language-plaintext highlighter-rouge">Show result in</code> of the Configuration window.</p>
+
+<p><img src="./dlg_dockWindow_no_fiber.png" alt="Panel, no fiber" /></p>
+
+
+<h3>Basics</h3>
+
+<p>To make an analysis, follow the procedure:</p>
+
+<ol>
+  <li>
+    <p>Load in the QGIS project the layer(-s) containing the line network where the analysis of the shortest path will be made. Use the normal QGIS procedures for loading or creating projects or individual layers. Temporary layers are also supported.</p>
+  </li>
+  <li>
+    <p>From the plugin panel, select the desired layers for the analysis in the <code class="language-plaintext highlighter-rouge">Layers</code><img src="./icons/layer-stack2.svg" alt="Layers" width="25" height="25" /> selector. Please note that only the layers having a line geometry will appear in the dropdown list of the layers selector. The CRS of the layers will appear enclosed in brackets. If a line layer is not associated with a CRS, it will not appear in the layer selector.</p>
+    
+    <p>Multiple layers may be selected using the selector. The analysis will use the selected layers, regardless if they are visible on the map. See <a href="#handling-of-multiple-layers">Handling of multiple layers</a> for additional information and precautions.</p>
+  </li>
+  <li>
+    <p>Press the <code class="language-plaintext highlighter-rouge">Start</code><img src="./icons/start.png" alt="Start button"  /> button. The button will appear as pressed and the cursor will change to a cross. Navigate on the map and click on the Start point of your choice.</p>
+  </li>
+  <li>
+    <p>Press the <code class="language-plaintext highlighter-rouge">End</code><img src="./icons/end.png" alt="End button" />  button. The button will appear as pressed and the cursor will change to a cross (if it is not already a cross). Navigate on the map and click on the End point of your choice.</p>
+  </li>
+  <li>
+    <p>Press the <code class="language-plaintext highlighter-rouge">Calculate/Measure</code><img src="./icons/measure.svg" alt="Calculate/Measure button" width="20" height="20" />  button. The content of the Length box will change to <code class="language-plaintext highlighter-rouge">Processing...</code> and the routing algorithm will start running. In complex networks, this may take a few seconds. After the algorithm ends, the results will appear on the results area of the Panel, as well as in separate window, if configured so. In case a path is not found, a message will appear for a few seconds on the QGIS message bar.</p>
+  </li>
+</ol>
+
+<p><img src="./example-path.png" alt="Example path" width="585" height="435"/></p>
+
+<p>The Start and End markers can be placed either directly on top of the vertices of lines, on top of the segments of lines, or anywhere on the map. The routing algorithm will calculate the nearest line layer from the list of line layers selected in the plugin Layers selector, and will connect the marker to the nearest point on that line. The length of line from the marker to the line layer is referred to as the <strong>Entry</strong> or <strong>Exit</strong> respectively.
+
+
+<h3><a name="snapping-tool">Snapping tool</h3>
+
+<p>In order to assist the user in the placement of the markers, a snapping indicator tool identifies the map features near the cursor while the marker placement tool is active for any of the markers (start, middle, end). The functionality depends on the configuration setting <code class="language-plaintext highlighter-rouge">Snap method</code> and the snapping tolerance is set in the <code class="language-plaintext highlighter-rouge">Snap pixels</code> parameter. When snapping is active, a <strong>tooltip</strong> is attached to the snapping indicator, presenting a comma separated list of the identified layers where the tool is snapped.</p>
+
+
+<p>The snapping indicator appears as a blue rectangle or circle, depending on the value of the selected snap method:</p>
+
+<ul>
+<li>When the <code class="language-plaintext highlighter-rouge">Vertex</code> option has been selected, the snapping tool becomes a rectangle. The tool identifies the vertices of point and line layers loaded in the QGIS project.</li>
+<img src="./tooltip-vertex.png" alt="Example tooltip vertex" width="314" height="206"/>
+
+<li>When the <code class="language-plaintext highlighter-rouge">Edge</code> option has been selected, the snapping tool becomes a circle. The tool identifies the line layers loaded in the QGIS project. The tool follows the virtual path of the line.</li>
+
+</ul>
+
+<p></p>
+
+<p><strong>The snapping tool will identify all features within the <code class="language-plaintext highlighter-rouge">Snap pixels</code> tolerance.</strong> Even if the tool itself is snapped to one of many map features, the tooltip will report all layers within the tolerance. Since the tolerance is defined in pixels, the user may zoom in the map to - possibly - separate the individual map features, in case they do not coincide completely.</p> 
+
+<p>
+<img src="./tooltip1.png" alt="Example tooltip1" width="230" height="140"/>
+<img src="./tooltip2.png" alt="Example tooltip2" width="230" height="140"/>
+<img src="./tooltip3.png" alt="Example tooltip3" width="230" height="140"/>
+</p>
+
+
+<p>The tooltip feature identification functionality is extremely helpful in cases where overlapping lines of various layers do not allow the user to have an understanding of the network. Using the vertex option, the user may identify the vertices of each layer and understand points where the shortest path may cross the gap between the layers.</p>
+
+<p>The placement of the marker can be set to snap to the coordinates of the snapping tool, according to user selection. This is defined by the parameter <code class="language-plaintext highlighter-rouge">Snap to map</code> of the Configuration window. It is suggested to use the snap method <code class="language-plaintext highlighter-rouge">Vertex</code> when snapping to actual physical locations, such as a point of a point layer, or the start and end vertex of a line segment.</p>
+
+<p>When multiple layers are selected,  the analysis will use the selected layers, regardless if they are visible on the map. Yet, in order for the snapping functionality of the map tool to work with a currently invisible layer, this layer must have been made visible at least once. In other words, if a layer has not been made visible at least once since loaded, it will not be subject to snapping and the layer name will not appear in the layer list of the tooltip. </p>
+
+<p>Please refer to the <a href="#configuration">Configuration</a> section for details on setting the parameters.</p>
+
+
+
+<h3>Middle markers</h3>
+
+<p>In cases where the user would like to force the routing of the algorithm to pass from a selected point, the <code class="language-plaintext highlighter-rouge">Middle</code> point functionality can be used. In such case, the algorithm will calculate the shortest path from the Start marker to the Middle marker(s) and then will calculate the new shortest path from the Middle marker to the End marker. This functionality allows the manual routing of a path in a network with multiple routing options, where the user is not interested in the shortest path between the Start and End markers, but would rather like to measure a distance on a selected path.</p>
+
+<p><img src="./use-middle-marker.png" alt="Using middle marker" width="610" height="380"/></p>
+
+<p>The calculations from marker to marker are totally independent, therefore the path from any marker to the next may partially coincide with the previous path. This can be a desirable behaviour in occasions, e.g. leaving a main road for a pit stop and then return to the main road  via the same return path. The user must select the location of the points in a way that the calculations will provide a usable resulting path. These middle markers could be considered as the “Stop points” or “Rest points”, i.e. go from start to end, making stops along the way. To avoid terminology conflicts with the end point of the path and the exit point of the line layer, I avoided the “stop” term and used the term “middle”, although not completely accurate!</p>
+
+<p><img src="./path-overlap.png" alt="Path overlap" width="585" height="435"/></p>
+
+<p>At any time the user may press any of the <code class="language-plaintext highlighter-rouge">Start</code><img src="./icons/start.png" alt="Start button"  />, <code class="language-plaintext highlighter-rouge">Middle1</code><img src="./icons/m1.png" alt="Middle1 button"  /> , <code class="language-plaintext highlighter-rouge">Middle2</code><img src="./icons/m2.png" alt="Middle2 button" /> , <code class="language-plaintext highlighter-rouge">Middle3</code><img src="./icons/m3.png" alt="Middle3 button"  />  and <code class="language-plaintext highlighter-rouge">End</code><img src="./icons/end.png" alt="End button"  />  buttons and set each of the markers on map. After a marker has been set, the shape of the marker button becomes more round. This signifies that a pair of coordinates are now associated with this marker. If the user decides to change the coordinates of an already set marker, first make sure that the marker button is pressed and then click on the map. The new coordinates will be now associated to the marker.</p>
+
+<p><img src="./markers-set2.png" alt="Markers set" width="677" height="297"/></p>
+
+
+<p>The <code>Middle1</code><img src="./icons/m1.png" alt="Middle1 button"  /> , <code class="language-plaintext highlighter-rouge">Middle2</code><img src="./icons/m2.png" alt="Middle2 button" /> , <code class="language-plaintext highlighter-rouge">Middle3</code><img src="./icons/m3.png" alt="Middle3 button"  /> marker buttons, are equipped with the additional functionality of re-setting themselves. If for example a middle marker has been set and the user clicks on the marker button, the marker will be deleted. This functionality does not exist for the Start and Stop marker, since they are considered the most essential parameters of the analysis. Their coordinates can easily be modified pressing the associated marker button. To delete entirely the Start or End marker, you may use the <code class="language-plaintext highlighter-rouge">Reset</code><img src="./icons/reset.svg" alt="Reset button" width="25" height="25" /> button.</p>
+
+<p>The routing algorithm considers a strict sequence <strong>Start -&gt; Middle1 -&gt; Middle2 -&gt; Middle3 -&gt; End</strong> of the markers. If any of the middle markers is not set, it is simply ignored. For example, if only Middle3 marker has been set, the sequence will be <strong>Start -&gt; Middle3 -&gt; End</strong>. This allows to set and/or clear middle markers depending on the particular use case, without requiring to modify middle markers that have been previously set. Always keep in mind that when middle markers are set, the algorithm does not really care about finding the shortest path from start to end, but rather finding the shortest path from start to the first set middle marker, then to the next middle marker etc. and finally to the end point.</p>
+
+<h3>Numeric marker coordinates</h3>
+
+<p>The numeric ccordinates of the Start and End marker appear in the Panel textboxes.</p>
+
+<p>In case the user wishes to present the coordinates of all markers, the <code class="language-plaintext highlighter-rouge">eye</code><img src="./icons/eye.svg" alt="eye button" width="15" height="15" /> button presents the <code class="language-plaintext highlighter-rouge">Marker coordinates</code> window with the required information. </p>
+
+<p><img src="./dlg_marker_coordinates.png" alt="Marker coordinates window" width="452" height="212" /></p>
+
+<p>The user may see and even copy the coordinates of each marker. The coordinate format can be set in the configuration dialog. The coordinate values appear as defined by the project CRS, exactly as they are presented in the Coordinate box of the QGIS status bar.</p>
+
+<p>The window can be opened and be placed on screen continuously, without interfering with the rest of the operations. The coordinates of all markers are updated in real-time, both in value as well as the coordinate format set by the Configuration dialog.</p>
+
+
+
+
+
+<h3>Add analysis result as a layer</h3>
+
+<p>If you would like to store the results of an analysis to a new layer, you can press the <code class="language-plaintext highlighter-rouge">Add as layer</code><img src="./icons/add-layer.svg" alt="Add as layer button" width="25" height="25" />  button. A new temporary layer will be created. The fields of this layer contain the coordinates of all markers, along with the result data of the analysis. The format of the coordinates (x y, y x, etc.)  will be the one set in the Configuration dialog. The result length units and the format of the length will also appear as set in the Configuration dialog. Please note that the coordinate format will follow the current setting of the Configuration dialog, yet the measurement format and units will be those of the measurement that is currently active.</p>
+
+<p>In case the user needs to store results as layers on a continuous basis, the <code class="language-plaintext highlighter-rouge">Add result layer</code> parameter of the Configuration window allows creating a layer after each measurement.</p>
+
+<h3>Other...</h3>
+
+<p>Press the <code class="language-plaintext highlighter-rouge">Reset</code><img src="./icons/reset.svg" alt="Reset button" width="25" height="25" />  button to hide all visual elements (markers and rubberbands) and clear the existing values for all points, as well as the previously calculated results.</p>
+
+<p>When performing Fiber Loss measurements, you can decide if you would like to add the <code class="language-plaintext highlighter-rouge">Fixed Loss</code> amount of the Configuration dialog to the measurement. Check the <code class="language-plaintext highlighter-rouge">Add Fixed loss amount</code><img src="./icons/add-fixed.svg" alt="Add fixed button" width="20" height="20" />  if you want to add the amount to the result. Uncheck if you would like to have the measurement without the Fixed loss amount.</p>
+
+<p>You can press the <code class="language-plaintext highlighter-rouge">Configure</code><img src="./icons/settings.svg" alt="Configure button" width="15" height="15" />  button to enter the Configuration dialog. For detailed explanation of the configuration parameters, visit the <a href="#configuration">Configuration</a> section.</p>
+
+<p>You can press the <code class="language-plaintext highlighter-rouge">Help</code><img src="./icons/question.svg" alt="Help button" width="15" height="15" />  button to present the content of the help page. This is a simplified help page, without images, available when there is no internet connection. If an internet connection is available, click on the hyperlinks to gain acces to the full online documentation.</p>
+
+
+
+<h2 id="length-measurements">Length measurements</h2>
+
+
+
+<p>All distance measurements of this plugin are performed using the <strong>ellipsoidal</strong> method. The particular ellipsoid is the one that is associated with the selected Coordinate Reference System (CRS). See parameter <code class="language-plaintext highlighter-rouge">Use ellipsoid of the following CRS</code> of the <a href="#configuration">Configuration</a> window. The ellipsoid id will be presented just below the selected CRS.</p>
+
+<p><img src="./ellipsoid.png" alt="Ellipsoid" width="233" height="241" /></p>
+
+<p>After setting the markers and pressing the <code class="language-plaintext highlighter-rouge">Calculate/Measure</code><img src="./icons/measure.svg" alt="Calculate/Measure button" width="20" height="20" />  button, the results will appear in the Panel. If one of the "Window" options is set in the <code class="language-plaintext highlighter-rouge">Show result in</code> parameter of the <a href="#configuration">Configuration</a> window, the Results window will also appear.</p>
+
+<p><img src="./dlg_results.png" alt="Results window" width="302" height="202" /></p>
+
+<p>If the user is not interested in Fiber Loss data and has set the <code class="language-plaintext highlighter-rouge">Show result in</code> parameter to present only the length, the result window will contain only the length results.</p>
+
+<p><img src="./dlg_results_no_fiber.png" alt="Results-no fiber window" width="232" height="202" /></p>
+
+<p>The <code class="language-plaintext highlighter-rouge">Entry</code> length and loss is associated with the distance from the Start marker to the nearest point of the line layer, the <strong>entry point</strong>. This entry point is calculated by the core QGIS network analysis library.</p>
+
+<p>The <code class="language-plaintext highlighter-rouge">Exit</code> length and loss is associated with the distance from the End marker to the nearest point of the line layer, the <strong>exit point</strong>. This exit point is calculated by the core QGIS network analysis library.</p>
+
+<p>The <code class="language-plaintext highlighter-rouge">On path</code> length and loss is associated with the path over the selected line layer, from the entry point to the exit point of the line layer, excluding the pieces of length from the start and end marker to the line layer. The Dijkstra algorithm of the core QGIS network analysis library  is used to calculate the shortest path.</p>
+
+<p>The measurements of the lines from the Start/End marker to the line layer, as well as the length of the path on the line layer are being made as per the active CRS of the QGIS project. The QGIS ‘on the fly’ transformation feature can be used to take measurements with different CRS. The Results window provides information regarding the CRS and ellipsoid that have been used for conducting the measurement.</p>
+
+<p>NOTE: When the <code class="language-plaintext highlighter-rouge">Include entry/exit lengths</code> of the configuration dialog is checked, the total length from Start marker to entry point, along the line and from the exit point to End marker appears in the panel. When unchecked, only the length along the line network appears in the panel. Therefore, in the above example, when checked, the Panel will show the total length of 650.19m.</p>
+<p><img src="./dlg_dockWindow_no_fiber.png" alt="Panel, no fiber" /></p>
+<p>If unchecked, the Panel would show 627.88m which is the length "On path". The Results window continues to show all lengths.</p>
+
+
+
+
+<h2 id="fiber-loss-budget-measurements"><a name="fiber-loss-budget-measurements"></a>Fiber Loss Budget measurements</h2>
+
+<p>The loss for the entry/exit path is calculated as the sum of:</p>
+
+<ol>
+  <li>
+    <p>The number of <code class="language-plaintext highlighter-rouge">Connectors at entry</code> or respectively <code class="language-plaintext highlighter-rouge">Connectors at exit</code> parameter multiplied by the <code class="language-plaintext highlighter-rouge">Connector loss</code> parameter</p>
+  </li>
+  <li>
+    <p>The <code class="language-plaintext highlighter-rouge">Splice loss</code> parameter multiplied by the number of splices, which is calculated as the distance from the Start marker to the entry point on the line layer and respectively, from the exit point of the line layer to the End marker, divided by the the <code class="language-plaintext highlighter-rouge">Splice every</code> parameter. Although not entirely accurate, neither as concept nor as value, this is an attempt to include the participation of the entry and exit lengths in the calculation of the total number of splices.</p>
+  </li>
+  <li>
+    <p>The <code class="language-plaintext highlighter-rouge">Fiber attenuation</code> parameter multiplied by the distance from the Start marker to the entry point on the line layer and respectively, from the exit point of the line layer to the End marker.</p>
+  </li>
+</ol>
+
+<p>The loss along the line layer is calculated as the sum of:</p>
+
+<ol>
+  <li>
+    <p>The <code class="language-plaintext highlighter-rouge">Fiber attenuation</code> parameter multiplied by the distance from the entry point to the exit point of the line layer</p>
+  </li>
+  <li>
+    <p>The <code class="language-plaintext highlighter-rouge">Splice loss</code> parameter multiplied by the number of splices, which is calculated as the distance from the entry point into the line layer until the exit point of the line layer, divided by the <code class="language-plaintext highlighter-rouge">Splice every</code> parameter</p>
+  </li>
+  <li>
+    <p>The <code class="language-plaintext highlighter-rouge">Fixed loss</code> parameter, only if the checkbox <code class="language-plaintext highlighter-rouge">Add Fixed loss amount</code><img src="./icons/add-fixed.svg" alt="Add fixed button" width="20" height="20" /> of the plugin panel is checked</p>
+  </li>
+</ol>
+
+<p>NOTE: When the <code class="language-plaintext highlighter-rouge">Include entry/exit lengths</code> of the configuration dialog is checked, the total loss from Start marker, along the line and to the End marker appears in the panel. When unchecked, only the loss along the line (attenuation and splice loss) plus the Fixed loss appears in the panel. In the unchecked case, connector losses and fiber attenuation due to the distance of the Start and End markers from the line, is not included in the result value presented in the panel. Yet, the individual losses for all three parts (entry-line-exit) will appear in the Results window.</p>
+
+<p>An example of all elements participating in a fiber loss calculation for an FTTH network is presented below:</p>
+
+<p><img src="./ftth-loss-example.png" alt="FTTH Loss example" width="890" height="423" /></p>
+
+
+<h2 id="-handling-of-multiple-layers"><a name="handling-of-multiple-layers"></a> Handling of multiple layers</h2>
+
+<p>The plugin allows the selection of multiple layers to perform the shortest path analysis. This feature can be helpful in cases where a path is not fully contained in one layer. As an example, there may be one layer for a primary road network, another layer for the secondary road network, a third one for the tertiary road network and so on. To calculate a path from an arbitrary point to another, the user would normally have to merge all those layers and then run the shortest-path algorithm on the merged layer. The multiple layer selection of the plugin performs the layer merging automatically.</p>
+
+<p>The topology tolerance functionality can also be used in order to cross topologically disconnected lines from one layer to the other. The tolerance refers to vertices of lines and not to the lines themselves. Therefore, if two lines are crossing each other, the rubberband will not jump from one line to the other. Yet, if there are vertices in each line within the topology tolerance, the rubberband will jump from one vertex to the other. This functionality may be desired in some cases, such as a secondary road passing over or under a primary road, where it is not possible to drive from one road to the other.</p>
+
+<p>Use the <a href="snapping-tool">Snapping tool</a> in both available options (Vertex and Edge) to identify vertices and/or overlapping lines. The tooltip presents all layers within the snapping distance that have been made visible on the map for at least once.
+
+<p><strong>Some precautions need to be taken when merging layers:</strong></p>
+
+<ol>
+  <li>
+    <p>The merging of layers consumes heavily system resources (memory and CPU). In addition, calculations of the plugin are performed in Python, which is not as fast and efficient as the core QGIS language C++. Please select the minimum number of layers required for your work.</p>
+  </li>
+  <li>
+    <p>When multiple layers are selected, the configuration option to use an ellipsoid based on <code class="language-plaintext highlighter-rouge">Layer CRS</code> will not work. Since several layers are concerned and each layer may have its own CRS, the plugin selects to override ths option and to use the Project CRS. This is performed in the background and the configuration option of the Configuration dialog does not present this fact, because the user may decide later to select one single layer. In that case, the <code class="language-plaintext highlighter-rouge">Layer CRS</code> option will be used, without the user having to re-visit the Configuration dialog.</p>
+  </li>
+  <li>
+    <p>When two or more layers are selected, the plugin will be dealing with one single merged layer, consisting of all lines of the initial layers. The user should keep in mind that those layers may have not been created with the consideration that somebody will merge them. Therefore, lines of originally separate layers may cross without a connection, coincide geometrically, run in parallel at a very short distance and other situations that may visually confuse the users, if they do not have a clear view of the vertices of each line. Therefore, the result of finding a path between all those lines should be taken with a grain of salt. Especially when the Topology tolerance feature is activated, the results may be surprising. Users are advised to use layers with a strict topological association between the features of those layers. As an example, a point layer containing the common points between the line layers can help identify the points of transition from one layer to the other. A value of topology tolerance equal to zero, or the minimum possible to cope for snapping inconsistencies, is desirable in that case. Yet, cases could be found where identical coordinates of different layers may provide "bad" results. As an example, when two segments of two separate line layers have a vertex with identical coordinates, a cross will occur, even if it is not wanted or expected. In such cases, use a middle marker to direct the shortest path algorithm to another point which is common for both layers, where it is accepted to cross layers</p>
+    
+    <p><img src="./cross-bad.png" alt="Example merge bad cross" width="801" height="429" /></p>
+    <p><img src="./cross-good.png" alt="Example merge good cross" width="801" height="429" /></p>
+    
+    
+    
+  </li>
+  <li>
+    <p>User must be careful with coordinate transformations from one CRS to another, in regards to the topological association between vertices of different layers. For example, if the vertex of layer 1 has been snapped topologically to a vertex of layer 2, if layer 1 is saved to a different CRS, the same vertex of the layer 1 in the new CRS may not be topologically connected to the vertex of CRS 2. Use the topology tolerance to overcome such situations. A few millimeters will suffice.</p>
+  </li>
+</ol>
+<hr></hr>
+  </body>
+</html>

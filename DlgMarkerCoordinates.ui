@@ -218,7 +218,7 @@
     </property>
     <property name="icon">
      <iconset>
-      <normaloff>icons/start.png</normaloff>icons/start.png</iconset>
+      <normaloff>docs/icons/start.png</normaloff>docs/icons/start.png</iconset>
     </property>
     <property name="iconSize">
      <size>
@@ -244,7 +244,7 @@
     </property>
     <property name="icon">
      <iconset>
-      <normaloff>icons/m1.png</normaloff>icons/m1.png</iconset>
+      <normaloff>docs/icons/m1.png</normaloff>docs/icons/m1.png</iconset>
     </property>
     <property name="iconSize">
      <size>
@@ -270,7 +270,7 @@
     </property>
     <property name="icon">
      <iconset>
-      <normaloff>icons/m2.png</normaloff>icons/m2.png</iconset>
+      <normaloff>docs/icons/m2.png</normaloff>docs/icons/m2.png</iconset>
     </property>
     <property name="iconSize">
      <size>
@@ -296,7 +296,7 @@
     </property>
     <property name="icon">
      <iconset>
-      <normaloff>icons/m3.png</normaloff>icons/m3.png</iconset>
+      <normaloff>docs/icons/m3.png</normaloff>docs/icons/m3.png</iconset>
     </property>
     <property name="iconSize">
      <size>
@@ -322,7 +322,7 @@
     </property>
     <property name="icon">
      <iconset>
-      <normaloff>icons/end.png</normaloff>icons/end.png</iconset>
+      <normaloff>docs/icons/end.png</normaloff>docs/icons/end.png</iconset>
     </property>
     <property name="iconSize">
      <size>

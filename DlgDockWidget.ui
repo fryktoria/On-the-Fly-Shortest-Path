@@ -96,7 +96,7 @@
       <string/>
      </property>
      <property name="pixmap">
-      <pixmap>icons/layer-stack2.svg</pixmap>
+      <pixmap>docs/icons/layer-stack2.svg</pixmap>
      </property>
      <property name="scaledContents">
       <bool>true</bool>
@@ -122,7 +122,7 @@
      </property>
      <property name="icon">
       <iconset>
-       <normaloff>icons/start.png</normaloff>icons/start.png</iconset>
+       <normaloff>docs/icons/start.png</normaloff>docs/icons/start.png</iconset>
      </property>
      <property name="iconSize">
       <size>
@@ -154,7 +154,7 @@
      </property>
      <property name="icon">
       <iconset>
-       <normaloff>icons/m1.png</normaloff>icons/m1.png</iconset>
+       <normaloff>docs/icons/m1.png</normaloff>docs/icons/m1.png</iconset>
      </property>
      <property name="iconSize">
       <size>
@@ -186,7 +186,7 @@
      </property>
      <property name="icon">
       <iconset>
-       <normaloff>icons/end.png</normaloff>icons/end.png</iconset>
+       <normaloff>docs/icons/end.png</normaloff>docs/icons/end.png</iconset>
      </property>
      <property name="iconSize">
       <size>
@@ -214,7 +214,7 @@
       <string/>
      </property>
      <property name="pixmap">
-      <pixmap>icons/ruler.svg</pixmap>
+      <pixmap>docs/icons/ruler.svg</pixmap>
      </property>
      <property name="scaledContents">
       <bool>true</bool>
@@ -296,7 +296,7 @@
       <string/>
      </property>
      <property name="pixmap">
-      <pixmap>icons/otdr.png</pixmap>
+      <pixmap>docs/icons/otdr.png</pixmap>
      </property>
      <property name="scaledContents">
       <bool>true</bool>
@@ -379,7 +379,7 @@
      </property>
      <property name="icon">
       <iconset>
-       <normaloff>icons/settings.svg</normaloff>icons/settings.svg</iconset>
+       <normaloff>docs/icons/settings.svg</normaloff>docs/icons/settings.svg</iconset>
      </property>
     </widget>
     <widget class="QPushButton" name="resetButton">
@@ -420,7 +420,7 @@
      </property>
      <property name="icon">
       <iconset>
-       <normaloff>icons/undo.svg</normaloff>icons/undo.svg</iconset>
+       <normaloff>docs/icons/reset.svg</normaloff>docs/icons/reset.svg</iconset>
      </property>
      <property name="iconSize">
       <size>
@@ -467,7 +467,7 @@
      </property>
      <property name="icon">
       <iconset>
-       <normaloff>icons/measure.svg</normaloff>icons/measure.svg</iconset>
+       <normaloff>docs/icons/measure.svg</normaloff>docs/icons/measure.svg</iconset>
      </property>
      <property name="iconSize">
       <size>
@@ -496,7 +496,7 @@
      </property>
      <property name="icon">
       <iconset>
-       <normaloff>icons/add-fixed.svg</normaloff>icons/add-fixed.svg</iconset>
+       <normaloff>docs/icons/add-fixed.svg</normaloff>docs/icons/add-fixed.svg</iconset>
      </property>
      <property name="checked">
       <bool>true</bool>
@@ -530,7 +530,7 @@
       </size>
      </property>
      <property name="toolTip">
-      <string>Online help...</string>
+      <string>Help...</string>
      </property>
      <property name="statusTip">
       <string/>
@@ -543,7 +543,7 @@
      </property>
      <property name="icon">
       <iconset>
-       <normaloff>icons/question.svg</normaloff>icons/question.svg</iconset>
+       <normaloff>docs/icons/question.svg</normaloff>docs/icons/question.svg</iconset>
      </property>
     </widget>
     <widget class="QgsCheckableComboBox" name="layerCombobox">
@@ -588,7 +588,7 @@
      </property>
      <property name="icon">
       <iconset>
-       <normaloff>icons/m2.png</normaloff>icons/m2.png</iconset>
+       <normaloff>docs/icons/m2.png</normaloff>docs/icons/m2.png</iconset>
      </property>
      <property name="iconSize">
       <size>
@@ -620,7 +620,7 @@
      </property>
      <property name="icon">
       <iconset>
-       <normaloff>icons/m3.png</normaloff>icons/m3.png</iconset>
+       <normaloff>docs/icons/m3.png</normaloff>docs/icons/m3.png</iconset>
      </property>
      <property name="iconSize">
       <size>
@@ -649,7 +649,7 @@
      </property>
      <property name="icon">
       <iconset>
-       <normaloff>icons/eye.svg</normaloff>icons/eye.svg</iconset>
+       <normaloff>docs/icons/eye.svg</normaloff>docs/icons/eye.svg</iconset>
      </property>
     </widget>
     <widget class="QPushButton" name="addLayerButton">
@@ -687,7 +687,7 @@
      </property>
      <property name="icon">
       <iconset>
-       <normaloff>icons/add-layer.svg</normaloff>icons/add-layer.svg</iconset>
+       <normaloff>docs/icons/add-layer.svg</normaloff>docs/icons/add-layer.svg</iconset>
      </property>
     </widget>
    </widget>

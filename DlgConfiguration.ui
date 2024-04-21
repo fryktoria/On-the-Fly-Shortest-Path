@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>467</width>
-    <height>434</height>
+    <width>472</width>
+    <height>470</height>
    </rect>
   </property>
   <property name="minimumSize">
@@ -18,8 +18,8 @@
   </property>
   <property name="maximumSize">
    <size>
-    <width>467</width>
-    <height>434</height>
+    <width>472</width>
+    <height>470</height>
    </size>
   </property>
   <property name="windowTitle">
@@ -35,7 +35,7 @@
    <property name="geometry">
     <rect>
      <x>80</x>
-     <y>396</y>
+     <y>430</y>
      <width>165</width>
      <height>36</height>
     </rect>
@@ -56,10 +56,10 @@
   <widget class="QGroupBox" name="groupBox">
    <property name="geometry">
     <rect>
-     <x>232</x>
+     <x>244</x>
      <y>2</y>
-     <width>230</width>
-     <height>163</height>
+     <width>224</width>
+     <height>199</height>
     </rect>
    </property>
    <property name="locale">
@@ -71,8 +71,8 @@
    <widget class="QgsColorButton" name="rubberBandColor">
     <property name="geometry">
      <rect>
-      <x>10</x>
-      <y>40</y>
+      <x>5</x>
+      <y>36</y>
       <width>120</width>
       <height>27</height>
      </rect>
@@ -87,8 +87,8 @@
    <widget class="QgsColorButton" name="markerColor">
     <property name="geometry">
      <rect>
-      <x>10</x>
-      <y>90</y>
+      <x>5</x>
+      <y>86</y>
       <width>120</width>
       <height>27</height>
      </rect>
@@ -103,8 +103,8 @@
    <widget class="QSpinBox" name="rubberBandSize">
     <property name="geometry">
      <rect>
-      <x>138</x>
-      <y>42</y>
+      <x>130</x>
+      <y>38</y>
       <width>42</width>
       <height>22</height>
      </rect>
@@ -122,8 +122,8 @@
    <widget class="QSpinBox" name="markerSize">
     <property name="geometry">
      <rect>
-      <x>138</x>
-      <y>92</y>
+      <x>130</x>
+      <y>88</y>
       <width>42</width>
       <height>22</height>
      </rect>
@@ -138,7 +138,7 @@
    <widget class="QLabel" name="label">
     <property name="geometry">
      <rect>
-      <x>10</x>
+      <x>5</x>
       <y>20</y>
       <width>111</width>
       <height>16</height>
@@ -151,9 +151,9 @@
    <widget class="QLabel" name="label_2">
     <property name="geometry">
      <rect>
-      <x>140</x>
+      <x>130</x>
       <y>20</y>
-      <width>55</width>
+      <width>35</width>
       <height>16</height>
      </rect>
     </property>
@@ -164,8 +164,8 @@
    <widget class="QLabel" name="label_3">
     <property name="geometry">
      <rect>
-      <x>10</x>
-      <y>70</y>
+      <x>5</x>
+      <y>68</y>
       <width>81</width>
       <height>16</height>
      </rect>
@@ -177,9 +177,9 @@
    <widget class="QLabel" name="label_4">
     <property name="geometry">
      <rect>
-      <x>150</x>
-      <y>70</y>
-      <width>55</width>
+      <x>130</x>
+      <y>68</y>
+      <width>29</width>
       <height>16</height>
      </rect>
     </property>
@@ -190,8 +190,8 @@
    <widget class="QComboBox" name="coordinateFormat">
     <property name="geometry">
      <rect>
-      <x>132</x>
-      <y>126</y>
+      <x>125</x>
+      <y>166</y>
       <width>47</width>
       <height>22</height>
      </rect>
@@ -206,8 +206,8 @@
    <widget class="QLabel" name="label_25">
     <property name="geometry">
      <rect>
-      <x>10</x>
-      <y>130</y>
+      <x>4</x>
+      <y>170</y>
       <width>93</width>
       <height>16</height>
      </rect>
@@ -216,12 +216,90 @@
      <string>Coordinate format</string>
     </property>
    </widget>
+   <widget class="QComboBox" name="markerSnapMethod">
+    <property name="geometry">
+     <rect>
+      <x>6</x>
+      <y>134</y>
+      <width>79</width>
+      <height>22</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_27">
+    <property name="geometry">
+     <rect>
+      <x>8</x>
+      <y>116</y>
+      <width>73</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Snap method</string>
+    </property>
+   </widget>
+   <widget class="QSpinBox" name="markerSnapPixels">
+    <property name="geometry">
+     <rect>
+      <x>92</x>
+      <y>134</y>
+      <width>49</width>
+      <height>22</height>
+     </rect>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+    </property>
+    <property name="maximum">
+     <number>50</number>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_28">
+    <property name="geometry">
+     <rect>
+      <x>88</x>
+      <y>116</y>
+      <width>59</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Snap pixels</string>
+    </property>
+   </widget>
+   <widget class="QCheckBox" name="snapToMap">
+    <property name="geometry">
+     <rect>
+      <x>160</x>
+      <y>136</y>
+      <width>27</width>
+      <height>17</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_29">
+    <property name="geometry">
+     <rect>
+      <x>148</x>
+      <y>116</y>
+      <width>71</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Snap to map</string>
+    </property>
+   </widget>
   </widget>
   <widget class="QPushButton" name="defaultsButton">
    <property name="geometry">
     <rect>
      <x>308</x>
-     <y>404</y>
+     <y>436</y>
      <width>76</width>
      <height>24</height>
     </rect>
@@ -235,8 +313,8 @@
     <rect>
      <x>6</x>
      <y>2</y>
-     <width>221</width>
-     <height>395</height>
+     <width>232</width>
+     <height>429</height>
     </rect>
    </property>
    <property name="locale">
@@ -252,7 +330,7 @@
     <property name="geometry">
      <rect>
       <x>4</x>
-      <y>346</y>
+      <y>370</y>
       <width>167</width>
       <height>16</height>
      </rect>
@@ -261,7 +339,7 @@
      <enum>Qt::LeftToRight</enum>
     </property>
     <property name="text">
-     <string>Include entry/exit points</string>
+     <string>Include entry/exit lengths</string>
     </property>
     <property name="checked">
      <bool>true</bool>
@@ -336,8 +414,8 @@
     <property name="geometry">
      <rect>
       <x>4</x>
-      <y>216</y>
-      <width>119</width>
+      <y>240</y>
+      <width>101</width>
       <height>16</height>
      </rect>
     </property>
@@ -352,8 +430,8 @@
     <property name="geometry">
      <rect>
       <x>122</x>
-      <y>212</y>
-      <width>97</width>
+      <y>236</y>
+      <width>98</width>
       <height>22</height>
      </rect>
     </property>
@@ -377,7 +455,7 @@
     <property name="geometry">
      <rect>
       <x>6</x>
-      <y>164</y>
+      <y>174</y>
       <width>47</width>
       <height>16</height>
      </rect>
@@ -390,7 +468,7 @@
     <property name="geometry">
      <rect>
       <x>58</x>
-      <y>164</y>
+      <y>174</y>
       <width>157</width>
       <height>16</height>
      </rect>
@@ -405,9 +483,9 @@
    <widget class="QComboBox" name="distanceUnits">
     <property name="geometry">
      <rect>
-      <x>124</x>
-      <y>264</y>
-      <width>91</width>
+      <x>122</x>
+      <y>288</y>
+      <width>98</width>
       <height>22</height>
      </rect>
     </property>
@@ -419,8 +497,8 @@
     <property name="geometry">
      <rect>
       <x>6</x>
-      <y>268</y>
-      <width>87</width>
+      <y>292</y>
+      <width>73</width>
       <height>16</height>
      </rect>
     </property>
@@ -432,20 +510,20 @@
     <property name="geometry">
      <rect>
       <x>6</x>
-      <y>294</y>
-      <width>91</width>
+      <y>318</y>
+      <width>123</width>
       <height>16</height>
      </rect>
     </property>
     <property name="text">
-     <string>Decimal digits</string>
+     <string>Result decimal digits</string>
     </property>
    </widget>
    <widget class="QSpinBox" name="decimalDigits">
     <property name="geometry">
      <rect>
-      <x>170</x>
-      <y>290</y>
+      <x>178</x>
+      <y>314</y>
       <width>42</width>
       <height>22</height>
      </rect>
@@ -470,8 +548,8 @@
     <property name="geometry">
      <rect>
       <x>6</x>
-      <y>320</y>
-      <width>91</width>
+      <y>344</y>
+      <width>77</width>
       <height>16</height>
      </rect>
     </property>
@@ -482,8 +560,8 @@
    <widget class="QComboBox" name="resultDialogType">
     <property name="geometry">
      <rect>
-      <x>104</x>
-      <y>318</y>
+      <x>108</x>
+      <y>342</y>
       <width>111</width>
       <height>22</height>
      </rect>
@@ -496,7 +574,7 @@
     <property name="geometry">
      <rect>
       <x>6</x>
-      <y>186</y>
+      <y>196</y>
       <width>59</width>
       <height>16</height>
      </rect>
@@ -509,7 +587,7 @@
     <property name="geometry">
      <rect>
       <x>66</x>
-      <y>186</y>
+      <y>196</y>
       <width>141</width>
       <height>16</height>
      </rect>
@@ -522,7 +600,7 @@
     <property name="geometry">
      <rect>
       <x>6</x>
-      <y>242</y>
+      <y>266</y>
       <width>91</width>
       <height>16</height>
      </rect>
@@ -535,8 +613,8 @@
     <property name="geometry">
      <rect>
       <x>122</x>
-      <y>238</y>
-      <width>93</width>
+      <y>262</y>
+      <width>98</width>
       <height>22</height>
      </rect>
     </property>
@@ -558,9 +636,9 @@
     <property name="geometry">
      <rect>
       <x>0</x>
-      <y>156</y>
+      <y>164</y>
       <width>221</width>
-      <height>53</height>
+      <height>61</height>
      </rect>
     </property>
     <property name="title">
@@ -570,8 +648,8 @@
    <widget class="QCheckBox" name="addMergedLayer">
     <property name="geometry">
      <rect>
-      <x>112</x>
-      <y>372</y>
+      <x>120</x>
+      <y>396</y>
       <width>107</width>
       <height>16</height>
      </rect>
@@ -584,7 +662,7 @@
     <property name="geometry">
      <rect>
       <x>4</x>
-      <y>372</y>
+      <y>396</y>
       <width>109</width>
       <height>16</height>
      </rect>
@@ -621,9 +699,9 @@
   <widget class="QGroupBox" name="groupBox_3">
    <property name="geometry">
     <rect>
-     <x>232</x>
-     <y>174</y>
-     <width>230</width>
+     <x>244</x>
+     <y>208</y>
+     <width>224</width>
      <height>223</height>
     </rect>
    </property>
@@ -636,7 +714,7 @@
    <widget class="QLabel" name="label_8">
     <property name="geometry">
      <rect>
-      <x>4</x>
+      <x>6</x>
       <y>28</y>
       <width>91</width>
       <height>16</height>
@@ -662,7 +740,7 @@
    <widget class="QLabel" name="label_10">
     <property name="geometry">
      <rect>
-      <x>4</x>
+      <x>6</x>
       <y>54</y>
       <width>131</width>
       <height>16</height>
@@ -678,7 +756,7 @@
    <widget class="QLabel" name="label_11">
     <property name="geometry">
      <rect>
-      <x>4</x>
+      <x>6</x>
       <y>110</y>
       <width>105</width>
       <height>16</height>
@@ -691,7 +769,7 @@
    <widget class="QLabel" name="label_12">
     <property name="geometry">
      <rect>
-      <x>4</x>
+      <x>6</x>
       <y>138</y>
       <width>107</width>
       <height>16</height>
@@ -704,7 +782,7 @@
    <widget class="QLabel" name="label_13">
     <property name="geometry">
      <rect>
-      <x>4</x>
+      <x>6</x>
       <y>166</y>
       <width>109</width>
       <height>16</height>
@@ -851,7 +929,7 @@
    <widget class="QLabel" name="label_17">
     <property name="geometry">
      <rect>
-      <x>4</x>
+      <x>6</x>
       <y>82</y>
       <width>132</width>
       <height>16</height>
@@ -877,7 +955,7 @@
    <widget class="QLabel" name="label_18">
     <property name="geometry">
      <rect>
-      <x>4</x>
+      <x>6</x>
       <y>194</y>
       <width>91</width>
       <height>16</height>
@@ -944,6 +1022,7 @@
   <tabstop>rubberBandSize</tabstop>
   <tabstop>markerColor</tabstop>
   <tabstop>markerSize</tabstop>
+  <tabstop>markerSnapMethod</tabstop>
   <tabstop>coordinateFormat</tabstop>
   <tabstop>connectorLoss</tabstop>
   <tabstop>numberOfConnectorsAtEntry</tabstop>
