@@ -23,6 +23,8 @@ from qgis.core import ( QgsDistanceArea,
                         QgsProject,
                         QgsUnitTypes
                       )
+                      
+                      
 class OtFSP_Geometry:    
                    
     #Conversion factor from meters to units in the following order  ["m", "Km", "y", "ft", "NM", "mi"]
@@ -45,12 +47,13 @@ class OtFSP_Geometry:
         else:
             return value * self.conversionFactor[index]
 
-    def lengthInMeters(self, length:float, crs:QgsCoordinateReferenceSystem) -> float:
+
+    def lengthInMeters(self, length:float, sourceCrs:QgsCoordinateReferenceSystem) -> float:
         ''' Converts a distance from a crs unit to meters'''
         try:
             d = QgsDistanceArea()
-            d.setSourceCrs(crs, QgsProject.instance().transformContext())
-            # I do not use d.setEllipsoid(crs.ellipsoidAcronym()) because setting the ellipsoid defines an ellipsoidal rather than 
+            d.setSourceCrs(sourceCrs, QgsProject.instance().transformContext())
+            # I do not use d.setEllipsoid(sourceCrs.ellipsoidAcronym()) because setting the ellipsoid defines an ellipsoidal rather than 
             # a cartesian distance measurement and sets the length unit to meters.           
             # After QGIS 3.30 
             # length = d.convertLengthMeasurement(length, QgsUnitTypes.DistanceUnit.DistanceMeters)  
@@ -77,8 +80,8 @@ class OtFSP_Geometry:
         ''' Returns the distance units of a CRS, in human readable format '''
         if crs is None:
             return "Undefined"
-        else:
-            return QgsUnitTypes.toString(crs.mapUnits())               
+        
+        return QgsUnitTypes.toString(crs.mapUnits())               
 
             
            

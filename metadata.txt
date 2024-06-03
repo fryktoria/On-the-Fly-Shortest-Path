@@ -28,6 +28,13 @@ server=false
 hasProcessingProvider=false
 icon=logo.png
 changelog=
+              1.3.0 
+              * Introduced the flexjLine tool to set start, middle and end markers, with a measuring capability
+              * Introduced the bridgingPoint tool, to allow on-the-fly creation of points interconnecting layers and segments of the same layer
+              * Introduced the bridgingLine tool, to allow on-the-fly creation of bridges between segments
+              * Introduced limit functionality to assist in running the algorithm on layers with a huge number of features
+              * Change dynamically the width of the layer selecter combobox to show layers with long names
+              * Introduced a button to open the layer selector for the handling of both line layers and point layers to be used as bridging points
               1.2.1
               * Fixed calculation of fiber loss when result units were not meters
               * Introduced a custom map tool with the ability to snap to vertices and lines. Helpful for analysis of multiple layers with overlapping segments

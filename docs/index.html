@@ -67,6 +67,27 @@
   <li><a href="https://fryktoria.github.io/On-the-Fly-Shortest-Path/">Online documentation</a></li>
 </ul>
 
+<h2>What's new in version 1.3.0</h2>
+<p>Previous versions of the plugin solved the basic problem of setting the on-the-fly start and end markers and combined line layers, waiting passively for the Dijkstra algorithm to identify the shortest path. Only a basic functionality was given to the user in selecting the routing, namely the middle markers (i.e. "prefer that way instead of the other way"). The topology tolerance tool also provided a basic tool to address topological discontinuities. Version 1.3.0 provides the user with additional control of the routing, using new tools of the plugin.</p>
+
+<p>The <strong>Bridging Point tool</strong> solves the problem of topological discontinuities at the termination of line segments to point layers. As an example, trenches of a utility network usually terminate onto a manhole layer. The tool allows for a search radius that subsequently extends the lines to reach the point, even if the lines have not been snapped to the points. The shortest path algorithm may then use the point as a bridge to cross to other layers that also terminate to that point</p>
+
+<p>The <strong>On-the-fly Bridging Point tool</strong> provides similar functionality to the <strong>Bridging Point tool</strong>, but, as the name suggests, can be created by the user on the screen and can be used for "interactive" network analysis, without having to create a new layer from scratch. Several trial-and-error analysis scenarios may benefit from this functionality.</p>
+
+<p>The <strong>Bridging Point tool</strong> solves the problem of conducting an analysis on layers that have been designed with specifications that restrict or inhibit the shortest path analysis. As an example, two directions of a highway may have been represented on a line layer with two distinct, non-intersecting lines. The tool allows to create a bridge between the lines and offer an additional way to be exploited by the Dijkstra algorithm.
+
+<p>Other features have also been added in 1.3.0. In summary, the main new features are:</p>
+
+
+<ol>
+<li>Introduced the flexjLine tool to set start, middle and end markers in sequence, using a rubberband tool. The tool also provides a measuring capability</li>
+<li>Introduced the bridgingPoint tool, to allow on-the-fly creation of points interconnecting lines of different layers, as well as lines of the same layer</li>
+<li>Introduced the bridgingLine tool, to allow on-the-fly creation of bridges between vertices and segments</li>
+<li>Introduced limit functionality to assist in running the algorithm on layers with a huge number of features</li>
+
+</ol>
+
+
 <h2 id="support-issues-and-new-features">Support, Issues and new features</h2>
 
 <p>The plugin documentation can be found online in <a href="https://fryktoria.github.io/On-the-Fly-Shortest-Path/">the project page</a>. </p>
@@ -143,9 +164,8 @@
 
 <h2 id="configuration"><a name="configuration"></a>Configuration</h2>
 
-<p>The plugin offers several user-defined options that can be set via the configuration dialog. To activate this dialog, press the <code class="language-plaintext highlighter-rouge">Configure...</code><img src="./icons/settings.svg" alt="Configuration button" width="15" height="15"> button in the plugin panel. A new dialog form opens, containing parameters grouped in sections.</p>
+<p>The plugin offers several user-defined options that can be set via the configuration dialog. To activate this dialog, press the <code class="language-plaintext highlighter-rouge">Configure...</code><img src="./icons/settings.svg" alt="Configuration button" width="15" height="15"> button in the plugin panel. A new dialog form opens, containing parameters grouped in tabbed sections.</p>
 
-<p><img src="dlg_configuration.png" alt="Configuration dialog screenshot" width="474" height="502" /></p>
 
 <p>The new settings will be stored locally and will be available next time QGIS is started. The user may reset the settings to the factory defaults by clicking the <code class="language-plaintext highlighter-rouge">Defaults</code> button.</p>
 
@@ -153,29 +173,72 @@
 
 <h3 id="section-display">Section: Display</h3>
 
-<p>The <code class="language-plaintext highlighter-rouge">Rubberband</code> is the visual element displaying the path from the start point to the end point. You can select the desired color/opacity and size of the Rubberband.</p>
+<p><img src="dlg_configuration_display.png" alt="Configuration dialog screenshot - Display" /></p>
 
-<p>The <code class="language-plaintext highlighter-rouge">Markers</code> are the visual elements showing the start, middle and end points of the shortest path analysis. You can select the desired color/opacity and size of the Markers.</p>
-
-<p><code class="language-plaintext highlighter-rouge">Snap method</code> option. While the user is setting the position of the markers on the map, a map tool allows the identification of map elements under the cursor. When the tool locates an element within the distance set by parameter <code class="language-plaintext highlighter-rouge">Snap pixels</code>, it presents a <strong>blue box</strong> that is automatically snapped to:</p>
-
-<ol>
-  <li><code class="language-plaintext highlighter-rouge">None</code> Snapping tool is disabled</li>
-  <li><code class="language-plaintext highlighter-rouge">Vertex</code> Snapping takes place a) at the vertices of lines, when the cursor is over a linestring and b) at points, when the cursor is over a point layer point</li>
-  <li><code class="language-plaintext highlighter-rouge">Edge</code> Snapping takes place during the entire length of lines</li>
-</ol>
-
-<p>The <code class="language-plaintext highlighter-rouge">Snap pixels</code> parameter defines the minimum distance in pixels at which the tool will identify a nearby element.</p> 
-
-<p>The <code class="language-plaintext highlighter-rouge">Snap to map</code> parameter defines if the point clicked by the user will snap to the feature on the map, at the coordinates of the snapping tool. If the checkbox is not checked, the selection point will be the point on map that the user clicked, regardless of the appearance or position of the snapping tool. Please refer to the <a href="#snapping-tool">Snapping Tool</a> section for details.</p> 
-
-
+<h4> Group: Markers and Path</h4>
+<p>The <code class="language-plaintext highlighter-rouge">Path</code> is the visual element displaying the route from the start marker to the end marker. You can select the desired color/opacity and the line width.</p>
+<p><code class="language-plaintext highlighter-rouge">Path color</code>: You can select the desired color and opacity of the path line</p>
+<p><code class="language-plaintext highlighter-rouge">Path line width</code>: You can select the desired width of the path line</p>
+<p>The <code class="language-plaintext highlighter-rouge">Markers</code> are the visual elements showing the start, middle and end points of the shortest path analysis. </p>
+<p><code class="language-plaintext highlighter-rouge">Marker color</code>: You can select the desired color and opacity of the Markers.</p>
+<p><code class="language-plaintext highlighter-rouge">Marker size</code>: You can select the desired size of the Markers.</p>
 <p>The <code class="language-plaintext highlighter-rouge">Coordinate format</code> may be selected from a variety of options (with or without a comma separator, xy or yx), so that they can be easily copied and pasted to other applications that require a specific format.</p>
 
+
+<h4> Group: FlejLine tool</h4>
+<p>The flexjLine tool allows the placement of markers in sequence. It also provides a measurement of the straight line distances between markers.</p>
+<p><code class="language-plaintext highlighter-rouge">Color</code>: Select the color and opacity of the flexjLine tool</p>
+<p><code class="language-plaintext highlighter-rouge">Marker size</code>: Select the size of the markers which represent the vertices of the flexjLine tool</p>
+<p><code class="language-plaintext highlighter-rouge">Line width</code>: Select the width of the flexjLine tool</p>
+<p><code class="language-plaintext highlighter-rouge">Line style</code>: Select the line of the flexjLine tool from a variety of options</p>
+<p><code class="language-plaintext highlighter-rouge">Show distance</code>: When checked, the ellipsoidal distance is presented at the middle of the line</p>
+<p><code class="language-plaintext highlighter-rouge">Angled distance label</code>: The distance normally appears horizontally. When this checkbox is checked, the distance follows the angle of the line.</p>
+<p><code class="language-plaintext highlighter-rouge">Angle correction</code>: In some platforms, the calculation of the angle is performed in a different manner. Try checking this checkbox if the distance label does not follow the angle of the line.</p>
+<p><code class="language-plaintext highlighter-rouge">Show total distance</code>: The total distance is presented along with the segment distance, measured from the location of the first marker.</p>
+<p><code class="language-plaintext highlighter-rouge">Distance decimal digits</code>: Set the number of decimal points for the displayed length of the flexjLine tool.</p>
+<p><code class="language-plaintext highlighter-rouge">Keep base unit</code>: When checked, the measurement units are shown (e.g. meters). When unchecked, the system converts large distances to more suitable units (e.g. Kilometers).</p>
+
+
+<h4> Group: Snapping</h4>
+<p><code class="language-plaintext highlighter-rouge">Provider</code>: Selects the set of algorithms that provides snapping functionality. The following options are available:</p>
+<ol>
+  <li><code class="language-plaintext highlighter-rouge">Plugin</code>: Use the internal algorithms of the plugin</li>
+  <li><code class="language-plaintext highlighter-rouge">QGIS</code>: Use the snapping functionality of QGIS</li>
+  <li><code class="language-plaintext highlighter-rouge">Both</code>: Use both the plugin and QGIS snapping algorithms. </li>
+</ol>
+
+<p>The plugin algorithms have the advantage of providing a tooltip that presents all underlying layers. They do not provide snapping on intersections. In contrast, the QGIS algorithms do not provide the extended tooltip functionality but provide snapping on intersections. QGIS algorithms are more suitable when working with layers with a huge number of features. In smaller projects, you may also select <code class="language-plaintext highlighter-rouge">Both</code> option to have the best of both.</p>
+
+
+<p><code class="language-plaintext highlighter-rouge">Drop point to snapped location</code>: When this option is checked and a new vertex is about to be snapped to a point, the tools will drop the vertex to the snapped point. Otherwise, the vertex will be created at the mouse location. When unchecked, the vertex will be created at the mouse location, whereas the snapping indicator, if active, will only be there for informational purposes.</p>
+
+<h4> Group: Plugin Snapping tool</h4>
+<p>The following options control the behaviour of the internal snapping tool. The QGIS snapping tool can be controlled via the <code class="language-plaintext highlighter-rouge">File -> Project -> Snapping options...</code> QGIS menu.</p>
+<p><code class="language-plaintext highlighter-rouge">Snapper color</code>: Selects the color of the snapping tool</p>
+<p><code class="language-plaintext highlighter-rouge">Size</code>: Selects the size of the snapping tool</p>
+<p><code class="language-plaintext highlighter-rouge">Snapping method</code>: Selects the behaviour of the snapping tool. The following options are available:</p>
+<ol>
+  <li><code class="language-plaintext highlighter-rouge">None</code>: Snapping tool is disabled</li>
+  <li><code class="language-plaintext highlighter-rouge">Vertex</code>: Snapping takes place a) at the vertices of lines, when the cursor is over a linestring and b) at points, when the cursor is over a point layer point</li>
+  <li><code class="language-plaintext highlighter-rouge">Edge</code>: Snapping takes place during the entire length of lines</li>
+</ol>
+<p>The <code class="language-plaintext highlighter-rouge">Snapping tolerance</code> parameter defines the minimum distance in pixels at which the tool will identify a nearby element.</p>
+
+<p><code class="language-plaintext highlighter-rouge">Show tooltip with snapping marker</code>: When checked, a tooltip will show all layers within the snapping tolerance.</p>
+<p><code class="language-plaintext highlighter-rouge">Layers to snap</code>: Selects the layers that the snapping tool will try to locate features to snap. The following options are available:</p>
+<ol>
+  <li><code class="language-plaintext highlighter-rouge">All layers</code>: Snaps to all layers.</li>
+  <li><code class="language-plaintext highlighter-rouge">Selected layers</code>: Snaps to layers selected in the <code class="language-plaintext highlighter-rouge">Layers</code><img src="./icons/layer-stack2.svg" alt="Layers" width="25" height="25" /> selector of the Panel.</li>
+  <li><code class="language-plaintext highlighter-rouge">Active layer</code>: Snaps only to the active layer of the QGIS Layer browser.</li>
+</ol>
 
 
 
 <h3 id="section-network-analysis">Section: Network Analysis</h3>
+
+<p><img src="dlg_configuration_network_analysis.png" alt="Configuration dialog screenshot - Network analysis" /></p>
+
+<h4>Group: Ellipsoid</h4>
 
 <p><code class="language-plaintext highlighter-rouge">Use ellipsoid of the following CRS</code>: Distance measurements are taken based on the ellipsoid associated with the selected CRS. This feature allows viewing the map and coordinates on one CRS and take measurements on another. The following options are provided:</p>
 
@@ -190,39 +253,68 @@
 
 <p>After selecting the CRS, information labels regarding the ellipsoid associated with the selected CRS, as well as the units of the CRS are updated.</p>
 
-<p><code class="language-plaintext highlighter-rouge">Topology tolerance</code>: Set the topology tolerance to account for topological discontinuities of the line network. Setting topology tolerance to zero requires the network to having being designed with  topological continuity. The crossing from a line segment to the other considers <strong>only the vertices<strong> of both lines.  The topology tolerance value signifies the minimum distance between vertices of two lines that the algorithm will consider as eligible to cross. Please note that the algorithm of the QGIS Network Analysis Library presents a peculiarity that the crossing of the gap between the two lines will not take place between the nearest vertices but from the previous (or the next) vertex. The topology tolerance <strong>should be set to the minimum value</strong> that produces the desired results.</p>
-
-<p><code class="language-plaintext highlighter-rouge">Tolerance units</code>: Set the distance units associated with the <code class="language-plaintext highlighter-rouge">Topology tolerance</code> setting.</p>
-
-<p><code class="language-plaintext highlighter-rouge">Result units</code>: Set the type of distance units to present the result. Note: All measurements are made internally in meters. A simple conversion factor is applied.</p>
-
-<p><code class="language-plaintext highlighter-rouge">Decimal digits</code>: Set the number of decimal points for the displayed Length</p>
-
+<h4>Group: Results</h4>
 <p><code class="language-plaintext highlighter-rouge">Show result in</code>: You can select from the following options:</p>
-
 <ol>
 <li><code class="language-plaintext highlighter-rouge">Panel, Length and loss</code>: The results of the analysis will appear in the plugin panel. The result will contain the total length, including the entry length, length on the path along the line network and the exit length.</li>
 
 <li><code class="language-plaintext highlighter-rouge">Panel, Length only</code>: For users who are not interested in fiber calculations, these data can be hidden, both from the panel as well as from the results window.</li>
 
-<li><code class="language-plaintext highlighter-rouge">Window, length and loss</code>: The results will appear both in the plugin panel as well as in a window that will appear on screen. This new window will contain the details of entry, on line network and exit. Only length information is shown.</li>
+<li><code class="language-plaintext highlighter-rouge">Window, length and loss</code>: The results will appear both in the plugin panel as well as in a window that will appear on screen. This new window will contain the details of the entry, on the line network and of the exit. Only length information is shown.</li>
 
 <li><code class="language-plaintext highlighter-rouge">Window, length only</code>: The results will appear both in the plugin panel as well as in a window. Only length data are presented. The fiber calculations, both in the panel and the result window are hidden.</li>
 
 </ol>
-
-<p><code class="language-plaintext highlighter-rouge">Include entry/exit lengths</code>: When checked, the path is drawn from the Start marker to the nearest point on the line, along the line and finally to the End marker. When unchecked, only the path along the line is drawn.</p>
-
+<p>In Fiber loss calculations, when checked, the result includes the fiber loss from the line to the Start and End markers, such as the connector loss etc. When unchecked, only the fiber attenuation and the splice loss along the line, as well as the Fixed loss amount is calculated. Please refer to <a href="#fiber-loss-budget-measurements">Fiber Loss Budget measurements</a> for details.</p> 
 <p>In Fiber loss calculations, when checked, the result includes the fiber loss from the line to the Start and End markers, such as the connector loss etc. When unchecked, only the fiber attenuation and the splice loss along the line, as well as the Fixed loss amount is calculated. Please refer to <a href="#fiber-loss-budget-measurements">Fiber Loss Budget measurements</a> for details.</p> 
 
-<p><code class="language-plaintext highlighter-rouge">Add result layer</code>: When checked, the result of the analysis will create a new temporary layer. This layer contains as fields all results of the analysis.</p>
+<p><code class="language-plaintext highlighter-rouge">Result units</code>: Set the type of distance units to present the result. Note: All measurements are made internally in meters and a conversion factor is applied.</p>
 
-<p><code class="language-plaintext highlighter-rouge">Add merged layer</code>: When checked, the merged layer will appear as a temporary layer. If only one single layer has been selected, no merged layer is produced since no merging takes place. <strong>WARNING: For efficient memory usage, please use this feature only when absolutely necessary, e.g. for debugging of a routing analysis. It is advised to reset it, after debugging is complete. </strong></p>
+<p><code class="language-plaintext highlighter-rouge">Length decimal digits</code>: Set the number of decimal digits presented in the length result.</p>
+<p><code class="language-plaintext highlighter-rouge">Add result layer to map</code>: When checked, the result of the analysis will create a new temporary layer. This layer contains as fields all results of the analysis.</p>
 
+<p><code class="language-plaintext highlighter-rouge">Add analysis layer to map</code>: When checked, the layer that was used for the network analysis will appear as a temporary layer. If only one single layer has been selected, no analysis layer is produced since the analysis does not require data from multiple sources. Yet, when limits are applied, or when same layer bridging is prohibited, an analysis layer is created even for a single input layer. The CRS of the layer will be the CRS of the QGIS Project. This was selected instead of the CRS of the analysis, because, no matter how hard QGIS tries to re-project layers, features will be moved at an offset after re-projection on the map. To allow a direct association of the features of the input layers to the analysis layer, the Project CRS was selected. <strong>WARNING: For efficient memory usage and especially when layers contain a large number of features, please add layers only when absolutely necessary, e.g. for debugging of a routing analysis. It is advised to delete the analysis layer after debugging is complete, to free-up system memory resources. </strong></p>
+
+<h4>Group: Entry and Exit</h4>
+<p>Controls the behaviour when the start and/or the end marker is not placed directly on a line network</p>
+<p><code class="language-plaintext highlighter-rouge">Include entry/exit lengths</code>: When checked, the path is drawn from the Start marker to the nearest point on the line, along the line and finally to the End marker. When unchecked, only the path along the line is drawn. In the latter case, the length of the line shown in the Results area of the Panel will not include the entry and exit lengths.</p>
+<p><code class="language-plaintext highlighter-rouge">Length limit warning</code>: Sets a limit in meters for the distance between the start and/or end marker to the line layer. If the distance is higher than the limit, a warning is issued. If the value is set to zero, the warning is disabled.</p>
+
+
+
+<h4>Group: Topology tolerance</h4>
+
+<p><code class="language-plaintext highlighter-rouge">Topology tolerance</code>: Set the topology tolerance as the distance to account for topological discontinuities of the line network. Setting topology tolerance to zero requires the network to having being designed with topological continuity. The crossing from a line segment to the other considers <strong>only the vertices</strong> of both lines.  The topology tolerance value signifies the minimum distance between vertices of two lines that the algorithm will consider as eligible to cross. This functionality can also be evident in one single layer, where a tolerance value larger than the distance between consecutive segments of a line, may cause the path to bypass one or more vertices of the line and go directly to a vertex within the tolerance. Please note that the algorithm of the QGIS Network Analysis Library presents a peculiarity that the crossing of the gap between the two lines will not take place between the nearest vertices but from the previous (or the next) vertex. The topology tolerance <strong>should be set to the minimum value</strong> that produces the desired results. The tolerance is based on Cartesian calculations.</p>
+
+<p><code class="language-plaintext highlighter-rouge">Tolerance units</code>: Set the distance units associated with the <code class="language-plaintext highlighter-rouge">Topology tolerance</code> setting.</p>
+
+
+<h4>Group: Bridging Point tool</h4>
+<p>Set the parameters of this group to change the appearance of the on-the-fly <code class="language-plaintext highlighter-rouge">Bridging Point</code><img src="./icons/bridging_point.32x32_b.png" alt="Bridging point button"  width=22 height=22 /> tool, as well as the behaviour of the bridging point functionality of both point layers and on-the-fly bridging points.</p>
+<p><code class="language-plaintext highlighter-rouge">Color</code>: Set the color and opacity of the on-the-fly Bridging Point tool.</p>
+<p><code class="language-plaintext highlighter-rouge">Size</code>: Set the size of the marker set by the of the on-the-fly Bridging Point tool.</p>
+<p><code class="language-plaintext highlighter-rouge">Search radius</code>: The Bridging Point tool will connect the bridging point with features (points and lines) within the search radius and will create a shortcut for the subsequent network analysis. The search radius is defined in the same units as the <code class="language-plaintext highlighter-rouge">Tolerance units</code> parameter and its usage is based on Cartesian calculations. </p>
+<p><code class="language-plaintext highlighter-rouge">Allow same layer bridging for bridging points</code>: When checked, a bridging point may create shortcuts at the same layer, provided there are features of this layer within the search radius. When unchecked, each bridging point will connect only once to each layer. Such single connection will be made to the feature having the shortest distance from the point.</p>
+<p><code class="language-plaintext highlighter-rouge">Add on-the-fly bridge points layer to map</code>: When checked, the markers set by the on-the-fly Bridging Point tool will be stored in new point layer that will be added on the map.</p>
+<p><code class="language-plaintext highlighter-rouge">Ask before deleting on-the-fly bridging points</code>: When checked, a confirmation dialog will open after right-clicking on the map while the bridgingPoint tool is active, to notify the user that all on-the-fly bridging points set on map will be deleted. If the user feels confident with the operation of the plugin and understands the possible risk of loosing work, especially when the option to save the on-the-fly bridging points as a new layer has not ben set, the checkbox may be left unchecked.</p>
+
+<h4>Group: Bridging Line tool</h4>
+<p>Set the parameters of this group to change the appearance and behaviour of the on-the-fly  <code class="language-plaintext highlighter-rouge">Bridging Line</code><img src="./icons/bridge.40x22_mod.png" alt="Bridging line button" width=27 height=15 /> tool.</p>
+<p><code class="language-plaintext highlighter-rouge">Color</code>: Set the color and opacity of the on-the-fly Bridging Line tool.</p>
+<p><code class="language-plaintext highlighter-rouge">Size</code>: Set the size of the marker set at the vertices of the of the on-the-fly Bridging Line tool.</p>
+<p><code class="language-plaintext highlighter-rouge">Line width</code>: Select the line width of the on-the-fly Bridging Line tool.</p>
+<p><code class="language-plaintext highlighter-rouge">Line style</code>: Select the style of the on-the-fly Bridging Line tool from a variety of options</p>
+
+
+<p><code class="language-plaintext highlighter-rouge">Search radius</code>: The Bridging Line tool will connect each vertex created by the tool with features (points and lines) of the selected line and point layers of the <code class="language-plaintext highlighter-rouge">Layers</code><img src="./icons/layer-stack2.svg" alt="Layers" width="25" height="25" /> selector of the Panel, which reside within the search radius. It will also create a line connecting the tool vertices. This line will act as a possible path line, participating in the analysis as a linestring of new layer. The search radius is defined in the same units as the <code class="language-plaintext highlighter-rouge">Tolerance units</code> parameter and its usage is based on Cartesian calculations. </p>
+<p><code class="language-plaintext highlighter-rouge">Add bridge lines layer to map</code>: When checked, the lines set by the on-the-fly Bridging Tool will be stored in new Linestring layer that will be added on the map.</p>
+<p><code class="language-plaintext highlighter-rouge">Ask before deleting bridging lines</code>: When checked, a confirmation dialog will open after right-clicking on the map while the bridgingLine tool is active, to notify the user that all bridging lines set on map will be deleted. If the user feels confident with the operation of the plugin and understands the possible risk of loosing work, especially when the option to save the bridging lines as a new layer has not ben set, the checkbox may be left unchecked.</p>
 
 
 
 <h3 id="section-fiber-loss-budget">Section: Fiber Loss Budget</h3>
+
+<p><img src="dlg_configuration_fiber_loss.png" alt="Configuration dialog screenshot - Fiber Loss Budget" /></p>
 
 <p><code class="language-plaintext highlighter-rouge">Connector loss</code>: Set the average loss of the fiber optic connectors in use. Unit:<code class="language-plaintext highlighter-rouge">db</code>.</p>
 
@@ -232,12 +324,32 @@
 
 <p><code class="language-plaintext highlighter-rouge">Splice loss</code>: Set the average loss at every optical splice made on the fiber cable. Unit:<code class="language-plaintext highlighter-rouge">db</code>.</p>
 
-<p><code class="language-plaintext highlighter-rouge">Splice every</code>: Set the frequency of splices of the fiber optic network. Usually, a design parameter of a fiber optic network sets a splice every so many kilometers.</p>
+<p><code class="language-plaintext highlighter-rouge">Splice every</code>: Set the frequency of splices of the fiber optic network. Usually, a design parameter of a fiber optic network sets a splice every so many Kilometers.</p>
 
 <p><code class="language-plaintext highlighter-rouge">Fiber attenuation</code>: Set the average attenuation of the fiber optic cables used in the network. Unit:<code class="language-plaintext highlighter-rouge">db</code>.</p>
 
 <p><code class="language-plaintext highlighter-rouge">Fixed loss</code>: This is a fixed value that is added to the loss calculations. It accounts for loss created by certain components, such as optical splitters in an FTTH network. Please note that this value is allocated only to the on-graph cost and not to the entry or exit cost.</p>
 
+
+
+
+<h3 id="section-fiber-loss-budget">Section: Limits</h3>
+
+<p><img src="dlg_configuration_limits.png" alt="Configuration dialog screenshot - Limits" /></p>
+<p> The Dijkstra algotithm investigates several possible routes in its attempt to locate the shortest path. This process may take a long time when there are multiple lines to check. The plugin offers options to minimize the required time by limiting the number of features that the algorithm will be using for the analysis. The options which enforce an extent are based on the assumption that the shortest path will most probably be found between the markers.</p>
+
+<p><code class="language-plaintext highlighter-rouge">Limit geographical extent</code>: Sets a limited geographical extent for the analysis. The following options are available:</p>
+<ol>
+<li><code class="language-plaintext highlighter-rouge">No limit</code>: No geographical limit is enforced.</li>
+<li><code class="language-plaintext highlighter-rouge">Map canvas</code>: The analysis will be limited to the area that is currently visible on the map. Make sure that all markers are visisible.</li>
+<li><code class="language-plaintext highlighter-rouge">Nx markerextent</code>: The analysis will be limited to an extent N times the area contained by the start, end and middle markers.</li>
+</ol>
+
+<p><strong>Warning 1:</strong> The enforced geographical limits may cause the Dijkstra algorithm to fail finding a path. There are cases, such as when the start and end marker are either horizontally or vertically aligned. In such case, the area of the extent rectangle may be so small that a path cannot be found. Even the 10x extent option would not be sufficient to provide a path in the first example of <a href="#using-the-bridging-line-tool">Using the Bridging Line tool</a>. You can rectify this problem without resorting to the worst case scenario of setting No limits, by setting one or more middle markers perpendicular to the straight line between the start and end marker. The plugin calculates the extent rectangle using the coordinates of all markers and therefore the area can be expanded significantly with this solution. Alternatively, the <code class="language-plaintext highlighter-rouge">Map canvas</code> limit may provide more control on the way the algorithm selects the possible paths, if the user makes sure that both the start and end markers are visible on screen and the desired possible paths are also visible on screen.</p>
+
+<p><strong>Warning 2:</strong> When limits are applied, the shortest path may be different for different limit settings. Always check the path on map to verify that it follows the route of your expectations.</p>
+
+<p><code class="language-plaintext highlighter-rouge">Maximum number of features per layer</code>: This parameter defines the maximum number of features for each of the line layers participating in the analysis. A value of zero indicates no limitation. It is not currently possible to select which features will create the analysis dataset.</p>
 
 
 <h1 id="usage"><a name="usage"></a>Usage</h1>
@@ -271,33 +383,35 @@
     <p>Press the <code class="language-plaintext highlighter-rouge">End</code><img src="./icons/end.png" alt="End button" />  button. The button will appear as pressed and the cursor will change to a cross (if it is not already a cross). Navigate on the map and click on the End point of your choice.</p>
   </li>
   <li>
-    <p>Press the <code class="language-plaintext highlighter-rouge">Calculate/Measure</code><img src="./icons/measure.svg" alt="Calculate/Measure button" width="20" height="20" />  button. The content of the Length box will change to <code class="language-plaintext highlighter-rouge">Processing...</code> and the routing algorithm will start running. In complex networks, this may take a few seconds. After the algorithm ends, the results will appear on the results area of the Panel, as well as in separate window, if configured so. In case a path is not found, a message will appear for a few seconds on the QGIS message bar.</p>
+    <p>Press the <code class="language-plaintext highlighter-rouge">Calculate/Measure</code><img src="./icons/measure-length.png" alt="Calculate/Measure button" width="20" height="20" />  button. The content of the Length box will change to <code class="language-plaintext highlighter-rouge">Processing...</code> and the routing algorithm will start running. In complex networks, this may take a few seconds. After the algorithm ends, the results will appear on the results area of the Panel, as well as in separate window, if configured so. In case a path is not found, a message will appear for a few seconds on the QGIS message bar.</p>
   </li>
 </ol>
 
 <p><img src="./example-path.png" alt="Example path" width="585" height="435"/></p>
 
-<p>The Start and End markers can be placed either directly on top of the vertices of lines, on top of the segments of lines, or anywhere on the map. The routing algorithm will calculate the nearest line layer from the list of line layers selected in the plugin Layers selector, and will connect the marker to the nearest point on that line. The length of line from the marker to the line layer is referred to as the <strong>Entry</strong> or <strong>Exit</strong> respectively.
+<p>The Start and End markers can be placed either directly on top of the vertices of lines, on top of the segments of lines, or anywhere on the map. The routing algorithm will calculate the nearest line layer from the list of line layers selected in the <code class="language-plaintext highlighter-rouge">Layers</code><img src="./icons/layer-stack2.svg" alt="Layers" width="25" height="25" /> selector and will connect the marker to the nearest point on that line. The length of line from the marker to the line layer is referred to as the <strong>Entry</strong> or <strong>Exit</strong> respectively.
 
 
 <h3><a name="snapping-tool">Snapping tool</h3>
 
-<p>In order to assist the user in the placement of the markers, a snapping indicator tool identifies the map features near the cursor while the marker placement tool is active for any of the markers (start, middle, end). The functionality depends on the configuration setting <code class="language-plaintext highlighter-rouge">Snap method</code> and the snapping tolerance is set in the <code class="language-plaintext highlighter-rouge">Snap pixels</code> parameter. When snapping is active, a <strong>tooltip</strong> is attached to the snapping indicator, presenting a comma separated list of the identified layers where the tool is snapped.</p>
+<p><strong>The instructions below refer to the Plugin snapping provider.</strong> You may use only the QGIS snapping provider or even both.</p>
+
+<p>In order to assist the user in the placement of the markers, a snapping indicator tool identifies the map features near the cursor while the marker placement tool is active for any of the markers (start, middle, end), or at the placement of the vertices of the flexjLine, the bridgingPoint and the bridgingLine tools. The functionality depends on the configuration setting <code class="language-plaintext highlighter-rouge">Snap method</code>. Snapping tolerance is the distance the plugin uses to search for the closest vertex and/or edge of line segment when you set a new marker. The snapping tolerance is set in the <code class="language-plaintext highlighter-rouge">Snap pixels</code> parameter.</p>
+
+<p>When snapping is active, a <strong>tooltip</strong> is attached to the snapping indicator, presenting a comma separated list of the identified layers where the tool is snapped.</p>
 
 
-<p>The snapping indicator appears as a blue rectangle or circle, depending on the value of the selected snap method:</p>
+<p>The snapping indicator appears as a rectangle or circle, depending on the value of the selected snap method:</p>
 
 <ul>
-<li>When the <code class="language-plaintext highlighter-rouge">Vertex</code> option has been selected, the snapping tool becomes a rectangle. The tool identifies the vertices of point and line layers loaded in the QGIS project.</li>
+<li>When the <code class="language-plaintext highlighter-rouge">Vertex</code> option has been selected, the snapping tool becomes a rectangle. The tool snaps onto the vertices of point and line layers loaded in the QGIS project.</li>
 <img src="./tooltip-vertex.png" alt="Example tooltip vertex" width="314" height="206"/>
 
-<li>When the <code class="language-plaintext highlighter-rouge">Edge</code> option has been selected, the snapping tool becomes a circle. The tool identifies the line layers loaded in the QGIS project. The tool follows the virtual path of the line.</li>
+<li>When the <code class="language-plaintext highlighter-rouge">Edge</code> option has been selected, the snapping tool becomes a circle. The tool snaps onto the line layers loaded in the QGIS project. The tool follows the virtual path of the line.</li>
 
 </ul>
 
-<p></p>
-
-<p><strong>The snapping tool will identify all features within the <code class="language-plaintext highlighter-rouge">Snap pixels</code> tolerance.</strong> Even if the tool itself is snapped to one of many map features, the tooltip will report all layers within the tolerance. Since the tolerance is defined in pixels, the user may zoom in the map to - possibly - separate the individual map features, in case they do not coincide completely.</p> 
+<p><strong>The snapping tool will identify all features within the <code class="language-plaintext highlighter-rouge">Snap pixels</code> tolerance.</strong> Even if the tool itself is snapped to one of many map features, the tooltip will report all layers within the tolerance. Since the tolerance is defined in pixels, the user may zoom in the map to - possibly - separate the individual map features, in case they do not coincide completely. If you aren’t within the snapping tolerance, the plugin will leave the marker where you release the mouse button, instead of snapping it to an existing vertex and/or segment.</p> 
 
 <p>
 <img src="./tooltip1.png" alt="Example tooltip1" width="230" height="140"/>
@@ -310,8 +424,6 @@
 
 <p>The placement of the marker can be set to snap to the coordinates of the snapping tool, according to user selection. This is defined by the parameter <code class="language-plaintext highlighter-rouge">Snap to map</code> of the Configuration window. It is suggested to use the snap method <code class="language-plaintext highlighter-rouge">Vertex</code> when snapping to actual physical locations, such as a point of a point layer, or the start and end vertex of a line segment.</p>
 
-<p>When multiple layers are selected,  the analysis will use the selected layers, regardless if they are visible on the map. Yet, in order for the snapping functionality of the map tool to work with a currently invisible layer, this layer must have been made visible at least once. In other words, if a layer has not been made visible at least once since loaded, it will not be subject to snapping and the layer name will not appear in the layer list of the tooltip. </p>
-
 <p>Please refer to the <a href="#configuration">Configuration</a> section for details on setting the parameters.</p>
 
 
@@ -322,22 +434,37 @@
 
 <p><img src="./use-middle-marker.png" alt="Using middle marker" width="610" height="380"/></p>
 
-<p>The calculations from marker to marker are totally independent, therefore the path from any marker to the next may partially coincide with the previous path. This can be a desirable behaviour in occasions, e.g. leaving a main road for a pit stop and then return to the main road  via the same return path. The user must select the location of the points in a way that the calculations will provide a usable resulting path. These middle markers could be considered as the “Stop points” or “Rest points”, i.e. go from start to end, making stops along the way. To avoid terminology conflicts with the end point of the path and the exit point of the line layer, I avoided the “stop” term and used the term “middle”, although not completely accurate!</p>
+<p>The calculations from marker to marker are totally independent, therefore the path from any marker to the next may partially coincide with the previous path. This can be a desirable behaviour in occasions, e.g. leaving a main road for a pit stop and then return to the main road via the same return path. The user must select the location of the points in a way that the calculations will provide a usable resulting path. These middle markers could be considered as the “Stop points” or “Rest points”, i.e. go from start to end, making stops along the way. To avoid terminology conflicts with the end point of the path and the exit point of the line layer, I avoided the “stop” term and used the term “middle”, although not completely accurate!</p>
 
 <p><img src="./path-overlap.png" alt="Path overlap" width="585" height="435"/></p>
 
 <p>At any time the user may press any of the <code class="language-plaintext highlighter-rouge">Start</code><img src="./icons/start.png" alt="Start button"  />, <code class="language-plaintext highlighter-rouge">Middle1</code><img src="./icons/m1.png" alt="Middle1 button"  /> , <code class="language-plaintext highlighter-rouge">Middle2</code><img src="./icons/m2.png" alt="Middle2 button" /> , <code class="language-plaintext highlighter-rouge">Middle3</code><img src="./icons/m3.png" alt="Middle3 button"  />  and <code class="language-plaintext highlighter-rouge">End</code><img src="./icons/end.png" alt="End button"  />  buttons and set each of the markers on map. After a marker has been set, the shape of the marker button becomes more round. This signifies that a pair of coordinates are now associated with this marker. If the user decides to change the coordinates of an already set marker, first make sure that the marker button is pressed and then click on the map. The new coordinates will be now associated to the marker.</p>
 
-<p><img src="./markers-set2.png" alt="Markers set" width="677" height="297"/></p>
+<p><img src="./markers-set2.png" alt="Markers set" /></p>
 
 
 <p>The <code>Middle1</code><img src="./icons/m1.png" alt="Middle1 button"  /> , <code class="language-plaintext highlighter-rouge">Middle2</code><img src="./icons/m2.png" alt="Middle2 button" /> , <code class="language-plaintext highlighter-rouge">Middle3</code><img src="./icons/m3.png" alt="Middle3 button"  /> marker buttons, are equipped with the additional functionality of re-setting themselves. If for example a middle marker has been set and the user clicks on the marker button, the marker will be deleted. This functionality does not exist for the Start and Stop marker, since they are considered the most essential parameters of the analysis. Their coordinates can easily be modified pressing the associated marker button. To delete entirely the Start or End marker, you may use the <code class="language-plaintext highlighter-rouge">Reset</code><img src="./icons/reset.svg" alt="Reset button" width="25" height="25" /> button.</p>
 
 <p>The routing algorithm considers a strict sequence <strong>Start -&gt; Middle1 -&gt; Middle2 -&gt; Middle3 -&gt; End</strong> of the markers. If any of the middle markers is not set, it is simply ignored. For example, if only Middle3 marker has been set, the sequence will be <strong>Start -&gt; Middle3 -&gt; End</strong>. This allows to set and/or clear middle markers depending on the particular use case, without requiring to modify middle markers that have been previously set. Always keep in mind that when middle markers are set, the algorithm does not really care about finding the shortest path from start to end, but rather finding the shortest path from start to the first set middle marker, then to the next middle marker etc. and finally to the end point.</p>
 
-<h3>Numeric marker coordinates</h3>
 
-<p>The numeric ccordinates of the Start and End marker appear in the Panel textboxes.</p>
+<h3>Using the flexjLine tool to place coordinate markers</h3>
+
+<p>An alternative way to place the start, middle and end markers is provided via the flexjLineTool. Click on the <code class="language-plaintext highlighter-rouge">flexjLine</code><img src="./icons/path-mode-polyline.svg" alt="flexjLine button" width="24" height="24"/> button of the Panel. The button will become dark grey to show that the tool is activated. Navigate to the map and place the first point clicking the left mouse button. This point will become the start point of the path. Move to another point on the map and click the left mouse button. You can continue placing points in sequence. You may place a maximum of 5 points, because the pluging allows for 3 middle markers plus on top of teh start and end marker. If you try to place a 6th marker, the current markers and lines will be deleted and the new marker will be considered the first marker of a new flexjLine.</p>
+
+<p>After you have placed the final point, click on the right mouse button. The vertices of the flexjLine will become the coordinate markers.</p>
+
+<p>To delete all vertices and start a new placement, click on the right mouse button while the flexjLine tool is active. After you press the Calculate button, the coordinates of the vertices will be copied to the markers, and they can be manipulated using the normal procedures. </p></p>
+
+<p><img src="flexjLineTool.png" alt="flexjLine Tool" /></p>
+
+<h4>What kind of name is the flexjLine? How is it even pronounced?</h4>
+<p>The next option would be "Flexible Marker Placement Tool With Measuring Capabilities" or "FMPTWMC". Quite boring, isn't it? Unfortunately, words combining the terms "flexible" and "line" are mostly copyrighted or used as brand or product names. It seems that the leter "j" is the one that could possibly look like an "i" but not really spelled like this. It is also non sensical to use it in the market, so it is the perfect candidate for an open-source solution. It is pronounced in whatever way makes you feel comfortable.</p>
+
+
+
+
+<h3>Numeric marker coordinates</h3>
 
 <p>In case the user wishes to present the coordinates of all markers, the <code class="language-plaintext highlighter-rouge">eye</code><img src="./icons/eye.svg" alt="eye button" width="15" height="15" /> button presents the <code class="language-plaintext highlighter-rouge">Marker coordinates</code> window with the required information. </p>
 
@@ -357,6 +484,10 @@
 
 <p>In case the user needs to store results as layers on a continuous basis, the <code class="language-plaintext highlighter-rouge">Add result layer</code> parameter of the Configuration window allows creating a layer after each measurement.</p>
 
+
+
+
+
 <h3>Other...</h3>
 
 <p>Press the <code class="language-plaintext highlighter-rouge">Reset</code><img src="./icons/reset.svg" alt="Reset button" width="25" height="25" />  button to hide all visual elements (markers and rubberbands) and clear the existing values for all points, as well as the previously calculated results.</p>
@@ -365,19 +496,17 @@
 
 <p>You can press the <code class="language-plaintext highlighter-rouge">Configure</code><img src="./icons/settings.svg" alt="Configure button" width="15" height="15" />  button to enter the Configuration dialog. For detailed explanation of the configuration parameters, visit the <a href="#configuration">Configuration</a> section.</p>
 
-<p>You can press the <code class="language-plaintext highlighter-rouge">Help</code><img src="./icons/question.svg" alt="Help button" width="15" height="15" />  button to present the content of the help page. This is a simplified help page, without images, available when there is no internet connection. If an internet connection is available, click on the hyperlinks to gain acces to the full online documentation.</p>
+<p>You can press the <code class="language-plaintext highlighter-rouge">Help</code><img src="./icons/question.svg" alt="Help button" width="15" height="15" />  button to present the content of the help page. This is a simplified help page, without images, available when there is no internet connection. If an internet connection is available, click on the hyperlinks to gain access to the full online documentation.</p>
 
 
 
 <h2 id="length-measurements">Length measurements</h2>
 
-
-
 <p>All distance measurements of this plugin are performed using the <strong>ellipsoidal</strong> method. The particular ellipsoid is the one that is associated with the selected Coordinate Reference System (CRS). See parameter <code class="language-plaintext highlighter-rouge">Use ellipsoid of the following CRS</code> of the <a href="#configuration">Configuration</a> window. The ellipsoid id will be presented just below the selected CRS.</p>
 
-<p><img src="./ellipsoid.png" alt="Ellipsoid" width="233" height="241" /></p>
+<p><img src="./ellipsoid.png" alt="Ellipsoid"  /></p>
 
-<p>After setting the markers and pressing the <code class="language-plaintext highlighter-rouge">Calculate/Measure</code><img src="./icons/measure.svg" alt="Calculate/Measure button" width="20" height="20" />  button, the results will appear in the Panel. If one of the "Window" options is set in the <code class="language-plaintext highlighter-rouge">Show result in</code> parameter of the <a href="#configuration">Configuration</a> window, the Results window will also appear.</p>
+<p>After setting the markers and pressing the <code class="language-plaintext highlighter-rouge">Calculate/Measure</code><img src="./icons/measure-length.png" alt="Calculate/Measure button" width="20" height="20" />  button, the results will appear in the Panel. If one of the "Window" options is set in the <code class="language-plaintext highlighter-rouge">Show result in</code> parameter of the <a href="#configuration">Configuration</a> window, the Results window will also appear.</p>
 
 <p><img src="./dlg_results.png" alt="Results window" width="302" height="202" /></p>
 
@@ -391,11 +520,8 @@
 
 <p>The <code class="language-plaintext highlighter-rouge">On path</code> length and loss is associated with the path over the selected line layer, from the entry point to the exit point of the line layer, excluding the pieces of length from the start and end marker to the line layer. The Dijkstra algorithm of the core QGIS network analysis library  is used to calculate the shortest path.</p>
 
-<p>The measurements of the lines from the Start/End marker to the line layer, as well as the length of the path on the line layer are being made as per the active CRS of the QGIS project. The QGIS ‘on the fly’ transformation feature can be used to take measurements with different CRS. The Results window provides information regarding the CRS and ellipsoid that have been used for conducting the measurement.</p>
 
-<p>NOTE: When the <code class="language-plaintext highlighter-rouge">Include entry/exit lengths</code> of the configuration dialog is checked, the total length from Start marker to entry point, along the line and from the exit point to End marker appears in the panel. When unchecked, only the length along the line network appears in the panel. Therefore, in the above example, when checked, the Panel will show the total length of 650.19m.</p>
-<p><img src="./dlg_dockWindow_no_fiber.png" alt="Panel, no fiber" /></p>
-<p>If unchecked, the Panel would show 627.88m which is the length "On path". The Results window continues to show all lengths.</p>
+<p>NOTE: When the <code class="language-plaintext highlighter-rouge">Include entry/exit lengths</code> of the configuration dialog is checked, the total length from Start marker to entry point, along the line and from the exit point to End marker appears in the panel. When unchecked, only the length along the line network appears in the panel. Therefore, in the above example, when checked, the Panel will show the total length of 650.19m. If unchecked, the Panel would show 627.88m which is the length "On path". The Results window continues to show all lengths.</p>
 
 
 
@@ -409,7 +535,7 @@
     <p>The number of <code class="language-plaintext highlighter-rouge">Connectors at entry</code> or respectively <code class="language-plaintext highlighter-rouge">Connectors at exit</code> parameter multiplied by the <code class="language-plaintext highlighter-rouge">Connector loss</code> parameter</p>
   </li>
   <li>
-    <p>The <code class="language-plaintext highlighter-rouge">Splice loss</code> parameter multiplied by the number of splices, which is calculated as the distance from the Start marker to the entry point on the line layer and respectively, from the exit point of the line layer to the End marker, divided by the the <code class="language-plaintext highlighter-rouge">Splice every</code> parameter. Although not entirely accurate, neither as concept nor as value, this is an attempt to include the participation of the entry and exit lengths in the calculation of the total number of splices.</p>
+    <p>The <code class="language-plaintext highlighter-rouge">Splice loss</code> parameter multiplied by the number of splices, which is calculated as the distance from the Start marker to the entry point on the line layer and respectively, from the exit point of the line layer to the End marker, divided by the <code class="language-plaintext highlighter-rouge">Splice every</code> parameter. Although not entirely accurate, neither as concept nor as value, this is an attempt to include the participation of the entry and exit lengths in the calculation of the total number of splices.</p>
   </li>
   <li>
     <p>The <code class="language-plaintext highlighter-rouge">Fiber attenuation</code> parameter multiplied by the distance from the Start marker to the entry point on the line layer and respectively, from the exit point of the line layer to the End marker.</p>
@@ -441,9 +567,13 @@
 
 <p>The plugin allows the selection of multiple layers to perform the shortest path analysis. This feature can be helpful in cases where a path is not fully contained in one layer. As an example, there may be one layer for a primary road network, another layer for the secondary road network, a third one for the tertiary road network and so on. To calculate a path from an arbitrary point to another, the user would normally have to merge all those layers and then run the shortest-path algorithm on the merged layer. The multiple layer selection of the plugin performs the layer merging automatically.</p>
 
-<p>The topology tolerance functionality can also be used in order to cross topologically disconnected lines from one layer to the other. The tolerance refers to vertices of lines and not to the lines themselves. Therefore, if two lines are crossing each other, the rubberband will not jump from one line to the other. Yet, if there are vertices in each line within the topology tolerance, the rubberband will jump from one vertex to the other. This functionality may be desired in some cases, such as a secondary road passing over or under a primary road, where it is not possible to drive from one road to the other.</p>
+<p>When multiple layers are selected, the analysis will use the selected layers, regardless if they are visible on the map.</p>
 
-<p>Use the <a href="snapping-tool">Snapping tool</a> in both available options (Vertex and Edge) to identify vertices and/or overlapping lines. The tooltip presents all layers within the snapping distance that have been made visible on the map for at least once.
+<p>The topology tolerance functionality can also be used in order to cross topologically disconnected lines either of the same layer or from lines of one layer to lines of the other. The tolerance refers to vertices of lines and not to the lines themselves. Therefore, if two lines are crossing each other, the rubberband will not jump from one line to the other. Yet, if there are vertices in each line within the topology tolerance, the rubberband will jump from one vertex to the other. This functionality may be desired in some cases, such as a secondary road passing over or under a primary road, where it is not possible to drive from one road to the other.</p>
+
+<p>Use the <a href="snapping-tool">Snapping tool</a> in both available options (Vertex and Edge) to identify vertices and/or overlapping lines. The tooltip presents all layers within the snapping distance.</p>
+
+<p> With the introduction of the Bridging Point and Bridging Line functionality since version 1.3.0 of the plugin, it is strongly advised to use bridging when individual cases need to be handled, as the bridging behaviour is more controllable than the topology tolerance. When a layer requires several interventions in order to create a contiguous path, use Topology tolerance or combinations of the tools.</p>
 
 <p><strong>Some precautions need to be taken when merging layers:</strong></p>
 
@@ -452,10 +582,10 @@
     <p>The merging of layers consumes heavily system resources (memory and CPU). In addition, calculations of the plugin are performed in Python, which is not as fast and efficient as the core QGIS language C++. Please select the minimum number of layers required for your work.</p>
   </li>
   <li>
-    <p>When multiple layers are selected, the configuration option to use an ellipsoid based on <code class="language-plaintext highlighter-rouge">Layer CRS</code> will not work. Since several layers are concerned and each layer may have its own CRS, the plugin selects to override ths option and to use the Project CRS. This is performed in the background and the configuration option of the Configuration dialog does not present this fact, because the user may decide later to select one single layer. In that case, the <code class="language-plaintext highlighter-rouge">Layer CRS</code> option will be used, without the user having to re-visit the Configuration dialog.</p>
+    <p>When multiple layers are selected, the configuration option to use an ellipsoid based on <code class="language-plaintext highlighter-rouge">Layer CRS</code> will not work. Since several layers are concerned and each layer may have its own CRS, the plugin selects to override this option and to use the Project CRS instead. This is performed in the background and the configuration option of the Configuration dialog does not present this fact, because the user may decide later to select one single layer. In the latter case, the <code class="language-plaintext highlighter-rouge">Layer CRS</code> option will be used, without the user having to re-visit the Configuration dialog.</p>
   </li>
   <li>
-    <p>When two or more layers are selected, the plugin will be dealing with one single merged layer, consisting of all lines of the initial layers. The user should keep in mind that those layers may have not been created with the consideration that somebody will merge them. Therefore, lines of originally separate layers may cross without a connection, coincide geometrically, run in parallel at a very short distance and other situations that may visually confuse the users, if they do not have a clear view of the vertices of each line. Therefore, the result of finding a path between all those lines should be taken with a grain of salt. Especially when the Topology tolerance feature is activated, the results may be surprising. Users are advised to use layers with a strict topological association between the features of those layers. As an example, a point layer containing the common points between the line layers can help identify the points of transition from one layer to the other. A value of topology tolerance equal to zero, or the minimum possible to cope for snapping inconsistencies, is desirable in that case. Yet, cases could be found where identical coordinates of different layers may provide "bad" results. As an example, when two segments of two separate line layers have a vertex with identical coordinates, a cross will occur, even if it is not wanted or expected. In such cases, use a middle marker to direct the shortest path algorithm to another point which is common for both layers, where it is accepted to cross layers</p>
+    <p>When two or more layers are selected, the plugin will be dealing with one single merged layer, consisting of all lines of the initial layers. The user should keep in mind that those layers may have not been created with the consideration that somebody will merge them. Therefore, lines of originally separate layers may cross without a connection, coincide geometrically, run in parallel at a very short distance and other situations that may visually confuse the users, if they do not have a clear view of the vertices of each line. Therefore, the result of finding a path between all those lines should be taken with a grain of salt. Especially when the Topology tolerance feature is activated, the results may be surprising. Users are advised to use layers with a strict topological association between the features of those layers. Otherwise, use the Bridging Point and Bridging Line tools to create bridges between lines of the same or different layers. As an example of the topology tolerance behaviour,  a point layer containing the common points between the line layers can help identify the points of transition from one layer to the other. A value of topology tolerance equal to zero, or the minimum possible to cope for snapping inconsistencies, is desirable in that case. Yet, cases could be found where identical coordinates of different layers may provide "bad" results. As an example, when two segments of two separate line layers have a vertex with identical coordinates, a cross will occur, even if it is not wanted or expected. In such cases, use a middle marker to direct the shortest path algorithm to another point which is common for both layers, where it is accepted to cross layers</p>
     
     <p><img src="./cross-bad.png" alt="Example merge bad cross" width="801" height="429" /></p>
     <p><img src="./cross-good.png" alt="Example merge good cross" width="801" height="429" /></p>
@@ -464,9 +594,71 @@
     
   </li>
   <li>
-    <p>User must be careful with coordinate transformations from one CRS to another, in regards to the topological association between vertices of different layers. For example, if the vertex of layer 1 has been snapped topologically to a vertex of layer 2, if layer 1 is saved to a different CRS, the same vertex of the layer 1 in the new CRS may not be topologically connected to the vertex of CRS 2. Use the topology tolerance to overcome such situations. A few millimeters will suffice.</p>
+    <p>User must be careful with coordinate transformations from one CRS to another, in regard to the topological association between vertices of different layers. For example, if the vertex of layer 1 has been snapped topologically to a vertex of layer 2, if layer 1 is saved to a different CRS, the same vertex of the layer 1 in the new CRS may not be topologically connected to the vertex of CRS 2. Use the topology tolerance to overcome such situations. A few millimeters will suffice.</p>
   </li>
 </ol>
+
+<h2 id="-using-the-bridging-point-tool"><a name="using-the-bridging-point-tool"></a>Using the Bridging Point tool</h2>
+<p>The Bridging Point tool facilitates the network analysis, even when the layers used in the analysis do not provide the topological consistency required for a controlled jump from one line layer to another. Using the Bridging Point tool, the user may set points on the map using the on-the-fly bridgingPointTool <img src="./icons/bridging_point.32x32_b.png" alt="Bridging point button"/> or use an existing point layer that the user may select using the <code class="language-plaintext highlighter-rouge">Layers</code><img src="./icons/layer-stack2.svg" alt="Layers" width="25" height="25" /> selector of the Panel. For each such point, a Search radius defines an area where the bridging point will try to locate lines and connect to each one of them. Since those connecting lines have the bridging point as a common vertex, a path is created that connects the associated lines. This functionality is presented in the figure below:</p>
+
+<p><img src="bridging-point-tool.png" alt="Example Bridging Point Tool" /></p>
+
+<p>The start marker has been placed on the green layer and the end marker on the red layer. The distance between the point and each of the line layers has been set to be within the bridging point search radius. After the user presses the Calculate button, the plugin creates one new line to connect the point to each line layer. Such line connects the point to the nearest edge of the line, i.e. creating a line that is vertical to the original line. The Dijkstra algorithm considers the new lines as part of the analysis and creates the path crossing the layers.</p>
+
+<p>Please note that the creation of new lines is performed entirely on a memory layer. The layers which are input into the analysis are not modified at all.</p>
+
+<p>In this example, the bridging point has been placed purposely at a point that is visually away from both line layers, for the purpose of presenting how the tool works. In normal operations, the bridging point would be placed much closer to the intersection of both line layers, or exactly at the intersection if snapping is activated.</p>
+
+The Bridging Point tool can be used in two variations:
+<ol>
+<li>Bridging Point layers</li>
+<li>On-the-fly Bridging points</li>
+</ol>
+
+<h4>Bridging Point layers</h4>
+<p>The features of Point layers can be set to be used as Bridging Points. Load such point layers in QGIS and then press the  <code class="language-plaintext highlighter-rouge">Layer</code><img src="./icons/layer-stack2.svg" alt="Layer button"  /> button of the Panel window. Select the points layers in the Layer selection window, tab Point layers.</p>
+
+<p><img src="point-layer-selection-window.png" alt="Example Bridging Point Tool Layer selection" /></p>
+
+<h4>On-the-fly Bridging points</h4>
+<p>Click on the <code class="language-plaintext highlighter-rouge">Bridging Point</code><img src="./icons/bridging_point.32x32_b.png" alt="Bridging point button"  width=22 height=22 /> button of the Panel. The button will become dark grey to show that the tool is activated. Navigate to the map and place one or several on-the-fly bridging points using the left mouse button. The on-the-fly bridging points will remain on the map even if another tool of the plugin or another QGIS tool is activated.</p>
+
+</p>To delete all on-the-fly bridging points click on the <code class="language-plaintext highlighter-rouge">Bridging Point</code><img src="./icons/bridging_point.32x32_b.png" alt="Bridging point button"  width=22 height=22 /> button to activate the tool (if it is not alraedy active) and then press the right mouse button on the map. Handling each individual bridging point to move or delete, is not available. If such actions are required, you may create a temporary point layer where the entire QGIS functionality in creating and handling points, CRS etc. is at your hands. You may select this temporary layer as a Bridging Point layer.</p>
+
+<h3>Same layer bridging</h3>
+<p>The default bridging functionality allows the bridge points to connect to lines of the same layer. This may be useful when the end vertices of lines from the same layer are not topologically identical. It may also be useful in cases where one road has been digitized as two separate lines, while we would like to cross the lanes. Such examples are presented below:<p>
+
+<div>
+<p><img src="same-layer-bridging-2.png" alt="Example same layer bridging 2" /><img src="same-layer-bridging.png" alt="Example same layer bridging" /></p>
+</div>
+
+<p>If the configuration option <code class="language-plaintext highlighter-rouge">Allow same layer bridging for bridging points</code> is unchecked, the plugin will not connect a point more than once to features of the same line layer, even if they reside within the search radius. The single feature that the plugin will select for connection will be the one with the smallest distance from the point. </p>
+
+
+<h2 id="-using-the-bridging-line-tool"><a name="using-the-bridging-line-tool"></a>Using the Bridging Line tool</h2>
+<p>The <code class="language-plaintext highlighter-rouge">Bridging Line</code><img src="./icons/bridge.40x22_mod.png" alt="Bridging line button" width=27 height=15 /> tool facilitates the network analysis even more, by providing connections between several arbitrary points of the original path, within the same layer or separate layers. This functionality is presented in the figure below:</p>
+
+<p><img src="bridging-line-example-a.png" alt="Example Bridging line Tool - example a" /><img src="bridging-line-example-b.png" alt="Example Bridging line Tool example b" /></p>
+
+<p>In the first image, there is no bridge and the algorithm selects a long path. In the second image, a bridging line has been created and the algorithm finds a shortest path.</p>
+
+<p>A bridging line may be composed of several vertices, as shown in the image below:</p>
+
+<p><img src="bridging-line-multiple-vertices.png" alt="Example Bridging line multiple vertices" /></p>
+
+<p>To use the Bridging Line tool, click on the <code class="language-plaintext highlighter-rouge">Bridging Line</code><img src="./icons/bridge.40x22_mod.png" alt="Bridging line button" width=27 height=15 /> button of the Panel. The button will become dark grey to show that the tool is activated. Navigate to the map and place the first point of the bridge clicking the left mouse button. Move to another point on the map and click the left mouse button. You can continue placing points which will be part of the same bridging line. After you have placed the final point, click on the right mouse button. The bridging line is now finalized. You can create additional bridging lines by clicking the left mouse button again and repeat the procedure.</p>
+
+<p> To delete all bridging lines, click on the <code class="language-plaintext highlighter-rouge">Bridging Line</code><img src="./icons/bridge.40x22_mod.png" alt="Bridging line button" width=27 height=15 /> button to activate the tool (if it is not alraedy active) and then press the right mouse button on the map. You may activate other tools for other activities and then re-activate the Bridging Line tool, without deleting the bridging lines. </p>
+
+<p>The Bridging Line tool operates as follows: </p>
+<ol>
+<li>The line segments created by the tool are handled by the analysis algorithm as features of one additional line layer.</li>
+<li>The vertices of the lines created by the tool are handled by the analysis as Bridging Points, with a Search radius defined in the configuration parameter of the Bridging Line tool. This search radius is expected to be a small value, certainly smaller than the Bridging Point search radius, since the normal bridging points are expected to be placed between lines, whereas the vertices of bridging lines will most probably be placed directly on top of lines, using the snapping functionality. In addition, one more reason that the Bridging Line search radius should be small, is to avoid one vertex of the bridging line create connections to the lines which the bridge was supposed to connect using the path provided by its line.</p>
+
+<p>Also, it is clarified that, when two points of a bridging line are placed on lines of the same layer, an unchecked <code class="language-plaintext highlighter-rouge">Allow same layer bridging for bridging points</code> does not apply on the bridge itself, because each one of the vertices of the bridging line is handled individually, so it may not form connections with several lines of the same layer, but the one connection that it is allowed to place will create the desired path from the line, to the vertex and then to the bridging line itself, to the other vertex and finally to the other line. Yes, it may seem a bit complicated, but it is absolutely logical!</li>
+</ol>
+
+
 <hr></hr>
   </body>
 </html>

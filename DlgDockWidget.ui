@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>232</width>
+    <width>268</width>
     <height>240</height>
    </rect>
   </property>
@@ -29,7 +29,7 @@
    </size>
   </property>
   <property name="toolTip">
-   <string>Fiber loss</string>
+   <string/>
   </property>
   <property name="locale">
    <locale language="C" country="AnyCountry"/>
@@ -41,22 +41,22 @@
    <property name="minimumSize">
     <size>
      <width>0</width>
-     <height>225</height>
+     <height>212</height>
     </size>
    </property>
    <property name="maximumSize">
     <size>
      <width>16777215</width>
-     <height>225</height>
+     <height>212</height>
     </size>
    </property>
    <widget class="QFrame" name="frame">
     <property name="geometry">
      <rect>
-      <x>0</x>
-      <y>0</y>
-      <width>227</width>
-      <height>225</height>
+      <x>4</x>
+      <y>4</y>
+      <width>259</width>
+      <height>208</height>
      </rect>
     </property>
     <property name="minimumSize">
@@ -68,7 +68,7 @@
     <property name="maximumSize">
      <size>
       <width>16777215</width>
-      <height>225</height>
+      <height>208</height>
      </size>
     </property>
     <property name="locale">
@@ -80,34 +80,12 @@
     <property name="frameShadow">
      <enum>QFrame::Raised</enum>
     </property>
-    <widget class="QLabel" name="label">
-     <property name="geometry">
-      <rect>
-       <x>4</x>
-       <y>8</y>
-       <width>24</width>
-       <height>24</height>
-      </rect>
-     </property>
-     <property name="toolTip">
-      <string>Select one or more layers...</string>
-     </property>
-     <property name="text">
-      <string/>
-     </property>
-     <property name="pixmap">
-      <pixmap>docs/icons/layer-stack2.svg</pixmap>
-     </property>
-     <property name="scaledContents">
-      <bool>true</bool>
-     </property>
-    </widget>
     <widget class="QPushButton" name="startCoordinatesButton">
      <property name="geometry">
       <rect>
-       <x>161</x>
-       <y>40</y>
-       <width>56</width>
+       <x>2</x>
+       <y>46</y>
+       <width>48</width>
        <height>24</height>
       </rect>
      </property>
@@ -127,7 +105,7 @@
      <property name="iconSize">
       <size>
        <width>48</width>
-       <height>48</height>
+       <height>8</height>
       </size>
      </property>
      <property name="checkable">
@@ -137,9 +115,9 @@
     <widget class="QPushButton" name="middleCoordinatesButton">
      <property name="geometry">
       <rect>
-       <x>10</x>
-       <y>68</y>
-       <width>56</width>
+       <x>54</x>
+       <y>46</y>
+       <width>36</width>
        <height>24</height>
       </rect>
      </property>
@@ -158,8 +136,8 @@
      </property>
      <property name="iconSize">
       <size>
-       <width>48</width>
-       <height>48</height>
+       <width>34</width>
+       <height>8</height>
       </size>
      </property>
      <property name="checkable">
@@ -169,10 +147,10 @@
     <widget class="QPushButton" name="endCoordinatesButton">
      <property name="geometry">
       <rect>
-       <x>161</x>
-       <y>97</y>
-       <width>56</width>
-       <height>22</height>
+       <x>174</x>
+       <y>46</y>
+       <width>48</width>
+       <height>24</height>
       </rect>
      </property>
      <property name="toolTip">
@@ -191,7 +169,7 @@
      <property name="iconSize">
       <size>
        <width>48</width>
-       <height>48</height>
+       <height>8</height>
       </size>
      </property>
      <property name="checkable">
@@ -201,8 +179,8 @@
     <widget class="QLabel" name="label_2">
      <property name="geometry">
       <rect>
-       <x>20</x>
-       <y>128</y>
+       <x>14</x>
+       <y>115</y>
        <width>29</width>
        <height>24</height>
       </rect>
@@ -223,11 +201,17 @@
     <widget class="QLineEdit" name="resultLength">
      <property name="geometry">
       <rect>
-       <x>64</x>
-       <y>128</y>
+       <x>58</x>
+       <y>115</y>
        <width>115</width>
        <height>20</height>
       </rect>
+     </property>
+     <property name="focusPolicy">
+      <enum>Qt::NoFocus</enum>
+     </property>
+     <property name="toolTip">
+      <string>Path length</string>
      </property>
      <property name="locale">
       <locale language="C" country="AnyCountry"/>
@@ -240,12 +224,15 @@
      </property>
     </widget>
     <widget class="QLineEdit" name="startCoordinatesTextbox">
+     <property name="enabled">
+      <bool>false</bool>
+     </property>
      <property name="geometry">
       <rect>
-       <x>12</x>
-       <y>42</y>
-       <width>146</width>
-       <height>20</height>
+       <x>2</x>
+       <y>98</y>
+       <width>0</width>
+       <height>0</height>
       </rect>
      </property>
      <property name="toolTip">
@@ -262,12 +249,15 @@
      </property>
     </widget>
     <widget class="QLineEdit" name="endCoordinatesTextbox">
+     <property name="enabled">
+      <bool>false</bool>
+     </property>
      <property name="geometry">
       <rect>
        <x>12</x>
        <y>98</y>
-       <width>146</width>
-       <height>20</height>
+       <width>0</width>
+       <height>0</height>
       </rect>
      </property>
      <property name="toolTip">
@@ -283,8 +273,8 @@
     <widget class="QLabel" name="label_3">
      <property name="geometry">
       <rect>
-       <x>18</x>
-       <y>159</y>
+       <x>12</x>
+       <y>146</y>
        <width>40</width>
        <height>17</height>
       </rect>
@@ -305,11 +295,14 @@
     <widget class="QLineEdit" name="fiberLoss">
      <property name="geometry">
       <rect>
-       <x>122</x>
-       <y>156</y>
+       <x>116</x>
+       <y>143</y>
        <width>56</width>
        <height>22</height>
       </rect>
+     </property>
+     <property name="toolTip">
+      <string>Fiber loss</string>
      </property>
      <property name="alignment">
       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -318,8 +311,8 @@
     <widget class="QLabel" name="lengthUnits">
      <property name="geometry">
       <rect>
-       <x>182</x>
-       <y>128</y>
+       <x>176</x>
+       <y>115</y>
        <width>36</width>
        <height>21</height>
       </rect>
@@ -331,8 +324,8 @@
     <widget class="QLabel" name="fiberLossUnits">
      <property name="geometry">
       <rect>
-       <x>182</x>
-       <y>159</y>
+       <x>176</x>
+       <y>146</y>
        <width>36</width>
        <height>16</height>
       </rect>
@@ -344,14 +337,14 @@
     <widget class="QPushButton" name="configureButton">
      <property name="geometry">
       <rect>
-       <x>156</x>
-       <y>186</y>
+       <x>123</x>
+       <y>174</y>
        <width>33</width>
        <height>26</height>
       </rect>
      </property>
      <property name="sizePolicy">
-      <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+      <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
        <horstretch>0</horstretch>
        <verstretch>0</verstretch>
       </sizepolicy>
@@ -385,27 +378,27 @@
     <widget class="QPushButton" name="resetButton">
      <property name="geometry">
       <rect>
-       <x>80</x>
-       <y>186</y>
-       <width>40</width>
+       <x>34</x>
+       <y>174</y>
+       <width>50</width>
        <height>26</height>
       </rect>
      </property>
      <property name="sizePolicy">
-      <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+      <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
        <horstretch>0</horstretch>
        <verstretch>0</verstretch>
       </sizepolicy>
      </property>
      <property name="minimumSize">
       <size>
-       <width>40</width>
+       <width>50</width>
        <height>26</height>
       </size>
      </property>
      <property name="maximumSize">
       <size>
-       <width>40</width>
+       <width>50</width>
        <height>26</height>
       </size>
      </property>
@@ -432,28 +425,28 @@
     <widget class="QPushButton" name="calculateButton">
      <property name="geometry">
       <rect>
-       <x>4</x>
-       <y>186</y>
-       <width>74</width>
-       <height>26</height>
+       <x>154</x>
+       <y>78</y>
+       <width>67</width>
+       <height>28</height>
       </rect>
      </property>
      <property name="sizePolicy">
-      <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+      <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
        <horstretch>0</horstretch>
        <verstretch>0</verstretch>
       </sizepolicy>
      </property>
      <property name="minimumSize">
       <size>
-       <width>74</width>
-       <height>26</height>
+       <width>0</width>
+       <height>0</height>
       </size>
      </property>
      <property name="maximumSize">
       <size>
-       <width>74</width>
-       <height>26</height>
+       <width>110</width>
+       <height>28</height>
       </size>
      </property>
      <property name="toolTip">
@@ -467,21 +460,21 @@
      </property>
      <property name="icon">
       <iconset>
-       <normaloff>docs/icons/measure.svg</normaloff>docs/icons/measure.svg</iconset>
+       <normaloff>docs/icons/measure-length.png</normaloff>docs/icons/measure-length.png</iconset>
      </property>
      <property name="iconSize">
       <size>
-       <width>20</width>
-       <height>20</height>
+       <width>24</width>
+       <height>24</height>
       </size>
      </property>
     </widget>
     <widget class="QCheckBox" name="addFixedLoss">
      <property name="geometry">
       <rect>
-       <x>64</x>
-       <y>158</y>
-       <width>39</width>
+       <x>54</x>
+       <y>145</y>
+       <width>43</width>
        <height>17</height>
       </rect>
      </property>
@@ -505,14 +498,14 @@
     <widget class="QPushButton" name="helpButton">
      <property name="geometry">
       <rect>
-       <x>190</x>
-       <y>186</y>
+       <x>160</x>
+       <y>174</y>
        <width>33</width>
        <height>26</height>
       </rect>
      </property>
      <property name="sizePolicy">
-      <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+      <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
        <horstretch>0</horstretch>
        <verstretch>0</verstretch>
       </sizepolicy>
@@ -549,14 +542,14 @@
     <widget class="QgsCheckableComboBox" name="layerCombobox">
      <property name="geometry">
       <rect>
-       <x>36</x>
+       <x>44</x>
        <y>6</y>
-       <width>181</width>
+       <width>173</width>
        <height>25</height>
       </rect>
      </property>
      <property name="toolTip">
-      <string>Select one or multiple layers</string>
+      <string>Select one or multiple line layers for path analysis</string>
      </property>
      <property name="editable">
       <bool>true</bool>
@@ -571,9 +564,9 @@
     <widget class="QPushButton" name="middle2CoordinatesButton">
      <property name="geometry">
       <rect>
-       <x>68</x>
-       <y>68</y>
-       <width>56</width>
+       <x>94</x>
+       <y>46</y>
+       <width>36</width>
        <height>24</height>
       </rect>
      </property>
@@ -592,8 +585,8 @@
      </property>
      <property name="iconSize">
       <size>
-       <width>48</width>
-       <height>48</height>
+       <width>34</width>
+       <height>8</height>
       </size>
      </property>
      <property name="checkable">
@@ -603,9 +596,9 @@
     <widget class="QPushButton" name="middle3CoordinatesButton">
      <property name="geometry">
       <rect>
-       <x>126</x>
-       <y>68</y>
-       <width>56</width>
+       <x>134</x>
+       <y>46</y>
+       <width>36</width>
        <height>24</height>
       </rect>
      </property>
@@ -624,8 +617,8 @@
      </property>
      <property name="iconSize">
       <size>
-       <width>48</width>
-       <height>48</height>
+       <width>34</width>
+       <height>8</height>
       </size>
      </property>
      <property name="checkable">
@@ -635,10 +628,10 @@
     <widget class="QPushButton" name="eyeButton">
      <property name="geometry">
       <rect>
-       <x>184</x>
-       <y>68</y>
-       <width>33</width>
-       <height>24</height>
+       <x>2</x>
+       <y>78</y>
+       <width>35</width>
+       <height>28</height>
       </rect>
      </property>
      <property name="toolTip">
@@ -655,14 +648,14 @@
     <widget class="QPushButton" name="addLayerButton">
      <property name="geometry">
       <rect>
-       <x>122</x>
-       <y>186</y>
+       <x>88</x>
+       <y>174</y>
        <width>33</width>
        <height>26</height>
       </rect>
      </property>
      <property name="sizePolicy">
-      <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+      <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
        <horstretch>0</horstretch>
        <verstretch>0</verstretch>
       </sizepolicy>
@@ -690,6 +683,132 @@
        <normaloff>docs/icons/add-layer.svg</normaloff>docs/icons/add-layer.svg</iconset>
      </property>
     </widget>
+    <widget class="QPushButton" name="selectLayersButton">
+     <property name="geometry">
+      <rect>
+       <x>4</x>
+       <y>8</y>
+       <width>33</width>
+       <height>26</height>
+      </rect>
+     </property>
+     <property name="toolTip">
+      <string>Click to select line and bridge layers</string>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+     <property name="icon">
+      <iconset>
+       <normaloff>docs/icons/layer-stack2.svg</normaloff>docs/icons/layer-stack2.svg</iconset>
+     </property>
+     <property name="iconSize">
+      <size>
+       <width>20</width>
+       <height>20</height>
+      </size>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="flexjLineButton">
+     <property name="geometry">
+      <rect>
+       <x>41</x>
+       <y>78</y>
+       <width>35</width>
+       <height>28</height>
+      </rect>
+     </property>
+     <property name="focusPolicy">
+      <enum>Qt::NoFocus</enum>
+     </property>
+     <property name="toolTip">
+      <string>Use the FlexjLine Tool to set markers by clicking the map in sequence</string>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+     <property name="icon">
+      <iconset>
+       <normaloff>docs/icons/path-mode-polyline.svg</normaloff>docs/icons/path-mode-polyline.svg</iconset>
+     </property>
+     <property name="iconSize">
+      <size>
+       <width>24</width>
+       <height>24</height>
+      </size>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="bridgingLineButton">
+     <property name="geometry">
+      <rect>
+       <x>118</x>
+       <y>78</y>
+       <width>35</width>
+       <height>28</height>
+      </rect>
+     </property>
+     <property name="toolTip">
+      <string>Create on-the-fly bridging lines to connect lines of line layers</string>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+     <property name="icon">
+      <iconset>
+       <normaloff>docs/icons/bridge.40x22_mod.png</normaloff>docs/icons/bridge.40x22_mod.png</iconset>
+     </property>
+     <property name="iconSize">
+      <size>
+       <width>24</width>
+       <height>22</height>
+      </size>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="bridgingPointButton">
+     <property name="geometry">
+      <rect>
+       <x>80</x>
+       <y>78</y>
+       <width>35</width>
+       <height>28</height>
+      </rect>
+     </property>
+     <property name="toolTip">
+      <string>Create on-the-fly bridging points to connect vertices of line layers</string>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+     <property name="icon">
+      <iconset>
+       <normaloff>docs/icons/bridging_point.32x32_b.png</normaloff>docs/icons/bridging_point.32x32_b.png</iconset>
+     </property>
+    </widget>
+    <zorder>startCoordinatesTextbox</zorder>
+    <zorder>startCoordinatesButton</zorder>
+    <zorder>middleCoordinatesButton</zorder>
+    <zorder>endCoordinatesButton</zorder>
+    <zorder>label_2</zorder>
+    <zorder>resultLength</zorder>
+    <zorder>endCoordinatesTextbox</zorder>
+    <zorder>label_3</zorder>
+    <zorder>fiberLoss</zorder>
+    <zorder>lengthUnits</zorder>
+    <zorder>fiberLossUnits</zorder>
+    <zorder>configureButton</zorder>
+    <zorder>resetButton</zorder>
+    <zorder>calculateButton</zorder>
+    <zorder>addFixedLoss</zorder>
+    <zorder>helpButton</zorder>
+    <zorder>layerCombobox</zorder>
+    <zorder>middle2CoordinatesButton</zorder>
+    <zorder>middle3CoordinatesButton</zorder>
+    <zorder>eyeButton</zorder>
+    <zorder>addLayerButton</zorder>
+    <zorder>selectLayersButton</zorder>
+    <zorder>flexjLineButton</zorder>
+    <zorder>bridgingLineButton</zorder>
+    <zorder>bridgingPointButton</zorder>
    </widget>
   </widget>
  </widget>
@@ -701,23 +820,25 @@
   </customwidget>
  </customwidgets>
  <tabstops>
+  <tabstop>selectLayersButton</tabstop>
   <tabstop>layerCombobox</tabstop>
-  <tabstop>startCoordinatesTextbox</tabstop>
   <tabstop>startCoordinatesButton</tabstop>
   <tabstop>middleCoordinatesButton</tabstop>
   <tabstop>middle2CoordinatesButton</tabstop>
   <tabstop>middle3CoordinatesButton</tabstop>
-  <tabstop>eyeButton</tabstop>
-  <tabstop>endCoordinatesTextbox</tabstop>
   <tabstop>endCoordinatesButton</tabstop>
-  <tabstop>resultLength</tabstop>
+  <tabstop>eyeButton</tabstop>
+  <tabstop>bridgingPointButton</tabstop>
+  <tabstop>bridgingLineButton</tabstop>
+  <tabstop>calculateButton</tabstop>
+  <tabstop>startCoordinatesTextbox</tabstop>
   <tabstop>addFixedLoss</tabstop>
   <tabstop>fiberLoss</tabstop>
-  <tabstop>calculateButton</tabstop>
   <tabstop>resetButton</tabstop>
   <tabstop>addLayerButton</tabstop>
   <tabstop>configureButton</tabstop>
   <tabstop>helpButton</tabstop>
+  <tabstop>endCoordinatesTextbox</tabstop>
  </tabstops>
  <resources/>
  <connections/>
